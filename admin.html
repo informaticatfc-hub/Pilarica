@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Panel administrativo — Pilarica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Jost:wght@300;400;500&display=swap');
+
+:root {
+  --gold: #B8975A;
+  --gold-light: #D4B87A;
+  --ink: #1A1714;
+  --ink-mid: #3D3830;
+  --stone: #7A746C;
+  --cream: #FDFAF5;
+  --cream-dark: #F2EDE3;
+  --cream-mid: #EAE3D6;
+  --border: rgba(184,151,90,0.2);
+  --border-md: rgba(184,151,90,0.4);
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Jost', system-ui, sans-serif;
+  --nav-h: 72px;
+  --sidebar-w: 260px;
+  --ease: cubic-bezier(0.4,0,0.2,1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  font-family: var(--sans);
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+button, input, select, textarea { font-family: var(--sans); }
+img { display: block; max-width: 100%; }
+
+/* ——— Login ——— */
+.login-screen {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 32px 5vw;
+  background: linear-gradient(135deg, var(--cream) 0%, var(--cream-dark) 100%);
+}
+.login-card {
+  width: 100%; max-width: 420px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  padding: 40px 36px 36px;
+}
+.login-brand {
+  font-family: var(--serif);
+  font-size: 32px; font-weight: 300;
+  letter-spacing: 0.1em; text-align: center;
+  margin-bottom: 4px;
+}
+.login-tagline {
+  text-align: center;
+  font-size: 9px; letter-spacing: 0.35em;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 32px;
+}
+.login-title {
+  font-family: var(--serif);
+  font-size: 24px; font-weight: 300;
+  margin-bottom: 6px;
+}
+.login-sub {
+  font-size: 13px; font-weight: 300; color: var(--stone);
+  margin-bottom: 24px;
+}
+.form-label {
+  display: block;
+  font-size: 9px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 6px;
+}
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  font-size: 14px; font-weight: 300;
+  color: var(--ink);
+  background: var(--cream-dark);
+  border: 1px solid var(--border);
+  padding: 11px 14px;
+  transition: border-color 0.2s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none; border-color: var(--gold);
+}
+.form-row { margin-bottom: 16px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-textarea { min-height: 88px; resize: vertical; }
+.form-error {
+  font-size: 12px; color: #9a4a4a;
+  margin-top: 8px; display: none;
+}
+.form-error.visible { display: block; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  font-weight: 500; padding: 12px 22px;
+  border: none; cursor: pointer; transition: all 0.2s var(--ease);
+}
+.btn-gold { background: var(--gold); color: var(--cream); }
+.btn-gold:hover { background: var(--ink); }
+.btn-outline {
+  background: transparent; color: var(--ink-mid);
+  border: 1px solid var(--border-md);
+}
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+.btn-ink { background: var(--ink); color: var(--cream); }
+.btn-ink:hover { background: var(--gold); }
+.btn-sm { padding: 8px 14px; font-size: 9px; }
+.btn-danger { background: transparent; color: #8b4545; border: 1px solid rgba(139,69,69,0.35); }
+.btn-danger:hover { background: #8b4545; color: var(--cream); }
+.btn-block { width: 100%; }
+
+.login-back {
+  display: block; text-align: center; margin-top: 20px;
+  font-size: 11px; letter-spacing: 0.1em; color: var(--stone);
+  text-decoration: none; transition: color 0.2s;
+}
+.login-back:hover { color: var(--gold); }
+
+/* ——— App shell ——— */
+.app-shell { display: none; min-height: 100vh; }
+.app-shell.app-visible { display: flex; }
+
+.admin-topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--nav-h);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px 0 calc(var(--sidebar-w) + 20px);
+  background: rgba(253,250,245,0.96);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.admin-topbar-title {
+  font-family: var(--serif); font-size: 22px; font-weight: 300;
+}
+.admin-topbar-actions { display: flex; align-items: center; gap: 10px; }
+.admin-user {
+  font-size: 11px; color: var(--stone); letter-spacing: 0.06em;
+  display: none;
+}
+.menu-toggle {
+  display: none;
+  width: 38px; height: 38px;
+  background: transparent; border: 1px solid var(--border-md);
+  color: var(--ink-mid); font-size: 18px; cursor: pointer;
+}
+
+.admin-sidebar {
+  position: fixed; top: 0; left: 0; bottom: 0; z-index: 110;
+  width: var(--sidebar-w);
+  background: var(--ink);
+  color: var(--cream);
+  display: flex; flex-direction: column;
+  padding: 24px 0;
+  transition: transform 0.35s var(--ease);
+}
+.sidebar-brand {
+  padding: 0 24px 28px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 20px;
+}
+.sidebar-brand-name {
+  font-family: var(--serif);
+  font-size: 26px; font-weight: 300; letter-spacing: 0.08em;
+}
+.sidebar-brand-sub {
+  font-size: 8px; letter-spacing: 0.35em;
+  text-transform: uppercase; color: var(--gold-light);
+  margin-top: 4px;
+}
+.sidebar-nav { flex: 1; padding: 0 12px; }
+.sidebar-link {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; text-align: left;
+  padding: 12px 14px; margin-bottom: 4px;
+  background: transparent; border: none;
+  color: rgba(253,250,245,0.55);
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.2s;
+  border-radius: 2px;
+}
+.sidebar-link svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.7; }
+.sidebar-link:hover { color: var(--cream); background: rgba(255,255,255,0.06); }
+.sidebar-link.active {
+  color: var(--cream); background: rgba(184,151,90,0.22);
+}
+.sidebar-link.active svg { opacity: 1; color: var(--gold-light); }
+.sidebar-foot {
+  padding: 20px 24px 0;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.sidebar-foot a {
+  font-size: 10px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: rgba(253,250,245,0.4);
+  text-decoration: none; transition: color 0.2s;
+}
+.sidebar-foot a:hover { color: var(--gold-light); }
+
+.admin-main {
+  margin-left: var(--sidebar-w);
+  margin-top: var(--nav-h);
+  padding: 32px 28px 64px;
+  flex: 1; min-width: 0;
+}
+.admin-panel { display: none; animation: fadeIn 0.35s ease; }
+.admin-panel.panel-active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.panel-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.panel-header h2 {
+  font-family: var(--serif);
+  font-size: clamp(28px, 4vw, 36px); font-weight: 300;
+  line-height: 1.1;
+}
+.panel-header p {
+  font-size: 13px; font-weight: 300; color: var(--stone);
+  margin-top: 6px; max-width: 520px;
+}
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px; margin-bottom: 28px;
+}
+.stat-box {
+  background: var(--cream-dark);
+  border: 1px solid var(--border);
+  padding: 18px 20px;
+}
+.stat-box-num {
+  font-family: var(--serif);
+  font-size: 28px; color: var(--gold); line-height: 1;
+}
+.stat-box-label {
+  font-size: 9px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--stone);
+  margin-top: 6px;
+}
+
+.admin-card {
+  background: var(--cream-dark);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.admin-card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+}
+.admin-card-title {
+  font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold);
+}
+
+/* Tabla productos */
+.products-table-wrap { overflow-x: auto; }
+.products-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 13px; font-weight: 300;
+}
+.products-table th {
+  text-align: left; padding: 12px 16px;
+  font-size: 9px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--stone);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.products-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.products-table tr:last-child td { border-bottom: none; }
+.products-table tr:hover td { background: rgba(184,151,90,0.04); }
+.prod-thumb {
+  width: 48px; height: 48px; object-fit: cover;
+  background: var(--cream-mid);
+}
+.prod-name-cell strong {
+  display: block; font-family: var(--serif);
+  font-size: 16px; font-weight: 400; color: var(--ink);
+}
+.prod-name-cell span { font-size: 11px; color: var(--stone); }
+.badge {
+  display: inline-block;
+  font-size: 8px; letter-spacing: 0.14em;
+  text-transform: uppercase; padding: 4px 8px;
+}
+.badge-gold { background: rgba(184,151,90,0.15); color: var(--gold); }
+.badge-muted { background: rgba(122,116,108,0.12); color: var(--stone); }
+.badge-green { background: rgba(90,122,90,0.12); color: #5a7a5a; }
+.row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* Formulario producto */
+.product-editor {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px; align-items: start;
+}
+.editor-main, .editor-side {
+  background: var(--cream-dark);
+  border: 1px solid var(--border);
+  padding: 24px 22px;
+}
+.editor-side-title {
+  font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 16px;
+}
+.image-preview {
+  aspect-ratio: 4/5; background: var(--cream-mid);
+  overflow: hidden; margin-bottom: 14px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--stone); font-size: 12px; text-align: center; padding: 16px;
+}
+.image-preview img { width: 100%; height: 100%; object-fit: cover; }
+.toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+}
+.toggle-row:last-child { border-bottom: none; }
+.toggle-label { font-size: 13px; font-weight: 300; }
+.toggle {
+  width: 44px; height: 24px;
+  background: var(--cream-mid); border: 1px solid var(--border);
+  border-radius: 99px; position: relative; cursor: pointer;
+  transition: background 0.2s;
+}
+.toggle.on { background: var(--gold); border-color: var(--gold); }
+.toggle::after {
+  content: ''; position: absolute;
+  top: 3px; left: 3px;
+  width: 16px; height: 16px;
+  background: var(--cream); border-radius: 50%;
+  transition: transform 0.2s var(--ease);
+}
+.toggle.on::after { transform: translateX(20px); }
+.editor-actions {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-top: 24px; padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+/* Certificados — mismo formato que panel original */
+.dash-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 24px; }
+.panel {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  padding: 28px 28px 24px;
+}
+.panel-title {
+  font-family: var(--serif); font-size: 20px;
+  font-weight: 300; color: var(--ink);
+  margin-bottom: 20px; padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.form-select {
+  width: 100%; font-size: 14px; font-weight: 300; color: var(--ink);
+  background: var(--cream-dark); border: 1px solid var(--border);
+  padding: 11px 14px; outline: none; border-radius: 0;
+  transition: border-color 0.2s; appearance: none;
+}
+.form-select:focus { border-color: var(--gold); }
+.form-divider {
+  margin: 20px 0; border: none;
+  border-top: 1px solid var(--border);
+}
+.dash-form-note {
+  font-size: 11px; font-weight: 300; color: var(--stone);
+  font-style: italic; margin-bottom: 16px;
+}
+.btn-save {
+  width: 100%; font-size: 11px;
+  letter-spacing: 0.25em; text-transform: uppercase; font-weight: 500;
+  color: var(--cream); background: var(--gold); border: none;
+  padding: 13px; cursor: pointer; transition: background 0.2s;
+}
+.btn-save:hover { background: var(--ink); }
+.cert-label {
+  font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--stone); margin-bottom: 10px; display: block;
+}
+#certificate-card {
+  width: 100%; aspect-ratio: 85.6/54;
+  background: var(--cream);
+  border: 1px solid var(--border-md);
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+  padding: 14px 18px 12px;
+  font-family: var(--serif);
+}
+.cert-bg-ring {
+  position: absolute; right: -24px; top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.07; pointer-events: none;
+}
+.cert-corner { position: absolute; width: 18px; height: 18px; border-color: var(--gold); border-style: solid; }
+.cert-corner.tl { top: 7px; left: 7px; border-width: 1px 0 0 1px; }
+.cert-corner.tr { top: 7px; right: 7px; border-width: 1px 1px 0 0; }
+.cert-corner.bl { bottom: 7px; left: 7px; border-width: 0 0 1px 1px; }
+.cert-corner.br { bottom: 7px; right: 7px; border-width: 0 1px 1px 0; }
+.cert-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.cert-brand-name { font-size: 19px; font-weight: 300; letter-spacing: 0.1em; color: var(--ink); line-height: 1; }
+.cert-brand-sub {
+  font-family: var(--sans); font-size: 7px;
+  letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--gold); font-weight: 300; margin-top: 3px; display: block;
+}
+.cert-auth-badge {
+  font-family: var(--sans); font-size: 6.5px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gold); border: 0.5px solid var(--border-md);
+  padding: 3px 7px; font-weight: 400; align-self: flex-start;
+}
+.cert-divider {
+  width: 100%; height: 1px; margin: 7px 0;
+  background: linear-gradient(90deg, transparent, var(--gold) 20%, var(--gold) 80%, transparent);
+  opacity: 0.4;
+}
+.cert-product-name {
+  font-size: 16px; font-weight: 300; font-style: italic;
+  color: var(--ink); line-height: 1.2; margin-bottom: 5px;
+}
+.cert-details-row { display: flex; gap: 18px; margin-top: 4px; }
+.cert-detail-item {
+  font-family: var(--sans); font-size: 7.5px;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--stone); font-weight: 300;
+}
+.cert-detail-item strong {
+  display: block; font-size: 9.5px; font-weight: 400;
+  color: var(--ink-mid); letter-spacing: 0.03em;
+  text-transform: none; margin-top: 2px;
+  font-family: var(--serif);
+}
+.cert-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+.cert-client-label {
+  font-family: var(--sans); font-size: 8px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--stone); font-weight: 300;
+}
+.cert-client-name {
+  font-family: var(--serif); font-size: 12px;
+  font-weight: 300; color: var(--ink);
+  letter-spacing: 0.04em; display: block; margin-top: 2px;
+}
+.cert-serial-block { text-align: right; }
+.cert-serial {
+  font-family: var(--sans); font-size: 7px;
+  letter-spacing: 0.18em; color: rgba(122,116,108,0.5);
+  font-weight: 300; display: block;
+}
+.cert-actions { display: flex; gap: 10px; margin-top: 14px; }
+.btn-print {
+  flex: 1; font-size: 11px;
+  letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500;
+  color: var(--cream); background: var(--ink); border: none;
+  padding: 11px; cursor: pointer; transition: background 0.2s;
+}
+.btn-print:hover { background: var(--gold); }
+.btn-clear {
+  font-size: 11px; letter-spacing: 0.15em;
+  text-transform: uppercase; font-weight: 400; color: var(--stone);
+  background: transparent; border: 1px solid var(--border);
+  padding: 11px 18px; cursor: pointer; transition: all 0.2s;
+}
+.btn-clear:hover { border-color: var(--gold); color: var(--gold); }
+.hist-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 0; border-bottom: 1px solid var(--border);
+  gap: 12px; flex-wrap: wrap;
+}
+.hist-item:last-child { border-bottom: none; }
+.hist-name { font-family: var(--serif); font-size: 15px; font-weight: 300; color: var(--ink); }
+.hist-sub { font-size: 12px; font-weight: 300; color: var(--stone); margin-top: 2px; }
+.hist-serial { color: var(--gold); }
+.hist-meta { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.hist-date { font-size: 11px; font-weight: 300; color: var(--stone); }
+.hist-reprint {
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gold); background: transparent;
+  border: 1px solid var(--border-md); padding: 5px 10px;
+  cursor: pointer; transition: all 0.2s; font-weight: 400;
+}
+.hist-reprint:hover { background: var(--gold); color: var(--cream); }
+.empty-state {
+  text-align: center; padding: 24px 0;
+  font-size: 13px; font-weight: 300; color: var(--stone);
+}
+
+@media print {
+  body * { visibility: hidden; }
+  #print-zone, #print-zone * { visibility: visible; }
+  #print-zone {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: white;
+  }
+  #certificate-card {
+    width: 85.6mm !important; height: 54mm !important;
+    padding: 5mm 6mm 4mm !important;
+    border: 0.5pt solid #B8975A !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    aspect-ratio: unset !important;
+  }
+  .admin-sidebar, .admin-topbar, .panel:not(:has(#print-zone)) { display: none !important; }
+}
+
+.toast {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
+  z-index: 500; padding: 12px 24px;
+  font-size: 12px; letter-spacing: 0.06em;
+  background: var(--ink); color: var(--cream);
+  opacity: 0; transition: transform 0.35s var(--ease), opacity 0.35s;
+  pointer-events: none; white-space: nowrap;
+}
+.toast.toast-show { transform: translateX(-50%) translateY(0); opacity: 1; }
+.toast-warn { background: var(--gold); }
+
+.sidebar-backdrop {
+  display: none; position: fixed; inset: 0; z-index: 105;
+  background: rgba(26,23,20,0.45);
+}
+
+@media (max-width: 1024px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .product-editor { grid-template-columns: 1fr; }
+  .dash-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .admin-topbar { padding-left: 20px; }
+  .menu-toggle { display: flex; align-items: center; justify-content: center; }
+  .admin-user { display: none; }
+  .admin-sidebar {
+    transform: translateX(-100%);
+    box-shadow: 8px 0 32px rgba(0,0,0,0.2);
+  }
+  .admin-sidebar.sidebar-open { transform: translateX(0); }
+  .sidebar-backdrop.visible { display: block; }
+  .admin-main { margin-left: 0; padding: 24px 18px 48px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .products-table .hide-mobile { display: none; }
+  .panel-header { flex-direction: column; align-items: stretch; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 420px) {
+  .stats-row { grid-template-columns: 1fr; }
+}
+  </style>
+</head>
+<body>
+
+<div id="login-screen" class="login-screen">
+  <div class="login-card">
+    <p class="login-brand">Pilarica</p>
+    <p class="login-tagline">Panel administrativo</p>
+    <h1 class="login-title">Iniciar sesión</h1>
+    <p class="login-sub">Acceso exclusivo para administradores de la tienda.</p>
+    <form id="login-form">
+      <div class="form-row">
+        <label class="form-label" for="login-email">Correo</label>
+        <input class="form-input" id="login-email" type="email" placeholder="admin@pilaricajoyas.com.mx" autocomplete="username" required />
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="login-password">Contraseña</label>
+        <input class="form-input" id="login-password" type="password" placeholder="••••••••" autocomplete="current-password" required />
+      </div>
+      <p class="form-error" id="login-error">Correo o contraseña incorrectos.</p>
+      <button type="submit" class="btn btn-gold btn-block" style="margin-top:8px;">Entrar al panel</button>
+    </form>
+    <a class="login-back" href="index.html">← Volver a la tienda</a>
+  </div>
+</div>
+
+<div id="app-shell" class="app-shell">
+  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+  <aside class="admin-sidebar" id="admin-sidebar">
+    <div class="sidebar-brand">
+      <p class="sidebar-brand-name">Pilarica</p>
+      <p class="sidebar-brand-sub">Administración</p>
+    </div>
+    <nav class="sidebar-nav" aria-label="Menú administrativo">
+      <button type="button" class="sidebar-link active" data-panel="products">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="1.2"/><rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="1.2"/><rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="1.2"/><rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="1.2"/></svg>
+        Productos
+      </button>
+      <button type="button" class="sidebar-link" data-panel="editor" id="nav-editor" hidden>
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" stroke="currentColor" stroke-width="1.2"/></svg>
+        Editar pieza
+      </button>
+      <button type="button" class="sidebar-link" data-panel="certificates">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.2"/><path d="M14 2v6h6M9 15l2 2 4-4" stroke="currentColor" stroke-width="1.2"/></svg>
+        Certificados
+      </button>
+    </nav>
+    <div class="sidebar-foot">
+      <a href="index.html">← Ver tienda pública</a>
+    </div>
+  </aside>
+
+  <header class="admin-topbar">
+    <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">☰</button>
+    <h1 class="admin-topbar-title" id="topbar-title">Productos</h1>
+    <div class="admin-topbar-actions">
+      <span class="admin-user" id="admin-user-label">admin@pilarica</span>
+      <button type="button" class="btn btn-outline btn-sm" id="logout-btn">Salir</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+
+    <!-- LISTA PRODUCTOS -->
+    <section class="admin-panel panel-active" id="panel-products">
+      <div class="panel-header">
+        <div>
+          <h2>Catálogo de <em style="font-family:var(--serif);font-style:italic;">productos</em></h2>
+          <p>Administra precios, imágenes, stock y piezas destacadas. Los cambios se guardan en este navegador hasta conectar el servidor.</p>
+        </div>
+        <button type="button" class="btn btn-gold" id="btn-new-product">+ Nueva pieza</button>
+      </div>
+
+      <div class="stats-row" id="stats-row"></div>
+
+      <div class="admin-card">
+        <div class="admin-card-head">
+          <span class="admin-card-title">Todas las piezas</span>
+          <input class="form-input" id="product-search" type="search" placeholder="Buscar por nombre o SKU…" style="max-width:240px;padding:8px 12px;font-size:13px;" />
+        </div>
+        <div class="products-table-wrap">
+          <table class="products-table">
+            <thead>
+              <tr>
+                <th>Pieza</th>
+                <th class="hide-mobile">Categoría</th>
+                <th>Precio</th>
+                <th class="hide-mobile">Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="products-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDITOR PRODUCTO -->
+    <section class="admin-panel" id="panel-editor">
+      <div class="panel-header">
+        <div>
+          <h2 id="editor-heading">Nueva pieza</h2>
+          <p>Completa los datos de la joya. No necesitas tocar código — solo llena el formulario y guarda.</p>
+        </div>
+      </div>
+
+      <form id="product-form" class="product-editor">
+        <div class="editor-main">
+          <div class="form-grid">
+            <div class="form-row">
+              <label class="form-label" for="pf-id">SKU / ID *</label>
+              <input class="form-input" id="pf-id" required placeholder="PIL-006" />
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="pf-category">Categoría *</label>
+              <select class="form-select" id="pf-category" required>
+                <option value="anillos">Anillos</option>
+                <option value="collares">Collares</option>
+                <option value="aretes">Aretes</option>
+                <option value="pulseras">Pulseras</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="pf-name">Nombre de la pieza *</label>
+            <input class="form-input" id="pf-name" required placeholder="Ej. Collar Tennis Diamantes" />
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="pf-desc">Descripción</label>
+            <textarea class="form-textarea" id="pf-desc" placeholder="Descripción para la ficha del producto…"></textarea>
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label class="form-label" for="pf-material">Metal / Material</label>
+              <input class="form-input" id="pf-material" placeholder="Oro 18k" />
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="pf-stone">Piedra</label>
+              <input class="form-input" id="pf-stone" placeholder="Diamantes" />
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label class="form-label" for="pf-size">Medida / Talla</label>
+              <input class="form-input" id="pf-size" placeholder="42 cm" />
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="pf-price">Precio (MXN) *</label>
+              <input class="form-input" id="pf-price" type="number" min="0" step="1" required placeholder="48500" />
+            </div>
+          </div>
+          <div class="editor-actions">
+            <button type="submit" class="btn btn-gold">Guardar pieza</button>
+            <button type="button" class="btn btn-outline" id="btn-cancel-edit">Cancelar</button>
+            <button type="button" class="btn btn-danger btn-sm" id="btn-delete-product" hidden>Eliminar</button>
+          </div>
+        </div>
+
+        <div class="editor-side">
+          <p class="editor-side-title">Imagen</p>
+          <div class="image-preview" id="image-preview">
+            <span>Sin imagen</span>
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="pf-image">Ruta o URL de imagen</label>
+            <input class="form-input" id="pf-image" placeholder="assets/products/collares/..." />
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="pf-image-file">Subir imagen</label>
+            <input class="form-input" id="pf-image-file" type="file" accept="image/*" />
+          </div>
+          <p class="cert-note" style="margin-top:12px;margin-bottom:0;">Puedes usar rutas de la carpeta <code style="font-size:11px;">assets/products/</code> o subir una foto (se guarda en el navegador).</p>
+
+          <p class="editor-side-title" style="margin-top:24px;">Visibilidad</p>
+          <div class="toggle-row">
+            <span class="toggle-label">Disponible en tienda</span>
+            <button type="button" class="toggle on" id="toggle-stock" aria-pressed="true"></button>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">Pieza destacada</span>
+            <button type="button" class="toggle" id="toggle-featured" aria-pressed="false"></button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- CERTIFICADOS -->
+    <section class="admin-panel" id="panel-certificates">
+      <div class="dash-grid">
+
+        <div class="panel">
+          <p class="panel-title">Emitir certificado</p>
+          <p class="dash-form-note">Completa los datos al momento de la compra. El certificado se genera una sola vez por transacción.</p>
+
+          <div class="form-row">
+            <label class="form-label" for="cert-catalog-pick">Cargar desde catálogo</label>
+            <select class="form-select" id="cert-catalog-pick">
+              <option value="">— Seleccionar pieza —</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label class="form-label" for="cert-product">Nombre del producto *</label>
+            <input class="form-input" id="cert-product" type="text" placeholder="Ej. Anillo Eternity Diamantes" autocomplete="off" />
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label class="form-label" for="cert-material">Material *</label>
+              <select class="form-select" id="cert-material">
+                <option value="">Seleccionar</option>
+                <option>Oro 18k</option>
+                <option>Oro 14k</option>
+                <option>Plata 925</option>
+                <option>Oro Rose 18k</option>
+                <option>Oro Blanco 18k</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="cert-stone">Piedra principal</label>
+              <select class="form-select" id="cert-stone">
+                <option value="">Sin piedra</option>
+                <option>Diamante natural</option>
+                <option>Diamante amarillo</option>
+                <option>Zafiro azul</option>
+                <option>Esmeralda</option>
+                <option>Rubí</option>
+                <option>Perla cultivada</option>
+                <option>Topacio azul</option>
+                <option>Pavé de diamantes</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label class="form-label" for="cert-size">Talla / Medida</label>
+              <input class="form-input" id="cert-size" type="text" placeholder="Ej. Talla 14 · 42 cm" />
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="cert-price">Precio de venta</label>
+              <input class="form-input" id="cert-price" type="text" placeholder="Ej. $48,500 MXN" />
+            </div>
+          </div>
+
+          <hr class="form-divider" />
+
+          <div class="form-row">
+            <label class="form-label" for="cert-client">Nombre del cliente *</label>
+            <input class="form-input" id="cert-client" type="text" placeholder="Nombre completo del cliente" />
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="cert-date">Fecha de compra *</label>
+            <input class="form-input" id="cert-date" type="date" />
+          </div>
+
+          <button type="button" class="btn-save" id="btn-save-cert">* Guardar y emitir certificado</button>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:20px;">
+
+          <div class="panel">
+            <p class="panel-title">Vista previa</p>
+            <span class="cert-label">Tarjeta física — 85.6 × 54 mm</span>
+
+            <div id="print-zone">
+              <div id="certificate-card" role="img" aria-label="Certificado de autenticidad">
+                <div class="cert-corner tl"></div>
+                <div class="cert-corner tr"></div>
+                <div class="cert-corner bl"></div>
+                <div class="cert-corner br"></div>
+                <svg class="cert-bg-ring" width="90" height="90" viewBox="0 0 90 90" fill="none">
+                  <circle cx="45" cy="45" r="42" stroke="#B8975A" stroke-width="0.8"/>
+                  <circle cx="45" cy="45" r="32" stroke="#B8975A" stroke-width="0.4"/>
+                  <circle cx="45" cy="3" r="4" fill="#B8975A"/>
+                </svg>
+                <div class="cert-top">
+                  <div>
+                    <div class="cert-brand-name">Pilarica</div>
+                    <span class="cert-brand-sub">Joyería de Autor</span>
+                  </div>
+                  <div class="cert-auth-badge">Certificado de Autenticidad</div>
+                </div>
+                <div class="cert-divider"></div>
+                <div class="cert-mid">
+                  <div class="cert-product-name" id="cert-prev-name">Nombre del producto</div>
+                  <div class="cert-details-row">
+                    <div class="cert-detail-item">Material<strong id="cert-prev-material">—</strong></div>
+                    <div class="cert-detail-item">Piedra<strong id="cert-prev-stone">—</strong></div>
+                    <div class="cert-detail-item">Talla<strong id="cert-prev-size">—</strong></div>
+                  </div>
+                </div>
+                <div class="cert-divider"></div>
+                <div class="cert-bottom">
+                  <div>
+                    <span class="cert-client-label">Para</span>
+                    <span class="cert-client-name" id="cert-prev-client">Nombre del cliente</span>
+                  </div>
+                  <div class="cert-serial-block">
+                    <span class="cert-serial" id="cert-prev-date">—</span>
+                    <span class="cert-serial" id="cert-prev-serial">PIL-000000</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="cert-actions">
+              <button type="button" class="btn-print" id="btn-print-cert">Imprimir certificado</button>
+              <button type="button" class="btn-clear" id="btn-reset-cert">Limpiar</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <p class="panel-title">Certificados emitidos</p>
+            <div id="cert-history-list">
+              <p class="empty-state">Los certificados emitidos aparecerán aquí.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div id="toast" class="toast" role="alert"></div>
+
+<script>
+const ADMIN_AUTH_KEY = 'pilarica_admin_session';
+const PRODUCTS_KEY = 'pilarica_admin_products';
+const CERTS_KEY = 'pilarica_certs';
+const DEMO_EMAIL = 'admin@pilaricajoyas.com.mx';
+const DEMO_PASS = 'pilarica2025';
+
+const SEED_PRODUCTS = [
+  { id: 'PIL-001', name: 'Collar Candy Baguette', category: 'collares', material: 'Oro 18k', stone: 'Diamantes Baguette', size: '42 cm', currency: 'MXN', price: 48500, image: '', description: 'Cadena paperclip en oro 18k con colgante rectangular de esmalte rosa y diamantes baguette.', featured: true, inStock: true },
+  { id: 'PIL-002', name: 'Pulsera Marquise Star', category: 'pulseras', material: 'Oro 18k', stone: 'Diamantes Marquise', size: '17 cm', currency: 'MXN', price: 62000, image: '', description: 'Pulsera rígida de bolas texturizadas en oro 18k con medallones de diamantes.', featured: true, inStock: true },
+  { id: 'PIL-003', name: 'Collar Doble Corazón', category: 'collares', material: 'Oro Blanco 18k', stone: 'Pavé de Diamantes', size: '45 cm', currency: 'MXN', price: 55000, image: '', description: 'Dos corazones en pavé total de diamantes sobre cadena delicada.', featured: true, inStock: true },
+  { id: 'PIL-004', name: 'Anillo Pear Bicolor', category: 'anillos', material: 'Oro 18k', stone: 'Diamantes Amarillos', size: 'Talla 14', currency: 'MXN', price: 38000, image: '', description: 'Anillo abierto con alternancia de diamantes pera amarillos y blancos.', featured: true, inStock: true },
+  { id: 'PIL-005', name: 'Aretes Corazón Zafiro', category: 'aretes', material: 'Oro Rose 18k', stone: 'Zafiro Azul', size: '1.8 cm', currency: 'MXN', price: 42000, image: '', description: 'Aretes en forma de corazón con zafiro azul central.', featured: true, inStock: true },
+];
+
+const CATEGORIES = { anillos: 'Anillos', collares: 'Collares', aretes: 'Aretes', pulseras: 'Pulseras' };
+
+let products = [];
+let editingId = null;
+let certSeq = 100;
+
+function initCertSeq() {
+  const list = getCerts();
+  if (list.length) {
+    const nums = list.map(c => parseInt((c.serial || '').replace('PIL-', ''), 10)).filter(n => !isNaN(n));
+    if (nums.length) certSeq = Math.max(...nums);
+  }
+}
+
+function formatCertDate(isoDate) {
+  if (!isoDate) return '—';
+  const d = new Date(isoDate + 'T12:00:00');
+  return d.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function setCertField(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = val;
+}
+
+function setCertPreviewText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val || '—';
+}
+
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast toast-show' + (type === 'warn' ? ' toast-warn' : '');
+  setTimeout(() => { t.className = 'toast'; }, 2800);
+}
+
+function formatPrice(n) {
+  return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 0 }).format(n);
+}
+
+function loadProducts() {
+  const saved = localStorage.getItem(PRODUCTS_KEY);
+  products = saved ? JSON.parse(saved) : [...SEED_PRODUCTS];
+  persistProducts();
+}
+
+function persistProducts() {
+  localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+}
+
+function isLoggedIn() {
+  return sessionStorage.getItem(ADMIN_AUTH_KEY) === '1';
+}
+
+function showApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app-shell').classList.add('app-visible');
+  document.getElementById('admin-user-label').textContent = DEMO_EMAIL;
+  loadProducts();
+  renderProducts();
+  renderStats();
+  fillCertCatalogPick();
+  initCertSeq();
+  renderCertHistory();
+  document.getElementById('cert-date').value = new Date().toISOString().split('T')[0];
+  updateCertPreview();
+}
+
+function showLogin() {
+  sessionStorage.removeItem(ADMIN_AUTH_KEY);
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app-shell').classList.remove('app-visible');
+}
+
+function switchPanel(name) {
+  document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('panel-active'));
+  document.querySelectorAll('.sidebar-link[data-panel]').forEach(l => {
+    if (l.id === 'nav-editor') return;
+    l.classList.toggle('active', l.dataset.panel === name);
+  });
+  const panel = document.getElementById('panel-' + name);
+  if (panel) panel.classList.add('panel-active');
+  const titles = { products: 'Productos', editor: editingId ? 'Editar pieza' : 'Nueva pieza', certificates: 'Certificados' };
+  document.getElementById('topbar-title').textContent = titles[name] || 'Panel';
+  closeSidebar();
+}
+
+function renderStats() {
+  const el = document.getElementById('stats-row');
+  const total = products.length;
+  const featured = products.filter(p => p.featured).length;
+  const inStock = products.filter(p => p.inStock).length;
+  const avg = total ? Math.round(products.reduce((s, p) => s + p.price, 0) / total) : 0;
+  el.innerHTML = [
+    ['' + total, 'Piezas en catálogo'],
+    ['' + featured, 'Destacadas'],
+    ['' + inStock, 'Disponibles'],
+    [formatPrice(avg), 'Precio promedio'],
+  ].map(([n, l]) => `<div class="stat-box"><div class="stat-box-num">${n}</div><div class="stat-box-label">${l}</div></div>`).join('');
+}
+
+function renderProducts(filter) {
+  const tbody = document.getElementById('products-tbody');
+  const q = (filter || '').toLowerCase().trim();
+  const list = q
+    ? products.filter(p => p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q))
+    : products;
+
+  if (!list.length) {
+    tbody.innerHTML = `<tr><td colspan="5"><p class="empty-state">No hay productos${q ? ' con esa búsqueda' : ''}.</p></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = list.map(p => `
+    <tr data-id="${p.id}">
+      <td>
+        <div style="display:flex;align-items:center;gap:12px;">
+          ${p.image ? `<img class="prod-thumb" src="${p.image}" alt="" />` : `<div class="prod-thumb" style="display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--stone);">IMG</div>`}
+          <div class="prod-name-cell">
+            <strong>${p.name}</strong>
+            <span>${p.id}</span>
+          </div>
+        </div>
+      </td>
+      <td class="hide-mobile">${CATEGORIES[p.category] || p.category}</td>
+      <td>${formatPrice(p.price)}</td>
+      <td class="hide-mobile">
+        ${p.inStock ? '<span class="badge badge-green">Disponible</span>' : '<span class="badge badge-muted">Agotado</span>'}
+        ${p.featured ? ' <span class="badge badge-gold">Destacado</span>' : ''}
+      </td>
+      <td>
+        <div class="row-actions">
+          <button type="button" class="btn btn-outline btn-sm" data-edit="${p.id}">Editar</button>
+        </div>
+      </td>
+    </tr>`).join('');
+
+  tbody.querySelectorAll('[data-edit]').forEach(btn => {
+    btn.addEventListener('click', () => openEditor(btn.dataset.edit));
+  });
+}
+
+function openEditor(id) {
+  editingId = id || null;
+  const form = document.getElementById('product-form');
+  form.reset();
+  document.getElementById('btn-delete-product').hidden = !editingId;
+  document.getElementById('editor-heading').textContent = editingId ? 'Editar pieza' : 'Nueva pieza';
+  document.getElementById('nav-editor').hidden = false;
+
+  if (editingId) {
+    const p = products.find(x => x.id === editingId);
+    if (!p) return;
+    document.getElementById('pf-id').value = p.id;
+    document.getElementById('pf-id').readOnly = true;
+    document.getElementById('pf-name').value = p.name;
+    document.getElementById('pf-category').value = p.category;
+    document.getElementById('pf-desc').value = p.description || '';
+    document.getElementById('pf-material').value = p.material || '';
+    document.getElementById('pf-stone').value = p.stone || '';
+    document.getElementById('pf-size').value = p.size || '';
+    document.getElementById('pf-price').value = p.price;
+    document.getElementById('pf-image').value = p.image || '';
+    setToggle('toggle-stock', p.inStock);
+    setToggle('toggle-featured', p.featured);
+    updateImagePreview(p.image);
+  } else {
+    document.getElementById('pf-id').readOnly = false;
+    setToggle('toggle-stock', true);
+    setToggle('toggle-featured', false);
+    updateImagePreview('');
+  }
+  switchPanel('editor');
+  document.querySelector('.sidebar-link[data-panel="editor"]').classList.add('active');
+}
+
+function setToggle(id, on) {
+  const el = document.getElementById(id);
+  el.classList.toggle('on', on);
+  el.setAttribute('aria-pressed', on ? 'true' : 'false');
+}
+
+function getToggle(id) {
+  return document.getElementById(id).classList.contains('on');
+}
+
+function updateImagePreview(src) {
+  const box = document.getElementById('image-preview');
+  if (src) {
+    box.innerHTML = `<img src="${src}" alt="Vista previa" onerror="this.parentElement.innerHTML='<span>No se pudo cargar</span>'" />`;
+  } else {
+    box.innerHTML = '<span>Sin imagen</span>';
+  }
+}
+
+function saveProduct(e) {
+  e.preventDefault();
+  const data = {
+    id: document.getElementById('pf-id').value.trim(),
+    name: document.getElementById('pf-name').value.trim(),
+    category: document.getElementById('pf-category').value,
+    description: document.getElementById('pf-desc').value.trim(),
+    material: document.getElementById('pf-material').value.trim(),
+    stone: document.getElementById('pf-stone').value.trim(),
+    size: document.getElementById('pf-size').value.trim(),
+    price: Number(document.getElementById('pf-price').value),
+    image: document.getElementById('pf-image').value.trim(),
+    currency: 'MXN',
+    inStock: getToggle('toggle-stock'),
+    featured: getToggle('toggle-featured'),
+  };
+  if (!data.id || !data.name || !data.price) {
+    toast('Completa SKU, nombre y precio', 'warn');
+    return;
+  }
+  const idx = products.findIndex(p => p.id === data.id);
+  if (editingId) {
+    if (idx >= 0) products[idx] = data;
+  } else {
+    if (idx >= 0) { toast('Ese SKU ya existe', 'warn'); return; }
+    products.push(data);
+  }
+  persistProducts();
+  renderProducts();
+  renderStats();
+  fillCertCatalogPick();
+  updateCertPreview();
+  toast(editingId ? 'Pieza actualizada' : 'Pieza creada');
+  editingId = null;
+  document.getElementById('nav-editor').hidden = true;
+  switchPanel('products');
+}
+
+function deleteProduct() {
+  if (!editingId || !confirm('¿Eliminar esta pieza del catálogo?')) return;
+  products = products.filter(p => p.id !== editingId);
+  persistProducts();
+  renderProducts();
+  renderStats();
+  toast('Pieza eliminada');
+  editingId = null;
+  document.getElementById('nav-editor').hidden = true;
+  switchPanel('products');
+}
+
+function fillCertCatalogPick() {
+  const sel = document.getElementById('cert-catalog-pick');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">— Seleccionar pieza —</option>' +
+    products.map(p => `<option value="${p.id}">${p.name} (${p.id})</option>`).join('');
+}
+
+function setSelectValue(id, val) {
+  const el = document.getElementById(id);
+  if (!el || !val) { if (el) el.value = ''; return; }
+  const match = [...el.options].find(o => o.value === val || o.text === val);
+  if (match) {
+    el.value = match.value;
+    return;
+  }
+  if (el.tagName === 'SELECT') {
+    const opt = document.createElement('option');
+    opt.value = val;
+    opt.textContent = val;
+    el.appendChild(opt);
+    el.value = val;
+  } else {
+    el.value = val;
+  }
+}
+
+function prefillCertFromProduct(productId) {
+  const p = products.find(x => x.id === productId);
+  if (!p) return;
+  setCertField('cert-product', p.name);
+  setSelectValue('cert-material', p.material || '');
+  setSelectValue('cert-stone', p.stone && p.stone !== 'Sin piedra' ? p.stone : '');
+  setCertField('cert-size', p.size || '');
+  setCertField('cert-price', typeof p.price === 'number' ? formatPrice(p.price) : (p.price || ''));
+  updateCertPreview();
+}
+
+function getCerts() {
+  return JSON.parse(localStorage.getItem(CERTS_KEY) || '[]');
+}
+
+function saveCerts(list) {
+  localStorage.setItem(CERTS_KEY, JSON.stringify(list));
+}
+
+function updateCertPreview() {
+  setCertPreviewText('cert-prev-name', document.getElementById('cert-product').value || 'Nombre del producto');
+  setCertPreviewText('cert-prev-material', document.getElementById('cert-material').value || '—');
+  setCertPreviewText('cert-prev-stone', document.getElementById('cert-stone').value || '—');
+  setCertPreviewText('cert-prev-size', document.getElementById('cert-size').value || '—');
+  setCertPreviewText('cert-prev-client', document.getElementById('cert-client').value || 'Nombre del cliente');
+  setCertPreviewText('cert-prev-date', formatCertDate(document.getElementById('cert-date').value));
+}
+
+function saveCert() {
+  const productName = document.getElementById('cert-product').value.trim();
+  const clientName = document.getElementById('cert-client').value.trim();
+  if (!productName) { toast('Ingresa el nombre del producto', 'warn'); return; }
+  if (!clientName) { toast('Ingresa el nombre del cliente', 'warn'); return; }
+
+  certSeq++;
+  const serial = 'PIL-' + String(certSeq).padStart(6, '0');
+  const cert = {
+    serial,
+    productName,
+    material: document.getElementById('cert-material').value,
+    stone: document.getElementById('cert-stone').value || 'Sin piedra',
+    size: document.getElementById('cert-size').value,
+    price: document.getElementById('cert-price').value,
+    clientName,
+    purchaseDate: document.getElementById('cert-date').value,
+    issuedAt: new Date().toISOString(),
+  };
+  const list = getCerts();
+  list.unshift(cert);
+  saveCerts(list);
+  document.getElementById('cert-prev-serial').textContent = serial;
+  renderCertHistory();
+  toast('Certificado ' + serial + ' guardado');
+}
+
+function resetCertForm() {
+  ['cert-product', 'cert-material', 'cert-stone', 'cert-size', 'cert-price', 'cert-client'].forEach(id => setCertField(id, ''));
+  document.getElementById('cert-catalog-pick').value = '';
+  document.getElementById('cert-stone').value = '';
+  document.getElementById('cert-material').value = '';
+  document.getElementById('cert-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('cert-prev-serial').textContent = 'PIL-000000';
+  updateCertPreview();
+}
+
+function populateCertPreview(cert) {
+  setCertPreviewText('cert-prev-name', cert.productName);
+  setCertPreviewText('cert-prev-material', cert.material || '—');
+  setCertPreviewText('cert-prev-stone', cert.stone || '—');
+  setCertPreviewText('cert-prev-size', cert.size || '—');
+  setCertPreviewText('cert-prev-client', cert.clientName);
+  setCertPreviewText('cert-prev-date', formatCertDate(cert.purchaseDate));
+  document.getElementById('cert-prev-serial').textContent = cert.serial;
+}
+
+function renderCertHistory() {
+  const list = getCerts().slice(0, 8);
+  const el = document.getElementById('cert-history-list');
+  if (!list.length) {
+    el.innerHTML = '<p class="empty-state">Los certificados emitidos aparecerán aquí.</p>';
+    return;
+  }
+  el.innerHTML = list.map(c => `
+    <div class="hist-item">
+      <div class="hist-info">
+        <p class="hist-name">${c.productName}</p>
+        <p class="hist-sub">${c.clientName} · <span class="hist-serial">${c.serial}</span></p>
+      </div>
+      <div class="hist-meta">
+        <span class="hist-date">${formatCertDate(c.purchaseDate)}</span>
+        <button type="button" class="hist-reprint" data-reprint="${c.serial}">Reimprimir</button>
+      </div>
+    </div>`).join('');
+  el.querySelectorAll('[data-reprint]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const cert = getCerts().find(c => c.serial === btn.dataset.reprint);
+      if (cert) {
+        populateCertPreview(cert);
+        window.print();
+      }
+    });
+  });
+}
+
+function closeSidebar() {
+  document.getElementById('admin-sidebar').classList.remove('sidebar-open');
+  document.getElementById('sidebar-backdrop').classList.remove('visible');
+}
+
+document.getElementById('login-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-password').value;
+  const err = document.getElementById('login-error');
+  if (email === DEMO_EMAIL && pass === DEMO_PASS) {
+    sessionStorage.setItem(ADMIN_AUTH_KEY, '1');
+    err.classList.remove('visible');
+    showApp();
+  } else {
+    err.classList.add('visible');
+  }
+});
+
+document.getElementById('logout-btn').addEventListener('click', showLogin);
+
+document.querySelectorAll('.sidebar-link[data-panel]').forEach(link => {
+  link.addEventListener('click', () => {
+    if (link.dataset.panel === 'editor' && !editingId) return;
+    switchPanel(link.dataset.panel);
+  });
+});
+
+document.getElementById('btn-new-product').addEventListener('click', () => openEditor(null));
+document.getElementById('btn-cancel-edit').addEventListener('click', () => {
+  editingId = null;
+  document.getElementById('nav-editor').hidden = true;
+  switchPanel('products');
+});
+document.getElementById('product-form').addEventListener('submit', saveProduct);
+document.getElementById('btn-delete-product').addEventListener('click', deleteProduct);
+document.getElementById('product-search').addEventListener('input', e => renderProducts(e.target.value));
+
+document.getElementById('toggle-stock').addEventListener('click', function() {
+  setToggle('toggle-stock', !this.classList.contains('on'));
+});
+document.getElementById('toggle-featured').addEventListener('click', function() {
+  setToggle('toggle-featured', !this.classList.contains('on'));
+});
+
+document.getElementById('pf-image').addEventListener('input', e => updateImagePreview(e.target.value.trim()));
+document.getElementById('pf-image-file').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    document.getElementById('pf-image').value = reader.result;
+    updateImagePreview(reader.result);
+  };
+  reader.readAsDataURL(file);
+});
+
+['cert-product', 'cert-material', 'cert-stone', 'cert-size', 'cert-client', 'cert-date'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', updateCertPreview);
+  if (el && el.tagName === 'SELECT') el.addEventListener('change', updateCertPreview);
+});
+
+document.getElementById('cert-catalog-pick').addEventListener('change', e => {
+  if (e.target.value) prefillCertFromProduct(e.target.value);
+});
+
+document.getElementById('btn-save-cert').addEventListener('click', saveCert);
+document.getElementById('btn-print-cert').addEventListener('click', () => window.print());
+document.getElementById('btn-reset-cert').addEventListener('click', resetCertForm);
+
+document.getElementById('menu-toggle').addEventListener('click', () => {
+  document.getElementById('admin-sidebar').classList.toggle('sidebar-open');
+  document.getElementById('sidebar-backdrop').classList.toggle('visible');
+});
+document.getElementById('sidebar-backdrop').addEventListener('click', closeSidebar);
+
+if (isLoggedIn()) showApp();
+</script>
+</body>
+</html>

@@ -116,6 +116,41 @@ button { font-family: var(--sans); cursor: pointer; }
 .nav-cta:hover { background: var(--gold) !important; color: var(--cream) !important; }
 .nav-cta::after { display: none !important; }
 
+.nav-links-wrap { display: flex; align-items: center; gap: 32px; }
+.nav-profile {
+  display: flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px;
+  background: transparent; border: 1px solid var(--border-md);
+  border-radius: 50%; padding: 0; cursor: pointer;
+  color: var(--ink-mid); transition: all 0.2s var(--ease);
+}
+.nav-profile:hover, .nav-profile.nav-active {
+  background: var(--gold); border-color: var(--gold); color: var(--cream);
+}
+.nav-profile svg { width: 18px; height: 18px; }
+
+.nav-cart {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px;
+  background: transparent; border: 1px solid var(--border-md);
+  border-radius: 50%; padding: 0; cursor: pointer;
+  color: var(--ink-mid); transition: all 0.2s var(--ease);
+}
+.nav-cart:hover, .nav-cart.cart-open {
+  background: var(--gold); border-color: var(--gold); color: var(--cream);
+}
+.nav-cart svg { width: 18px; height: 18px; }
+.nav-cart-count {
+  position: absolute; top: -4px; right: -4px;
+  min-width: 18px; height: 18px; padding: 0 5px;
+  background: var(--gold); color: var(--cream);
+  font-size: 9px; font-weight: 500; letter-spacing: 0.04em;
+  border-radius: 99px; display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+}
+.nav-cart-count[hidden] { display: none; }
+
 .nav-hamburger {
   display: none; flex-direction: column; gap: 5px;
   background: none; border: none; padding: 8px;
@@ -353,8 +388,9 @@ button { font-family: var(--sans); cursor: pointer; }
 .card-overlay {
   position: absolute; inset: 0;
   background: rgba(26,23,20,0.08);
-  display: flex; align-items: flex-end; justify-content: center;
-  padding-bottom: 20px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-end;
+  gap: 8px; padding-bottom: 20px;
   opacity: 0; transition: opacity 0.3s;
 }
 .product-card:hover .card-overlay { opacity: 1; }
@@ -382,10 +418,426 @@ button { font-family: var(--sans); cursor: pointer; }
   color: var(--ink); margin-bottom: 5px;
 }
 .card-material { font-size: 12px; font-weight: 300; color: var(--stone); margin-bottom: 14px; }
-.card-footer { display: flex; justify-content: space-between; align-items: flex-end; }
+.card-desc {
+  font-size: 12px; font-weight: 300; color: var(--stone);
+  line-height: 1.6; margin-bottom: 12px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-meta {
+  display: flex; flex-wrap: wrap; gap: 6px 12px;
+  margin-bottom: 14px; padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.card-meta-item {
+  font-size: 10px; letter-spacing: 0.08em;
+  color: var(--stone); font-weight: 300;
+}
+.card-meta-item strong {
+  font-weight: 500; color: var(--ink-mid);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  font-size: 9px; margin-right: 4px;
+}
+.card-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 12px; flex-wrap: wrap;
+}
 .card-price {
   font-family: var(--serif); font-size: 22px;
-  font-weight: 400; color: var(--gold);
+  font-weight: 400; color: var(--gold); line-height: 1;
+}
+.card-price small {
+  display: block; font-family: var(--sans);
+  font-size: 9px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--stone);
+  margin-top: 4px; font-weight: 400;
+}
+.card-actions { display: flex; gap: 8px; flex: 1; justify-content: flex-end; }
+.btn-card {
+  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  font-weight: 500; padding: 10px 14px; border: none; cursor: pointer;
+  transition: all 0.2s var(--ease); white-space: nowrap;
+}
+.btn-card-view {
+  background: transparent; border: 1px solid var(--border-md);
+  color: var(--ink-mid);
+}
+.btn-card-view:hover { border-color: var(--gold); color: var(--gold); }
+.btn-card-cart {
+  background: var(--ink); color: var(--cream);
+}
+.btn-card-cart:hover { background: var(--gold); }
+.btn-card-cart:disabled {
+  opacity: 0.45; cursor: not-allowed;
+}
+.product-card .card-img-wrap { cursor: pointer; }
+.card-stock {
+  font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: #5a7a5a; font-weight: 500; margin-bottom: 8px;
+}
+.card-stock.out { color: var(--stone); }
+
+/* Piezas destacadas — Ver abajo a la derecha */
+.product-card--featured .card-overlay { display: none; }
+.product-card--featured .card-body {
+  display: flex; flex-direction: column;
+  padding-top: 16px; min-height: 118px;
+}
+.product-card--featured .card-name { margin-bottom: 4px; }
+.product-card--featured .card-material { margin-bottom: 0; flex: 1; }
+.card-body-foot {
+  display: flex; justify-content: flex-end;
+  margin-top: 14px; padding-top: 2px;
+}
+.btn-featured-view {
+  flex-shrink: 0;
+  font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+  font-weight: 500; color: var(--ink-mid);
+  background: transparent; border: 1px solid var(--border-md);
+  padding: 8px 14px; cursor: pointer;
+  transition: all 0.2s var(--ease); white-space: nowrap;
+}
+.btn-featured-view:hover {
+  border-color: var(--gold); color: var(--gold); background: rgba(184,150,90,0.06);
+}
+.card-actions--single { flex: 1; }
+.card-actions--single .btn-card-cart { flex: 1; }
+
+/* Carrito lateral */
+.cart-backdrop {
+  position: fixed; inset: 0; z-index: 280;
+  background: rgba(26,23,20,0.42);
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.35s var(--ease), visibility 0.35s;
+}
+.cart-backdrop.cart-backdrop-visible {
+  opacity: 1; visibility: visible;
+}
+.cart-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 300;
+  width: min(420px, 100vw);
+  background: var(--cream);
+  border-left: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.4s var(--ease);
+  box-shadow: -12px 0 40px rgba(26,23,20,0.12);
+}
+.cart-drawer.cart-drawer-open { transform: translateX(0); }
+.cart-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px 24px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.cart-header-title {
+  font-family: var(--serif); font-size: 26px; font-weight: 300;
+  color: var(--ink); line-height: 1;
+}
+.cart-header-count {
+  display: block; margin-top: 6px;
+  font-family: var(--sans); font-size: 10px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--stone); font-weight: 300;
+}
+.cart-close {
+  width: 36px; height: 36px;
+  background: transparent; border: 1px solid var(--border-md);
+  color: var(--ink-mid); font-size: 22px; line-height: 1;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.cart-close:hover { border-color: var(--gold); color: var(--gold); }
+.cart-items {
+  flex: 1; overflow-y: auto; padding: 8px 0;
+}
+.cart-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 56px 32px; gap: 12px;
+  min-height: 240px;
+}
+.cart-empty-icon {
+  width: 48px; height: 48px; color: var(--gold); opacity: 0.7;
+}
+.cart-empty p {
+  font-size: 14px; font-weight: 300; color: var(--stone); line-height: 1.7;
+  max-width: 240px;
+}
+.cart-item {
+  display: grid; grid-template-columns: 72px 1fr auto;
+  gap: 14px; align-items: start;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.cart-item-img {
+  aspect-ratio: 1; overflow: hidden; background: var(--cream-mid);
+}
+.cart-item-img img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.cart-item-info { min-width: 0; }
+.cart-item-name {
+  font-family: var(--serif); font-size: 16px; font-weight: 300;
+  color: var(--ink); margin-bottom: 4px; line-height: 1.25;
+}
+.cart-item-meta {
+  font-size: 10px; letter-spacing: 0.1em;
+  color: var(--stone); margin-bottom: 10px;
+}
+.cart-item-price {
+  font-family: var(--serif); font-size: 18px; color: var(--gold);
+  margin-bottom: 10px;
+}
+.cart-item-qty {
+  display: inline-flex; align-items: center;
+  border: 1px solid var(--border);
+}
+.cart-qty-btn {
+  width: 28px; height: 28px;
+  background: transparent; border: none;
+  color: var(--ink-mid); font-size: 16px; cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.cart-qty-btn:hover { background: var(--cream-dark); color: var(--gold); }
+.cart-item-qty span {
+  min-width: 28px; text-align: center;
+  font-size: 12px; font-weight: 400; color: var(--ink);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  line-height: 28px;
+}
+.cart-item-remove {
+  background: none; border: none; padding: 4px;
+  color: var(--stone); font-size: 20px; line-height: 1;
+  cursor: pointer; transition: color 0.2s;
+}
+.cart-item-remove:hover { color: var(--ink); }
+.cart-footer {
+  padding: 20px 24px 28px;
+  border-top: 1px solid var(--border);
+  background: var(--cream-dark);
+}
+.cart-subtotal-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 6px;
+}
+.cart-subtotal-label {
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--stone);
+}
+.cart-subtotal-value {
+  font-family: var(--serif); font-size: 28px; color: var(--gold);
+}
+.cart-subtotal-note {
+  font-size: 10px; font-weight: 300; color: var(--stone);
+  margin-bottom: 18px; letter-spacing: 0.06em;
+}
+.cart-footer .btn { width: 100%; margin-bottom: 10px; }
+.cart-footer .btn:last-child { margin-bottom: 0; }
+
+/* Sigue explorando — mismo tamaño que piezas destacadas */
+.recent-section {
+  margin-top: 72px; padding-top: 48px;
+  border-top: 1px solid var(--border);
+}
+.recent-section .section-header { margin-bottom: 28px; }
+.recent-card {
+  background: var(--cream-dark); overflow: hidden;
+  transition: transform 0.3s var(--ease);
+}
+.recent-card:hover { transform: translateY(-4px); z-index: 1; }
+.recent-card-img {
+  aspect-ratio: 4/5; overflow: hidden; background: var(--cream-mid);
+  cursor: pointer;
+}
+.recent-card-img img,
+.recent-card-img .product-img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.6s var(--ease);
+}
+.recent-card:hover .recent-card-img img { transform: scale(1.05); }
+.recent-card-body {
+  padding: 18px 18px 22px;
+  border-top: 1px solid var(--border);
+  display: flex; flex-direction: column; min-height: 130px;
+}
+.recent-card-cat {
+  font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 6px; display: block;
+}
+.recent-card-name {
+  font-family: var(--serif); font-size: 20px; font-weight: 300;
+  color: var(--ink); margin-bottom: 8px; line-height: 1.2;
+}
+.recent-card-price {
+  font-family: var(--serif); font-size: 22px; color: var(--gold);
+  margin-bottom: 0; flex: 1;
+}
+.recent-card .card-body-foot { margin-top: 14px; }
+
+/* Bento catálogo */
+.catalog-bento {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  grid-template-rows: repeat(2, minmax(160px, 220px));
+  gap: 8px;
+  margin-bottom: 56px;
+}
+.bento-tile {
+  position: relative; overflow: hidden;
+  border: none; padding: 0; cursor: pointer;
+  background-size: cover; background-position: center;
+  text-align: left; min-height: 160px;
+  transition: transform 0.35s var(--ease);
+}
+.bento-tile::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(26,23,20,0.72) 0%, rgba(26,23,20,0.18) 55%, rgba(26,23,20,0.08) 100%);
+  transition: background 0.3s;
+}
+.bento-tile:hover { transform: scale(1.015); z-index: 1; }
+.bento-tile:hover::before {
+  background: linear-gradient(to top, rgba(26,23,20,0.82) 0%, rgba(26,23,20,0.28) 60%, rgba(26,23,20,0.12) 100%);
+}
+.bento-tile--anillos { grid-column: 1; grid-row: 1 / 3; }
+.bento-tile--collares { grid-column: 2 / 4; grid-row: 1; }
+.bento-tile--aretes { grid-column: 2; grid-row: 2; }
+.bento-tile--pulseras { grid-column: 3; grid-row: 2; }
+.bento-content {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  justify-content: flex-end; padding: 22px 24px;
+  color: var(--cream);
+}
+.bento-eyebrow {
+  font-size: 9px; letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--gold-light); margin-bottom: 6px;
+}
+.bento-label {
+  font-family: var(--serif);
+  font-size: clamp(22px, 3vw, 32px); font-weight: 300;
+  line-height: 1.1; margin-bottom: 6px;
+}
+.bento-count {
+  font-size: 10px; letter-spacing: 0.15em;
+  color: rgba(253,250,245,0.65); text-transform: uppercase;
+}
+.bento-arrow {
+  position: absolute; top: 20px; right: 20px;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(253,250,245,0.35);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: var(--cream);
+  transition: background 0.2s, border-color 0.2s;
+}
+.bento-tile:hover .bento-arrow {
+  background: var(--gold); border-color: var(--gold);
+}
+
+/* Pagina producto */
+.product-page { padding: 32px 5vw 96px; }
+.breadcrumb {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
+  font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--stone); margin-bottom: 32px;
+}
+.breadcrumb a, .breadcrumb button {
+  background: none; border: none; padding: 0;
+  font: inherit; color: inherit; cursor: pointer;
+  transition: color 0.2s;
+}
+.breadcrumb a:hover, .breadcrumb button:hover { color: var(--gold); }
+.breadcrumb-sep { opacity: 0.45; }
+.breadcrumb-current { color: var(--gold); }
+.product-page-layout {
+  display: grid; grid-template-columns: 1.05fr 0.95fr;
+  gap: 56px; align-items: start;
+}
+.product-page-gallery {
+  position: sticky; top: calc(var(--nav-h) + 24px);
+  background: var(--cream-mid); overflow: hidden;
+}
+.product-page-gallery img {
+  width: 100%; aspect-ratio: 4/5; object-fit: cover;
+}
+.product-page-info { display: flex; flex-direction: column; gap: 18px; padding-top: 8px; }
+.product-page-cat {
+  font-size: 9px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold);
+}
+.product-page-name {
+  font-family: var(--serif);
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 300; line-height: 1.08; color: var(--ink);
+}
+.product-page-desc {
+  font-size: 15px; font-weight: 300; color: var(--stone); line-height: 1.9;
+}
+.product-page-details {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 16px 24px; padding: 24px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.product-page-detail dt {
+  font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 5px;
+}
+.product-page-detail dd {
+  font-size: 14px; font-weight: 300; color: var(--ink-mid);
+}
+.product-page-price {
+  font-family: var(--serif); font-size: 36px;
+  color: var(--gold); font-weight: 400; line-height: 1;
+}
+.product-page-price small {
+  display: block; font-family: var(--sans);
+  font-size: 10px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--stone);
+  margin-top: 8px; font-weight: 400;
+}
+.product-page-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+.product-page-stock {
+  font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  font-weight: 500; color: #5a7a5a;
+}
+.product-page-stock.out { color: var(--stone); }
+
+/* Pagina categoria */
+.category-hero { padding: 56px 0 0; }
+.category-hero .section-header { margin-bottom: 0; }
+
+/* Cuenta / auth */
+.auth-page {
+  min-height: calc(100vh - var(--nav-h));
+  display: flex; align-items: center; justify-content: center;
+  padding: 48px 5vw 96px;
+}
+.auth-card {
+  width: 100%; max-width: 440px;
+  background: var(--cream-dark);
+  border: 1px solid var(--border);
+  padding: 40px 36px 36px;
+}
+.auth-tabs {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  margin-bottom: 32px;
+}
+.auth-tab {
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  font-weight: 400; color: var(--stone);
+  background: transparent; border: 1px solid var(--border);
+  padding: 10px; cursor: pointer; transition: all 0.2s;
+}
+.auth-tab.auth-tab-active, .auth-tab:hover {
+  background: var(--gold); border-color: var(--gold); color: var(--cream);
+}
+.auth-form { display: none; flex-direction: column; gap: 18px; }
+.auth-form.auth-form-active { display: flex; }
+.auth-title {
+  font-family: var(--serif); font-size: 28px; font-weight: 300;
+  color: var(--ink); margin-bottom: 4px;
+}
+.auth-subtitle {
+  font-size: 13px; font-weight: 300; color: var(--stone); margin-bottom: 8px;
 }
 
 
@@ -788,6 +1240,20 @@ button { font-family: var(--sans); cursor: pointer; }
   .hero-title { font-size: clamp(42px,12vw,72px); }
   .values-grid { grid-template-columns: 1fr; }
   .product-grid { grid-template-columns: 1fr 1fr; }
+  .catalog-bento {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(3, minmax(140px, 180px));
+  }
+  .bento-tile--anillos { grid-column: 1 / 3; grid-row: 1; }
+  .bento-tile--collares { grid-column: 1 / 3; grid-row: 2; }
+  .bento-tile--aretes { grid-column: 1; grid-row: 3; }
+  .bento-tile--pulseras { grid-column: 2; grid-row: 3; }
+  .product-page-layout { grid-template-columns: 1fr; gap: 32px; }
+  .product-page-gallery { position: static; }
+  .product-page-details { grid-template-columns: 1fr; }
+  .card-actions { width: 100%; }
+  .card-footer { flex-direction: column; align-items: stretch; }
+  .cart-item { grid-template-columns: 64px 1fr auto; padding: 16px 18px; }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
   .cf-grid { grid-template-columns: 1fr; }
   .form-grid { grid-template-columns: 1fr; }
@@ -795,6 +1261,11 @@ button { font-family: var(--sans); cursor: pointer; }
 }
 @media (max-width: 420px) {
   .product-grid { grid-template-columns: 1fr; }
+  .catalog-bento { grid-template-columns: 1fr; grid-template-rows: auto; }
+  .bento-tile--anillos,
+  .bento-tile--collares,
+  .bento-tile--aretes,
+  .bento-tile--pulseras { grid-column: 1; grid-row: auto; min-height: 160px; }
   .hero-stats { flex-wrap: wrap; }
 }
 
@@ -809,11 +1280,27 @@ button { font-family: var(--sans); cursor: pointer; }
     <small>Joyería de Autor</small>
   </a>
 
-  <div class="nav-links">
-    <a data-nav="home">Inicio</a>
-    <a data-nav="catalog">Catálogo</a>
-    <a data-nav="about">Conócenos</a>
-    
+  <div class="nav-links-wrap">
+    <div class="nav-links">
+      <a data-nav="home">Inicio</a>
+      <a data-nav="catalog">Catálogo</a>
+      <a data-nav="about">Conócenos</a>
+    </div>
+    <button type="button" class="nav-cart" id="nav-cart-btn" aria-label="Abrir carrito de compras">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6 6h15l-1.5 9h-12L6 6z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+        <path d="M6 6L5 3H2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        <circle cx="9" cy="20" r="1.2" fill="currentColor"/>
+        <circle cx="18" cy="20" r="1.2" fill="currentColor"/>
+      </svg>
+      <span class="nav-cart-count" id="nav-cart-count" hidden>0</span>
+    </button>
+    <button type="button" class="nav-profile" data-nav="auth" aria-label="Mi cuenta">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.2"/>
+        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.2"/>
+      </svg>
+    </button>
   </div>
 
   <button class="nav-hamburger" aria-label="Abrir menú" data-nav="catalog">
@@ -823,6 +1310,27 @@ button { font-family: var(--sans); cursor: pointer; }
 
 
 <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+<div id="cart-backdrop" class="cart-backdrop" aria-hidden="true"></div>
+<aside id="cart-drawer" class="cart-drawer" aria-label="Carrito de compras" aria-hidden="true">
+  <header class="cart-header">
+    <div>
+      <h2 class="cart-header-title">Tu carrito</h2>
+      <span class="cart-header-count" id="cart-header-count">0 piezas</span>
+    </div>
+    <button type="button" class="cart-close" id="cart-close-btn" aria-label="Cerrar carrito">&times;</button>
+  </header>
+  <div class="cart-items" id="cart-items"></div>
+  <footer class="cart-footer" id="cart-footer">
+    <div class="cart-subtotal-row">
+      <span class="cart-subtotal-label">Subtotal</span>
+      <span class="cart-subtotal-value" id="cart-subtotal">$0</span>
+    </div>
+    <p class="cart-subtotal-note">IVA incluido · Envío calculado al confirmar</p>
+    <button type="button" class="btn btn-gold" id="cart-checkout-btn">Solicitar por WhatsApp</button>
+    <button type="button" class="btn btn-outline-gold" id="cart-continue-btn">Seguir comprando</button>
+  </footer>
+</aside>
 
 
 
@@ -929,17 +1437,82 @@ button { font-family: var(--sans); cursor: pointer; }
 
   <div class="catalog-main">
     <div class="container">
-      <div class="catalog-filters" role="group" aria-label="Filtrar por categoría">
-        <button class="filter-btn filter-active" data-filter="all">Todo</button>
-        <button class="filter-btn" data-filter="anillos">Anillos</button>
-        <button class="filter-btn" data-filter="collares">Collares</button>
-        <button class="filter-btn" data-filter="aretes">Aretes</button>
-        <button class="filter-btn" data-filter="pulseras">Pulseras</button>
-      </div>
-      <div class="product-grid" id="catalog-grid" role="list" aria-label="Catálogo de joyas"></div>
+      <div class="catalog-bento" id="catalog-bento" aria-label="Explorar por categoría"></div>
     </div>
   </div>
 
+</main>
+
+
+<main id="page-category" class="page">
+
+  <div class="category-hero">
+    <div class="container">
+      <nav class="breadcrumb" id="category-breadcrumb" aria-label="Ruta de navegación"></nav>
+      <div class="section-header center" style="padding-top:24px;">
+        <p class="section-eyebrow" id="category-eyebrow">Categoría</p>
+        <h1 class="section-title" id="category-title">Anillos</h1>
+        <p class="section-body" id="category-desc"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="catalog-main">
+    <div class="container">
+      <div class="product-grid" id="category-grid" role="list" aria-label="Piezas de la categoría"></div>
+    </div>
+  </div>
+
+</main>
+
+
+<main id="page-product" class="page">
+  <div class="product-page container">
+    <nav class="breadcrumb" id="product-breadcrumb" aria-label="Ruta de navegación"></nav>
+    <div id="product-page-content"></div>
+  </div>
+</main>
+
+
+<main id="page-auth" class="page">
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-tabs" role="tablist">
+        <button type="button" class="auth-tab auth-tab-active" data-auth-tab="login" role="tab" aria-selected="true">Iniciar sesión</button>
+        <button type="button" class="auth-tab" data-auth-tab="register" role="tab" aria-selected="false">Registrarse</button>
+      </div>
+      <form class="auth-form auth-form-active" id="auth-login-form" data-auth-panel="login">
+        <h1 class="auth-title">Bienvenida de nuevo</h1>
+        <p class="auth-subtitle">Accede a tu cuenta para ver pedidos y favoritos.</p>
+        <div>
+          <label class="form-label" for="login-email">Correo electrónico</label>
+          <input class="form-input" id="login-email" type="email" placeholder="tu@email.com" autocomplete="email" />
+        </div>
+        <div>
+          <label class="form-label" for="login-password">Contraseña</label>
+          <input class="form-input" id="login-password" type="password" placeholder="••••••••" autocomplete="current-password" />
+        </div>
+        <button type="submit" class="btn btn-gold" style="width:100%;justify-content:center;">Entrar</button>
+      </form>
+      <form class="auth-form" id="auth-register-form" data-auth-panel="register">
+        <h1 class="auth-title">Crea tu cuenta</h1>
+        <p class="auth-subtitle">Regístrate para guardar tus piezas favoritas y agilizar tus compras.</p>
+        <div>
+          <label class="form-label" for="register-name">Nombre completo</label>
+          <input class="form-input" id="register-name" type="text" placeholder="Tu nombre" autocomplete="name" />
+        </div>
+        <div>
+          <label class="form-label" for="register-email">Correo electrónico</label>
+          <input class="form-input" id="register-email" type="email" placeholder="tu@email.com" autocomplete="email" />
+        </div>
+        <div>
+          <label class="form-label" for="register-password">Contraseña</label>
+          <input class="form-input" id="register-password" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" />
+        </div>
+        <button type="submit" class="btn btn-gold" style="width:100%;justify-content:center;">Crear cuenta</button>
+      </form>
+    </div>
+  </div>
 </main>
 
 
@@ -1274,6 +1847,24 @@ const PILARICA_IMAGES = {
 
 const ProductModel = (() => {
   const CATEGORIES = ['anillos', 'collares', 'aretes', 'pulseras'];
+  const CATEGORY_LABELS = {
+    anillos: 'Anillos',
+    collares: 'Collares',
+    aretes: 'Aretes',
+    pulseras: 'Pulseras',
+  };
+  const CATEGORY_COVERS = {
+    anillos: 'img4',
+    collares: 'img1',
+    aretes: 'img5',
+    pulseras: 'img2',
+  };
+  const CATEGORY_DESCRIPTIONS = {
+    anillos: 'Anillos de autor en oro 18k con diamantes y piedras preciosas. Piezas únicas para momentos que perduran.',
+    collares: 'Collares exclusivos que combinan diseño contemporáneo con la elegancia de la alta joyería.',
+    aretes: 'Aretes delicados y expresivos, elaborados con los más finos materiales y acabados impecables.',
+    pulseras: 'Pulseras esculturales en oro 18k. Joyas que abrazan la muñeca con sofisticación y carácter.',
+  };
   const _products = [
     {
       id: 'PIL-001',
@@ -1283,6 +1874,7 @@ const ProductModel = (() => {
       stone: 'Diamantes Baguette',
       size: '42 cm',
       currency: 'MXN',
+      price: 48500,
       imageKey: 'img1',
       description: 'Cadena paperclip en oro 18k con colgante rectangular de esmalte rosa y diamantes baguette. Una fusión entre lo lúdico y lo sofisticado.',
       featured: true,
@@ -1296,6 +1888,7 @@ const ProductModel = (() => {
       stone: 'Diamantes Marquise & Baguette',
       size: '17 cm',
       currency: 'MXN',
+      price: 62000,
       imageKey: 'img2',
       description: 'Pulsera rígida de bolas texturizadas en oro 18k con tres medallones de diamantes marquise y baguette. Elegancia escultural.',
       featured: true,
@@ -1309,6 +1902,7 @@ const ProductModel = (() => {
       stone: 'Pavé de Diamantes',
       size: '45 cm',
       currency: 'MXN',
+      price: 55000,
       imageKey: 'img3',
       description: 'Dos corazones en pavé total de diamantes sobre cadena delicada de oro blanco. Romántico, atrevido y eterno.',
       featured: true,
@@ -1322,6 +1916,7 @@ const ProductModel = (() => {
       stone: 'Diamantes Amarillos & Blancos',
       size: 'Talla 14',
       currency: 'MXN',
+      price: 38000,
       imageKey: 'img4',
       description: 'Anillo abierto con alternancia de diamantes pera amarillos y blancos, montados en garras individuales. Delicado y espectacular a la vez.',
       featured: true,
@@ -1335,9 +1930,52 @@ const ProductModel = (() => {
       stone: 'Zafiro Azul & Diamantes',
       size: '1.8 cm',
       currency: 'MXN',
+      price: 42000,
       imageKey: 'img5',
       description: 'Aretes en forma de corazón con zafiro azul central rodeado de doble halo de diamantes. Inspirados en la profundidad del océano.',
       featured: true,
+      inStock: true,
+    },
+    {
+      id: 'PIL-006',
+      name: 'Collar Tennis Diamantes',
+      category: 'collares',
+      material: 'Oro Blanco 18k',
+      stone: 'Diamantes',
+      size: '40 cm',
+      currency: 'MXN',
+      price: 72000,
+      imageKey: 'img6',
+      description: 'Elegante collar tennis con diamantes engarzados en oro blanco. Brillo continuo para ocasiones especiales.',
+      featured: false,
+      inStock: true,
+    },
+    {
+      id: 'PIL-007',
+      name: 'Collar Cruz Zafiro',
+      category: 'collares',
+      material: 'Oro Amarillo 18k',
+      stone: 'Zafiro & Diamantes',
+      size: '45 cm',
+      currency: 'MXN',
+      price: 58000,
+      imageKey: 'img7',
+      description: 'Dije en forma de cruz con zafiros rectangulares rodeados de brillantes, montado en cadena de oro amarillo.',
+      featured: false,
+      inStock: true,
+    },
+    {
+      id: 'PIL-008',
+      name: 'Stack Anillos Oro & Diamante',
+      category: 'anillos',
+      material: 'Oro 18k',
+      stone: 'Diamantes',
+      size: 'Talla 12–14',
+      currency: 'MXN',
+      price: 45000,
+      imageKey: 'img8',
+      description: 'Combinación de anillos en oro amarillo y blanco con pavé de diamantes. Perfectos para usar juntos o por separado.',
+      featured: false,
       inStock: true,
     },
   ];
@@ -1358,12 +1996,122 @@ const ProductModel = (() => {
     getCategories() {
       return CATEGORIES;
     },
+    getCategoryLabel(cat) {
+      return CATEGORY_LABELS[cat] || cat;
+    },
+    getCategoryCoverKey(cat) {
+      return CATEGORY_COVERS[cat] || 'img1';
+    },
+    getCategoryDescription(cat) {
+      return CATEGORY_DESCRIPTIONS[cat] || '';
+    },
+    countByCategory(cat) {
+      return _products.filter(p => p.category === cat).length;
+    },
     formatPrice(product) {
       return new Intl.NumberFormat('es-MX', {
         style: 'currency',
-        currency: product.currency,
+        currency: product.currency || 'MXN',
         minimumFractionDigits: 0,
       }).format(product.price);
+    },
+  };
+})();
+
+</script>
+<script>
+
+const CartModel = (() => {
+  let _items = JSON.parse(localStorage.getItem('pilarica_cart') || '[]');
+
+  function _persist() {
+    try { localStorage.setItem('pilarica_cart', JSON.stringify(_items)); } catch (e) {}
+  }
+
+  return {
+    add(productId) {
+      const existing = _items.find(i => i.productId === productId);
+      if (existing) existing.qty += 1;
+      else _items.push({ productId, qty: 1, addedAt: new Date().toISOString() });
+      _persist();
+      return _items;
+    },
+    getItems() {
+      return _items.map(i => ({ ...i }));
+    },
+    setQty(productId, qty) {
+      const item = _items.find(i => i.productId === productId);
+      if (!item) return;
+      if (qty <= 0) {
+        _items = _items.filter(i => i.productId !== productId);
+      } else {
+        item.qty = qty;
+      }
+      _persist();
+    },
+    remove(productId) {
+      _items = _items.filter(i => i.productId !== productId);
+      _persist();
+    },
+    clear() {
+      _items = [];
+      _persist();
+    },
+    getCount() {
+      return _items.reduce((sum, i) => sum + i.qty, 0);
+    },
+    getTotal() {
+      return _items.reduce((sum, i) => {
+        const p = ProductModel.getById(i.productId);
+        return sum + (p ? p.price * i.qty : 0);
+      }, 0);
+    },
+  };
+})();
+
+const RecentViewModel = (() => {
+  const KEY = 'pilarica_recent';
+  const MAX = 8;
+  let _ids = JSON.parse(localStorage.getItem(KEY) || '[]');
+
+  function _persist() {
+    try { localStorage.setItem(KEY, JSON.stringify(_ids)); } catch (e) {}
+  }
+
+  return {
+    add(productId) {
+      _ids = [productId, ..._ids.filter(id => id !== productId)].slice(0, MAX);
+      _persist();
+    },
+    getExploreProducts(currentId, limit = 4) {
+      const all = ProductModel.getAll().filter(p => p.id !== currentId);
+      if (!all.length) return [];
+
+      const current = ProductModel.getById(currentId);
+      const picked = [];
+      const seen = new Set([currentId]);
+
+      _ids.filter(id => id !== currentId).forEach(id => {
+        if (picked.length >= limit) return;
+        const p = ProductModel.getById(id);
+        if (p && !seen.has(p.id)) {
+          picked.push(p);
+          seen.add(p.id);
+        }
+      });
+
+      const sameCat = current
+        ? all.filter(p => p.category === current.category && !seen.has(p.id))
+        : [];
+      const rest = all.filter(p => !seen.has(p.id) && !sameCat.includes(p));
+
+      [...sameCat, ...rest].forEach(p => {
+        if (picked.length >= limit) return;
+        picked.push(p);
+        seen.add(p.id);
+      });
+
+      return picked.slice(0, limit);
     },
   };
 })();
@@ -1486,28 +2234,174 @@ const StoreModel = (() => {
 
 const ComponentView = (() => {
 
+  function _productThumb(p, className = 'product-img') {
+    if (typeof PILARICA_IMAGES !== 'undefined' && PILARICA_IMAGES[p.imageKey]) {
+      return `<img src="${PILARICA_IMAGES[p.imageKey]}" alt="${p.name}" class="${className}" loading="lazy" />`;
+    }
+    return `<div class="product-img-placeholder">${_jewelSVG(p.category)}</div>`;
+  }
+
+  function productPage(p) {
+    const imgSrc = (typeof PILARICA_IMAGES !== 'undefined' && PILARICA_IMAGES[p.imageKey])
+      ? PILARICA_IMAGES[p.imageKey]
+      : '';
+    const gallery = imgSrc
+      ? `<img src="${imgSrc}" alt="${p.name}" />`
+      : `<div class="product-img-placeholder" style="aspect-ratio:4/5;display:flex;align-items:center;justify-content:center">${_jewelSVG(p.category)}</div>`;
+    const price = ProductModel.formatPrice(p);
+    const catLabel = ProductModel.getCategoryLabel(p.category);
+
+    return `
+      <div class="product-page-layout">
+        <div class="product-page-gallery">${gallery}</div>
+        <div class="product-page-info">
+          <span class="product-page-cat">${catLabel}</span>
+          <h1 class="product-page-name">${p.name}</h1>
+          <p class="product-page-stock ${p.inStock ? '' : 'out'}">${p.inStock ? 'Disponible · Envío a todo México' : 'Agotado temporalmente'}</p>
+          <p class="product-page-desc">${p.description}</p>
+          <dl class="product-page-details">
+            <div class="product-page-detail"><dt>SKU / Modelo</dt><dd>${p.id}</dd></div>
+            <div class="product-page-detail"><dt>Metal</dt><dd>${p.material}</dd></div>
+            <div class="product-page-detail"><dt>Piedra</dt><dd>${p.stone || 'Sin piedra'}</dd></div>
+            <div class="product-page-detail"><dt>Medida</dt><dd>${p.size || '-'}</dd></div>
+            <div class="product-page-detail"><dt>Certificado</dt><dd>Incluido con cada compra</dd></div>
+            <div class="product-page-detail"><dt>Colección</dt><dd>Pilarica 2025</dd></div>
+          </dl>
+          <p class="product-page-price">${price}<small>MXN · IVA incl.</small></p>
+          <div class="product-page-actions">
+            <button type="button" class="btn btn-gold" data-add-cart="${p.id}" ${p.inStock ? '' : 'disabled'}>${p.inStock ? 'Agregar al carrito' : 'No disponible'}</button>
+            <button type="button" class="btn btn-outline-gold" data-goto-category="${p.category}">Ver más ${catLabel}</button>
+          </div>
+        </div>
+      </div>
+      <section class="recent-section" id="product-explore-section" aria-labelledby="explore-title">
+        <div class="section-header">
+          <p class="section-eyebrow">Te podría gustar</p>
+          <h2 class="section-title" id="explore-title">Sigue <em>explorando</em></h2>
+          <p class="section-body">Más piezas de la colección para descubrir.</p>
+        </div>
+        <div class="product-grid" id="product-explore-grid"></div>
+      </section>`;
+  }
+
+  function featuredCard(p) {
+    const img = _productThumb(p);
+    const catLabel = ProductModel.getCategoryLabel(p.category);
+    const materialLine = `${p.material}${p.stone && p.stone !== 'Sin piedra' ? ' · ' + p.stone : ''}`;
+
+    return `
+      <article class="product-card product-card--featured" data-id="${p.id}">
+        <div class="card-img-wrap" data-view-product="${p.id}" role="button" tabindex="0" aria-label="Ver ${p.name}">
+          ${img}
+          <span class="card-badge">Destacado</span>
+        </div>
+        <div class="card-body">
+          <span class="card-cat">${catLabel}</span>
+          <h3 class="card-name">${p.name}</h3>
+          <p class="card-material">${materialLine}</p>
+          <div class="card-body-foot">
+            <button type="button" class="btn-featured-view" data-view-product="${p.id}">Ver</button>
+          </div>
+        </div>
+      </article>`;
+  }
+
+  function recentCard(p) {
+    const catLabel = ProductModel.getCategoryLabel(p.category);
+    const price = ProductModel.formatPrice(p);
+    return `
+      <article class="recent-card" data-id="${p.id}">
+        <div class="recent-card-img" data-view-product="${p.id}" role="button" tabindex="0" aria-label="Ver ${p.name}">
+          ${_productThumb(p)}
+        </div>
+        <div class="recent-card-body">
+          <span class="recent-card-cat">${catLabel}</span>
+          <h3 class="recent-card-name">${p.name}</h3>
+          <p class="recent-card-price">${price}</p>
+          <div class="card-body-foot">
+            <button type="button" class="btn-featured-view" data-view-product="${p.id}">Ver</button>
+          </div>
+        </div>
+      </article>`;
+  }
+
+  function cartItemRow(item, p) {
+    const lineTotal = ProductModel.formatPrice({ price: p.price * item.qty });
+    const unitPrice = ProductModel.formatPrice(p);
+    return `
+      <article class="cart-item" data-cart-id="${p.id}">
+        <div class="cart-item-img">${_productThumb(p)}</div>
+        <div class="cart-item-info">
+          <h3 class="cart-item-name">${p.name}</h3>
+          <p class="cart-item-meta">${p.id} · ${p.material}</p>
+          <p class="cart-item-price">${lineTotal}${item.qty > 1 ? `<small style="font-family:var(--sans);font-size:9px;color:var(--stone);margin-left:6px;">(${unitPrice} c/u)</small>` : ''}</p>
+          <div class="cart-item-qty">
+            <button type="button" class="cart-qty-btn" data-cart-minus="${p.id}" aria-label="Reducir cantidad">−</button>
+            <span>${item.qty}</span>
+            <button type="button" class="cart-qty-btn" data-cart-plus="${p.id}" aria-label="Aumentar cantidad">+</button>
+          </div>
+        </div>
+        <button type="button" class="cart-item-remove" data-cart-remove="${p.id}" aria-label="Quitar del carrito">&times;</button>
+      </article>`;
+  }
+
   function productCard(p, showCertBtn = false) {
     const img = (typeof PILARICA_IMAGES !== 'undefined' && PILARICA_IMAGES[p.imageKey])
       ? `<img src="${PILARICA_IMAGES[p.imageKey]}" alt="${p.name}" class="product-img" loading="lazy" />`
       : `<div class="product-img-placeholder">${_jewelSVG(p.category)}</div>`;
+    const price = ProductModel.formatPrice(p);
+    const catLabel = ProductModel.getCategoryLabel(p.category);
+    const stockLabel = p.inStock
+      ? '<span class="card-stock">Disponible</span>'
+      : '<span class="card-stock out">Agotado</span>';
 
     return `
       <article class="product-card" data-id="${p.id}">
-        <div class="card-img-wrap">
+        <div class="card-img-wrap" data-view-product="${p.id}" role="button" tabindex="0" aria-label="Ver ${p.name}">
           ${img}
           <div class="card-overlay">
-            ${showCertBtn ? `<button class="overlay-btn" data-cert-product="${p.id}">Generar certificado</button>` : ''}
+            <button type="button" class="overlay-btn" data-view-product="${p.id}">Ver pieza</button>
+            ${showCertBtn ? `<button type="button" class="overlay-btn" data-cert-product="${p.id}">Generar certificado</button>` : ''}
           </div>
           ${p.featured ? '<span class="card-badge">Destacado</span>' : ''}
         </div>
         <div class="card-body">
-          <span class="card-cat">${p.category}</span>
+          <span class="card-cat">${catLabel}</span>
           <h3 class="card-name">${p.name}</h3>
-          <p class="card-material">${p.material}${p.stone && p.stone !== 'Sin piedra' ? ' · ' + p.stone : ''}</p>
+          ${stockLabel}
+          <p class="card-desc">${p.description}</p>
+          <div class="card-meta">
+            <span class="card-meta-item"><strong>SKU</strong>${p.id}</span>
+            <span class="card-meta-item"><strong>Metal</strong>${p.material}</span>
+          </div>
           <div class="card-footer">
+            <div class="card-price">${price}<small>MXN · IVA incl.</small></div>
+            <div class="card-actions card-actions--single">
+              <button type="button" class="btn-card btn-card-cart" data-add-cart="${p.id}" ${p.inStock ? '' : 'disabled'}>Agregar</button>
+            </div>
           </div>
         </div>
       </article>`;
+  }
+
+  function bentoTile(cat) {
+    const label = ProductModel.getCategoryLabel(cat);
+    const count = ProductModel.countByCategory(cat);
+    const coverKey = ProductModel.getCategoryCoverKey(cat);
+    const bg = (typeof PILARICA_IMAGES !== 'undefined' && PILARICA_IMAGES[coverKey])
+      ? `style="background-image:url('${PILARICA_IMAGES[coverKey]}')"`
+      : '';
+    const countLabel = count === 1 ? '1 pieza' : `${count} piezas`;
+
+    return `
+      <button type="button" class="bento-tile bento-tile--${cat}" data-bento="${cat}" ${bg} aria-label="Ver ${label}">
+        <span class="bento-arrow" aria-hidden="true">&rarr;</span>
+        <span class="bento-content">
+          <span class="bento-eyebrow">Categoría</span>
+          <span class="bento-label">${label}</span>
+          <span class="bento-count">${countLabel}</span>
+        </span>
+      </button>`;
   }
 
   function valueCard(v) {
@@ -1591,7 +2485,7 @@ const ComponentView = (() => {
     return `<svg width="80" height="80" viewBox="0 0 120 120" fill="none">${map[cat] || map.anillos}</svg>`;
   }
 
-  return { productCard, valueCard, locationCard, socialLink, certHistoryItem };
+  return { productCard, featuredCard, productPage, recentCard, cartItemRow, bentoTile, valueCard, locationCard, socialLink, certHistoryItem, jewelSVG: _jewelSVG };
 })();
 
 </script>
@@ -1644,16 +2538,193 @@ const UIView = (() => {
   return { toast };
 })();
 
+const CartView = (() => {
+  let _open = false;
+
+  function updateBadge() {
+    const count = CartModel.getCount();
+    const badge = document.getElementById('nav-cart-count');
+    if (badge) {
+      badge.textContent = count;
+      badge.hidden = count === 0;
+    }
+    const headerCount = document.getElementById('cart-header-count');
+    if (headerCount) {
+      headerCount.textContent = count === 1 ? '1 pieza' : `${count} piezas`;
+    }
+  }
+
+  function render() {
+    const list = document.getElementById('cart-items');
+    const subtotalEl = document.getElementById('cart-subtotal');
+    const footer = document.getElementById('cart-footer');
+    if (!list) return;
+
+    const items = CartModel.getItems();
+    updateBadge();
+
+    if (!items.length) {
+      list.innerHTML = `
+        <div class="cart-empty">
+          <svg class="cart-empty-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 6h15l-1.5 9h-12L6 6z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+            <path d="M6 6L5 3H2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <p>Tu carrito está vacío.<br/>Explora nuestra colección y encuentra tu pieza ideal.</p>
+          <button type="button" class="btn btn-outline-gold" id="cart-empty-shop">Ver catálogo</button>
+        </div>`;
+      if (subtotalEl) subtotalEl.textContent = ProductModel.formatPrice({ price: 0 });
+      if (footer) footer.style.display = 'none';
+      const shopBtn = document.getElementById('cart-empty-shop');
+      if (shopBtn) shopBtn.addEventListener('click', () => {
+        close();
+        AppController.navigate('catalog');
+      });
+      return;
+    }
+
+    if (footer) footer.style.display = '';
+    list.innerHTML = items.map(item => {
+      const p = ProductModel.getById(item.productId);
+      return p ? ComponentView.cartItemRow(item, p) : '';
+    }).join('');
+
+    if (subtotalEl) subtotalEl.textContent = ProductModel.formatPrice({ price: CartModel.getTotal() });
+
+    list.querySelectorAll('[data-cart-minus]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.cartMinus;
+        const item = CartModel.getItems().find(i => i.productId === id);
+        if (item) CartModel.setQty(id, item.qty - 1);
+        render();
+      });
+    });
+    list.querySelectorAll('[data-cart-plus]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.cartPlus;
+        const item = CartModel.getItems().find(i => i.productId === id);
+        if (item) CartModel.setQty(id, item.qty + 1);
+        render();
+      });
+    });
+    list.querySelectorAll('[data-cart-remove]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        CartModel.remove(btn.dataset.cartRemove);
+        render();
+        UIView.toast('Pieza retirada del carrito', 'success');
+      });
+    });
+  }
+
+  function open() {
+    const drawer = document.getElementById('cart-drawer');
+    const backdrop = document.getElementById('cart-backdrop');
+    const btn = document.getElementById('nav-cart-btn');
+    if (!drawer || !backdrop) return;
+    render();
+    _open = true;
+    drawer.classList.add('cart-drawer-open');
+    drawer.setAttribute('aria-hidden', 'false');
+    backdrop.classList.add('cart-backdrop-visible');
+    backdrop.setAttribute('aria-hidden', 'false');
+    if (btn) btn.classList.add('cart-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close() {
+    const drawer = document.getElementById('cart-drawer');
+    const backdrop = document.getElementById('cart-backdrop');
+    const btn = document.getElementById('nav-cart-btn');
+    if (!drawer || !backdrop) return;
+    _open = false;
+    drawer.classList.remove('cart-drawer-open');
+    drawer.setAttribute('aria-hidden', 'true');
+    backdrop.classList.remove('cart-backdrop-visible');
+    backdrop.setAttribute('aria-hidden', 'true');
+    if (btn) btn.classList.remove('cart-open');
+    document.body.style.overflow = '';
+  }
+
+  function toggle() {
+    if (_open) close();
+    else open();
+  }
+
+  function buildWhatsAppUrl() {
+    const items = CartModel.getItems();
+    const lines = items.map(item => {
+      const p = ProductModel.getById(item.productId);
+      if (!p) return null;
+      return `• ${p.name} (${p.id}) x${item.qty} — ${ProductModel.formatPrice({ price: p.price * item.qty })}`;
+    }).filter(Boolean);
+    const total = ProductModel.formatPrice({ price: CartModel.getTotal() });
+    const text = encodeURIComponent(
+      `Hola Pilarica, me interesa solicitar el siguiente pedido:\n\n${lines.join('\n')}\n\nSubtotal: ${total} MXN\n\n¿Me pueden ayudar con disponibilidad y envío?`
+    );
+    return `https://wa.me/529611555744?text=${text}`;
+  }
+
+  function bind() {
+    const openBtn = document.getElementById('nav-cart-btn');
+    const closeBtn = document.getElementById('cart-close-btn');
+    const backdrop = document.getElementById('cart-backdrop');
+    const continueBtn = document.getElementById('cart-continue-btn');
+    const checkoutBtn = document.getElementById('cart-checkout-btn');
+
+    if (openBtn) openBtn.addEventListener('click', toggle);
+    if (closeBtn) closeBtn.addEventListener('click', close);
+    if (backdrop) backdrop.addEventListener('click', close);
+    if (continueBtn) continueBtn.addEventListener('click', close);
+    if (checkoutBtn) {
+      checkoutBtn.addEventListener('click', () => {
+        if (!CartModel.getCount()) {
+          UIView.toast('Agrega piezas al carrito primero', 'warn');
+          return;
+        }
+        window.open(buildWhatsAppUrl(), '_blank');
+      });
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && _open) close();
+    });
+    updateBadge();
+  }
+
+  return { render, open, close, toggle, updateBadge, bind };
+})();
+
 </script>
 <script>
 
 const AppController = (() => {
-  const PAGES = ['home', 'catalog', 'about', 'dashboard'];
+  const PAGES = ['home', 'catalog', 'category', 'product', 'about', 'auth', 'dashboard'];
   let _currentPage = 'home';
-  let _currentFilter = 'all';
+  let _currentCategory = 'anillos';
+  let _currentProductId = null;
+
+  const ROUTE_MAP = {
+    inicio: 'home', home: 'home',
+    catalogo: 'catalog', catalog: 'catalog',
+    categoria: 'category', category: 'category',
+    producto: 'product', product: 'product',
+    conocenos: 'about', about: 'about',
+    cuenta: 'auth', auth: 'auth',
+  };
 
   function navigate(page, opts = {}) {
     if (!PAGES.includes(page)) return;
+
+    if (page === 'product') {
+      const p = ProductModel.getById(opts.productId);
+      if (!p) { navigate('catalog'); return; }
+      _currentProductId = opts.productId;
+    }
+    if (page === 'category') {
+      const cat = opts.category || _currentCategory;
+      if (!ProductModel.getCategories().includes(cat)) { navigate('catalog'); return; }
+      _currentCategory = cat;
+    }
+
     _currentPage = page;
     PAGES.forEach(p => {
       const el = document.getElementById(`page-${p}`);
@@ -1662,58 +2733,280 @@ const AppController = (() => {
     const target = document.getElementById(`page-${page}`);
     if (target) {
       target.style.display = 'block';
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    document.querySelectorAll('[data-nav]').forEach(a => {
-      a.classList.toggle('nav-active', a.dataset.nav === page);
-    });
+
+    _updateNavActive(page);
     const footer = document.getElementById('site-footer');
     if (footer) footer.style.display = page === 'dashboard' ? 'none' : '';
-    if (page === 'catalog') _renderCatalog(_currentFilter);
-    if (page === 'home') _renderHomeFeatured();
-    if (page === 'about') _renderAbout();
+
+    if (page === 'home') {
+      _renderHomeFeatured();
+      document.title = 'Pilarica - Joyería de Autor';
+    }
+    if (page === 'catalog') {
+      _renderCatalogBento();
+      document.title = 'Catálogo — Pilarica';
+    }
+    if (page === 'category') _renderCategoryPage(_currentCategory);
+    if (page === 'product') _renderProductPage(_currentProductId);
+    if (page === 'about') {
+      _renderAbout();
+      document.title = 'Conócenos — Pilarica';
+    }
+    if (page === 'auth') document.title = 'Mi cuenta — Pilarica';
     if (page === 'dashboard') _renderDashboard();
+
     if (opts.anchor) {
       setTimeout(() => {
         const el = document.getElementById(opts.anchor);
         if (el) el.scrollIntoView({ behavior: 'smooth' });
       }, 100);
     }
+
+    if (!opts.skipHash) _updateHash(page, opts);
   }
+
+  function _updateNavActive(page) {
+    document.querySelectorAll('[data-nav]').forEach(el => {
+      const nav = el.dataset.nav;
+      let active = nav === page;
+      if (nav === 'catalog' && (page === 'category' || page === 'product')) active = true;
+      el.classList.toggle('nav-active', active);
+    });
+  }
+
+  function _updateHash(page, opts = {}) {
+    let hash = '/inicio';
+    if (page === 'catalog') hash = '/catalogo';
+    else if (page === 'category') hash = `/categoria/${opts.category || _currentCategory}`;
+    else if (page === 'product') hash = `/producto/${opts.productId || _currentProductId}`;
+    else if (page === 'about') hash = '/conocenos';
+    else if (page === 'auth') hash = '/cuenta';
+    const next = '#' + hash;
+    if (location.hash !== next) history.pushState(null, '', next);
+  }
+
+  function _parseHash() {
+    const raw = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
+    const page = ROUTE_MAP[raw[0]] || 'home';
+    const opts = { skipHash: true };
+    if (page === 'category' && raw[1]) opts.category = raw[1];
+    if (page === 'product' && raw[1]) opts.productId = raw[1];
+    return { page, opts };
+  }
+
+  function viewProduct(id) {
+    navigate('product', { productId: id });
+  }
+
+  function viewCategory(cat) {
+    navigate('category', { category: cat });
+  }
+
+  function _breadcrumbHtml(items) {
+    return items.map((item, i) => {
+      const isLast = i === items.length - 1;
+      const sep = i > 0 ? '<span class="breadcrumb-sep" aria-hidden="true">/</span>' : '';
+      if (isLast) return `${sep}<span class="breadcrumb-current">${item.label}</span>`;
+      if (item.action === 'nav') {
+        return `${sep}<button type="button" data-nav="${item.target}">${item.label}</button>`;
+      }
+      if (item.action === 'category') {
+        return `${sep}<button type="button" data-goto-category="${item.target}">${item.label}</button>`;
+      }
+      return `${sep}<span>${item.label}</span>`;
+    }).join('');
+  }
+
+  function _bindBreadcrumb(container) {
+    if (!container) return;
+    container.querySelectorAll('[data-nav]').forEach(el => {
+      el.addEventListener('click', () => navigate(el.dataset.nav));
+    });
+    container.querySelectorAll('[data-goto-category]').forEach(el => {
+      el.addEventListener('click', () => viewCategory(el.dataset.gotoCategory));
+    });
+  }
+
+  function _renderCatalogBento() {
+    const bento = document.getElementById('catalog-bento');
+    if (!bento) return;
+    bento.innerHTML = ProductModel.getCategories()
+      .map(cat => ComponentView.bentoTile(cat))
+      .join('');
+    bento.querySelectorAll('[data-bento]').forEach(btn => {
+      btn.addEventListener('click', () => viewCategory(btn.dataset.bento));
+    });
+  }
+
+  function _renderCategoryPage(cat) {
+    const label = ProductModel.getCategoryLabel(cat);
+    const title = document.getElementById('category-title');
+    const desc = document.getElementById('category-desc');
+    const eyebrow = document.getElementById('category-eyebrow');
+    const breadcrumb = document.getElementById('category-breadcrumb');
+    const grid = document.getElementById('category-grid');
+
+    if (title) title.textContent = label;
+    if (desc) desc.textContent = ProductModel.getCategoryDescription(cat);
+    if (eyebrow) eyebrow.textContent = 'Categoría';
+    if (breadcrumb) {
+      breadcrumb.innerHTML = _breadcrumbHtml([
+        { label: 'Inicio', action: 'nav', target: 'home' },
+        { label: 'Catálogo', action: 'nav', target: 'catalog' },
+        { label: label },
+      ]);
+      _bindBreadcrumb(breadcrumb);
+    }
+    if (grid) {
+      const products = ProductModel.getByCategory(cat);
+      grid.innerHTML = products.length
+        ? products.map(p => ComponentView.productCard(p, false)).join('')
+        : '<p class="empty-state">Pronto habrá más piezas en esta categoría.</p>';
+      _bindCardEvents(grid);
+      _observeCards(grid);
+    }
+    document.title = `${label} — Pilarica`;
+  }
+
+  function _renderProductPage(id) {
+    const p = ProductModel.getById(id);
+    if (!p) return;
+    RecentViewModel.add(id);
+    const catLabel = ProductModel.getCategoryLabel(p.category);
+    const breadcrumb = document.getElementById('product-breadcrumb');
+    const content = document.getElementById('product-page-content');
+
+    if (breadcrumb) {
+      breadcrumb.innerHTML = _breadcrumbHtml([
+        { label: 'Inicio', action: 'nav', target: 'home' },
+        { label: 'Catálogo', action: 'nav', target: 'catalog' },
+        { label: catLabel, action: 'category', target: p.category },
+        { label: p.name },
+      ]);
+      _bindBreadcrumb(breadcrumb);
+    }
+    if (content) {
+      content.innerHTML = ComponentView.productPage(p);
+      _renderExploreProducts(id);
+      _bindCardEvents(content);
+    }
+    document.title = `${p.name} — Pilarica`;
+  }
+
+  function _renderExploreProducts(currentId) {
+    const grid = document.getElementById('product-explore-grid');
+    const section = document.getElementById('product-explore-section');
+    if (!grid) return;
+    const items = RecentViewModel.getExploreProducts(currentId, 4);
+    if (!items.length) {
+      if (section) section.style.display = 'none';
+      return;
+    }
+    if (section) section.style.display = '';
+    grid.innerHTML = items.map(p => ComponentView.recentCard(p)).join('');
+    _bindCardEvents(grid);
+    grid.querySelectorAll('.recent-card-img').forEach(el => {
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          viewProduct(el.dataset.viewProduct);
+        }
+      });
+    });
+  }
+
+  function addToCart(productId) {
+    const p = ProductModel.getById(productId);
+    if (!p || !p.inStock) return;
+    CartModel.add(productId);
+    CartView.updateBadge();
+    UIView.toast(`${p.name} agregado al carrito`, 'success');
+  }
+
   function _renderHomeFeatured() {
     const grid = document.getElementById('home-featured-grid');
     if (!grid) return;
     const products = ProductModel.getFeatured().slice(0, 4);
-    grid.innerHTML = products.map(p => ComponentView.productCard(p, true)).join('');
+    grid.innerHTML = products.map(p => ComponentView.featuredCard(p)).join('');
     _bindCardEvents(grid);
-  }
-  function _renderCatalog(filter) {
-    _currentFilter = filter;
-    document.querySelectorAll('[data-filter]').forEach(btn => {
-      btn.classList.toggle('filter-active', btn.dataset.filter === filter);
-    });
-
-    const grid = document.getElementById('catalog-grid');
-    if (!grid) return;
-    const products = ProductModel.getByCategory(filter);
-    grid.innerHTML = products.map(p => ComponentView.productCard(p, false)).join('');
-    _bindCardEvents(grid);
-  }
-
-  function _bindCatalogFilters() {
-    document.querySelectorAll('[data-filter]').forEach(btn => {
-      btn.addEventListener('click', () => _renderCatalog(btn.dataset.filter));
-    });
+    _observeCards(grid);
   }
 
   function _bindCardEvents(container) {
+    container.querySelectorAll('[data-view-product]').forEach(el => {
+      const open = e => {
+        e.preventDefault();
+        e.stopPropagation();
+        viewProduct(el.dataset.viewProduct);
+      };
+      el.addEventListener('click', open);
+      if (el.classList.contains('card-img-wrap')) {
+        el.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            viewProduct(el.dataset.viewProduct);
+          }
+        });
+      }
+    });
+    container.querySelectorAll('[data-add-cart]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        addToCart(btn.dataset.addCart);
+      });
+    });
+    container.querySelectorAll('[data-goto-category]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        viewCategory(btn.dataset.gotoCategory);
+      });
+    });
     container.querySelectorAll('[data-cert-product]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.dataset.certProduct;
-        _prefillCertForm(id);
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        _prefillCertForm(btn.dataset.certProduct);
         navigate('dashboard');
       });
     });
+  }
+
+  function _observeCards(container) {
+    container.querySelectorAll('.product-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transition = 'opacity 0.5s ease';
+      if (window._cardObserver) window._cardObserver.observe(el);
+    });
+  }
+
+  function _bindAuth() {
+    document.querySelectorAll('[data-auth-tab]').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const panel = tab.dataset.authTab;
+        document.querySelectorAll('[data-auth-tab]').forEach(t => {
+          t.classList.toggle('auth-tab-active', t.dataset.authTab === panel);
+          t.setAttribute('aria-selected', t.dataset.authTab === panel ? 'true' : 'false');
+        });
+        document.querySelectorAll('[data-auth-panel]').forEach(form => {
+          form.classList.toggle('auth-form-active', form.dataset.authPanel === panel);
+        });
+      });
+    });
+    const loginForm = document.getElementById('auth-login-form');
+    const registerForm = document.getElementById('auth-register-form');
+    if (loginForm) {
+      loginForm.addEventListener('submit', e => {
+        e.preventDefault();
+        UIView.toast('Inicio de sesión disponible próximamente.', 'success');
+      });
+    }
+    if (registerForm) {
+      registerForm.addEventListener('submit', e => {
+        e.preventDefault();
+        UIView.toast('Registro disponible próximamente.', 'success');
+      });
+    }
   }
   function _renderAbout() {
     const brand = StoreModel.getBrand();
@@ -1848,7 +3141,11 @@ const AppController = (() => {
         navigate(page, anchor ? { anchor } : {});
       });
     });
-    _bindCatalogFilters();
+    window.addEventListener('popstate', () => {
+      const { page, opts } = _parseHash();
+      navigate(page, opts);
+    });
+    _bindAuth();
     ['cert-product','cert-material','cert-stone','cert-size','cert-client','cert-date'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.addEventListener('input', _updateCertPreview);
@@ -1869,10 +3166,13 @@ const AppController = (() => {
         contactForm.reset();
       });
     }
-    navigate('home');
+    CartView.bind();
+    const { page, opts } = location.hash ? _parseHash() : { page: 'home', opts: { skipHash: true } };
+    navigate(page, opts);
+    if (!location.hash) _updateHash('home');
   }
 
-  return { init, navigate };
+  return { init, navigate, viewProduct, viewCategory, addToCart };
 })();
 
 </script>
@@ -1894,8 +3194,9 @@ const AppController = (() => {
       if (e.isIntersecting) e.target.style.opacity = '1';
     });
   }, { threshold: 0.1 });
+  window._cardObserver = observer;
 
-  document.querySelectorAll('.product-card, .value-card, .location-card').forEach(el => {
+  document.querySelectorAll('.value-card, .location-card, .bento-tile').forEach(el => {
     el.style.opacity = '0';
     el.style.transition = 'opacity 0.5s ease';
     observer.observe(el);
