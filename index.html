@@ -1826,7 +1826,7 @@ button { font-family: var(--sans); cursor: pointer; }
     </div>
   </div>
   <div class="footer-bottom container">
-    <p>© 2025 Pilarica Joyería de Autor · Todos los derechos reservados.</p>
+    <p>© 2025 Pilarica Joyería de Autor · Todos los derechos reservados. · <a href="admin.html" style="color:rgba(253,250,245,0.25);text-decoration:none;">Admin</a></p>
     <p>Con amor y tradición *</p>
   </div>
 </footer>
@@ -1843,178 +1843,44 @@ const PILARICA_IMAGES = {
 };
 
 </script>
+<script src="js/pilarica-config.js"></script>
+<script src="js/pilarica-store.js"></script>
 <script>
 
 const ProductModel = (() => {
-  const CATEGORIES = ['anillos', 'collares', 'aretes', 'pulseras'];
-  const CATEGORY_LABELS = {
-    anillos: 'Anillos',
-    collares: 'Collares',
-    aretes: 'Aretes',
-    pulseras: 'Pulseras',
-  };
-  const CATEGORY_COVERS = {
-    anillos: 'img4',
-    collares: 'img1',
-    aretes: 'img5',
-    pulseras: 'img2',
-  };
-  const CATEGORY_DESCRIPTIONS = {
-    anillos: 'Anillos de autor en oro 18k con diamantes y piedras preciosas. Piezas únicas para momentos que perduran.',
-    collares: 'Collares exclusivos que combinan diseño contemporáneo con la elegancia de la alta joyería.',
-    aretes: 'Aretes delicados y expresivos, elaborados con los más finos materiales y acabados impecables.',
-    pulseras: 'Pulseras esculturales en oro 18k. Joyas que abrazan la muñeca con sofisticación y carácter.',
-  };
-  const _products = [
-    {
-      id: 'PIL-001',
-      name: 'Collar Candy Baguette',
-      category: 'collares',
-      material: 'Oro 18k',
-      stone: 'Diamantes Baguette',
-      size: '42 cm',
-      currency: 'MXN',
-      price: 48500,
-      imageKey: 'img1',
-      description: 'Cadena paperclip en oro 18k con colgante rectangular de esmalte rosa y diamantes baguette. Una fusión entre lo lúdico y lo sofisticado.',
-      featured: true,
-      inStock: true,
-    },
-    {
-      id: 'PIL-002',
-      name: 'Pulsera Marquise Star',
-      category: 'pulseras',
-      material: 'Oro 18k',
-      stone: 'Diamantes Marquise & Baguette',
-      size: '17 cm',
-      currency: 'MXN',
-      price: 62000,
-      imageKey: 'img2',
-      description: 'Pulsera rígida de bolas texturizadas en oro 18k con tres medallones de diamantes marquise y baguette. Elegancia escultural.',
-      featured: true,
-      inStock: true,
-    },
-    {
-      id: 'PIL-003',
-      name: 'Collar Doble Corazón',
-      category: 'collares',
-      material: 'Oro Blanco 18k',
-      stone: 'Pavé de Diamantes',
-      size: '45 cm',
-      currency: 'MXN',
-      price: 55000,
-      imageKey: 'img3',
-      description: 'Dos corazones en pavé total de diamantes sobre cadena delicada de oro blanco. Romántico, atrevido y eterno.',
-      featured: true,
-      inStock: true,
-    },
-    {
-      id: 'PIL-004',
-      name: 'Anillo Pear Bicolor',
-      category: 'anillos',
-      material: 'Oro 18k',
-      stone: 'Diamantes Amarillos & Blancos',
-      size: 'Talla 14',
-      currency: 'MXN',
-      price: 38000,
-      imageKey: 'img4',
-      description: 'Anillo abierto con alternancia de diamantes pera amarillos y blancos, montados en garras individuales. Delicado y espectacular a la vez.',
-      featured: true,
-      inStock: true,
-    },
-    {
-      id: 'PIL-005',
-      name: 'Aretes Corazón Zafiro',
-      category: 'aretes',
-      material: 'Oro Rose 18k',
-      stone: 'Zafiro Azul & Diamantes',
-      size: '1.8 cm',
-      currency: 'MXN',
-      price: 42000,
-      imageKey: 'img5',
-      description: 'Aretes en forma de corazón con zafiro azul central rodeado de doble halo de diamantes. Inspirados en la profundidad del océano.',
-      featured: true,
-      inStock: true,
-    },
-    {
-      id: 'PIL-006',
-      name: 'Collar Tennis Diamantes',
-      category: 'collares',
-      material: 'Oro Blanco 18k',
-      stone: 'Diamantes',
-      size: '40 cm',
-      currency: 'MXN',
-      price: 72000,
-      imageKey: 'img6',
-      description: 'Elegante collar tennis con diamantes engarzados en oro blanco. Brillo continuo para ocasiones especiales.',
-      featured: false,
-      inStock: true,
-    },
-    {
-      id: 'PIL-007',
-      name: 'Collar Cruz Zafiro',
-      category: 'collares',
-      material: 'Oro Amarillo 18k',
-      stone: 'Zafiro & Diamantes',
-      size: '45 cm',
-      currency: 'MXN',
-      price: 58000,
-      imageKey: 'img7',
-      description: 'Dije en forma de cruz con zafiros rectangulares rodeados de brillantes, montado en cadena de oro amarillo.',
-      featured: false,
-      inStock: true,
-    },
-    {
-      id: 'PIL-008',
-      name: 'Stack Anillos Oro & Diamante',
-      category: 'anillos',
-      material: 'Oro 18k',
-      stone: 'Diamantes',
-      size: 'Talla 12–14',
-      currency: 'MXN',
-      price: 45000,
-      imageKey: 'img8',
-      description: 'Combinación de anillos en oro amarillo y blanco con pavé de diamantes. Perfectos para usar juntos o por separado.',
-      featured: false,
-      inStock: true,
-    },
-  ];
+  let _products = [];
+
+  function _sync() {
+    _products = typeof PilaricaStore !== 'undefined' ? PilaricaStore.getProducts() : [];
+  }
+
+  async function init() {
+    if (typeof PilaricaStore !== 'undefined') await PilaricaStore.init();
+    _sync();
+  }
+
+  async function reload() {
+    if (typeof PilaricaStore !== 'undefined') await PilaricaStore.reload();
+    _sync();
+  }
+
   return {
-    getAll() {
-      return [..._products];
-    },
-    getFeatured() {
-      return _products.filter(p => p.featured);
-    },
+    init,
+    reload,
+    getAll() { return [..._products]; },
+    getFeatured() { return _products.filter(p => p.featured); },
     getByCategory(cat) {
       if (cat === 'all') return [..._products];
       return _products.filter(p => p.category === cat);
     },
-    getById(id) {
-      return _products.find(p => p.id === id) || null;
-    },
-    getCategories() {
-      return CATEGORIES;
-    },
-    getCategoryLabel(cat) {
-      return CATEGORY_LABELS[cat] || cat;
-    },
-    getCategoryCoverKey(cat) {
-      return CATEGORY_COVERS[cat] || 'img1';
-    },
-    getCategoryDescription(cat) {
-      return CATEGORY_DESCRIPTIONS[cat] || '';
-    },
-    countByCategory(cat) {
-      return _products.filter(p => p.category === cat).length;
-    },
-    formatPrice(product) {
-      return new Intl.NumberFormat('es-MX', {
-        style: 'currency',
-        currency: product.currency || 'MXN',
-        minimumFractionDigits: 0,
-      }).format(product.price);
-    },
+    getById(id) { return _products.find(p => p.id === id) || null; },
+    getCategories() { return PilaricaStore.CATEGORIES; },
+    getCategoryLabel(cat) { return PilaricaStore.CATEGORY_LABELS[cat] || cat; },
+    getCategoryCoverUrl(cat) { return PilaricaStore.getCategoryCover(cat); },
+    getCategoryDescription(cat) { return PilaricaStore.CATEGORY_DESCRIPTIONS[cat] || ''; },
+    countByCategory(cat) { return _products.filter(p => p.category === cat).length; },
+    formatPrice(product) { return PilaricaStore.formatPrice(product.price, product.currency); },
+    getProductImage(p) { return PilaricaStore.getProductImage(p); },
   };
 })();
 
@@ -2235,16 +2101,15 @@ const StoreModel = (() => {
 const ComponentView = (() => {
 
   function _productThumb(p, className = 'product-img') {
-    if (typeof PILARICA_IMAGES !== 'undefined' && PILARICA_IMAGES[p.imageKey]) {
-      return `<img src="${PILARICA_IMAGES[p.imageKey]}" alt="${p.name}" class="${className}" loading="lazy" />`;
+    const src = ProductModel.getProductImage(p);
+    if (src) {
+      return `<img src="${src}" alt="${p.name}" class="${className}" loading="lazy" />`;
     }
     return `<div class="product-img-placeholder">${_jewelSVG(p.category)}</div>`;
   }
 
   function productPage(p) {
-    const imgSrc = (typeof PILARICA_IMAGES !== 'undefined' && PILARICA_IMAGES[p.imageKey])
-      ? PILARICA_IMAGES[p.imageKey]
-      : '';
+    const imgSrc = ProductModel.getProductImage(p);
     const gallery = imgSrc
       ? `<img src="${imgSrc}" alt="${p.name}" />`
       : `<div class="product-img-placeholder" style="aspect-ratio:4/5;display:flex;align-items:center;justify-content:center">${_jewelSVG(p.category)}</div>`;
@@ -2346,8 +2211,9 @@ const ComponentView = (() => {
   }
 
   function productCard(p, showCertBtn = false) {
-    const img = (typeof PILARICA_IMAGES !== 'undefined' && PILARICA_IMAGES[p.imageKey])
-      ? `<img src="${PILARICA_IMAGES[p.imageKey]}" alt="${p.name}" class="product-img" loading="lazy" />`
+    const src = ProductModel.getProductImage(p);
+    const img = src
+      ? `<img src="${src}" alt="${p.name}" class="product-img" loading="lazy" />`
       : `<div class="product-img-placeholder">${_jewelSVG(p.category)}</div>`;
     const price = ProductModel.formatPrice(p);
     const catLabel = ProductModel.getCategoryLabel(p.category);
@@ -2387,10 +2253,8 @@ const ComponentView = (() => {
   function bentoTile(cat) {
     const label = ProductModel.getCategoryLabel(cat);
     const count = ProductModel.countByCategory(cat);
-    const coverKey = ProductModel.getCategoryCoverKey(cat);
-    const bg = (typeof PILARICA_IMAGES !== 'undefined' && PILARICA_IMAGES[coverKey])
-      ? `style="background-image:url('${PILARICA_IMAGES[coverKey]}')"`
-      : '';
+    const coverUrl = ProductModel.getCategoryCoverUrl(cat);
+    const bg = coverUrl ? `style="background-image:url('${coverUrl}')"` : '';
     const countLabel = count === 1 ? '1 pieza' : `${count} piezas`;
 
     return `
@@ -2711,17 +2575,18 @@ const AppController = (() => {
     cuenta: 'auth', auth: 'auth',
   };
 
-  function navigate(page, opts = {}) {
+  async function navigate(page, opts = {}) {
     if (!PAGES.includes(page)) return;
+    await ProductModel.reload();
 
     if (page === 'product') {
       const p = ProductModel.getById(opts.productId);
-      if (!p) { navigate('catalog'); return; }
+      if (!p) { await navigate('catalog'); return; }
       _currentProductId = opts.productId;
     }
     if (page === 'category') {
       const cat = opts.category || _currentCategory;
-      if (!ProductModel.getCategories().includes(cat)) { navigate('catalog'); return; }
+      if (!ProductModel.getCategories().includes(cat)) { await navigate('catalog'); return; }
       _currentCategory = cat;
     }
 
@@ -3179,11 +3044,13 @@ const AppController = (() => {
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const grid = document.getElementById('home-values-grid');
-    if (grid) {
-      grid.innerHTML = StoreModel.getBrand().values.map(v => ComponentView.valueCard(v)).join('');
-    }
-    AppController.init();
+    ProductModel.init().then(() => {
+      const grid = document.getElementById('home-values-grid');
+      if (grid) {
+        grid.innerHTML = StoreModel.getBrand().values.map(v => ComponentView.valueCard(v)).join('');
+      }
+      AppController.init();
+    });
   });
   document.querySelectorAll('.about-hero-img img, section img').forEach(img => {
     img.addEventListener('mouseenter', () => img.style.transform = 'scale(1.05)');

@@ -574,7 +574,7 @@ img { display: block; max-width: 100%; }
     <p class="login-brand">Pilarica</p>
     <p class="login-tagline">Panel administrativo</p>
     <h1 class="login-title">Iniciar sesión</h1>
-    <p class="login-sub">Acceso exclusivo para administradores de la tienda.</p>
+    <p class="login-sub">Acceso con tu cuenta de administrador en Supabase.</p>
     <form id="login-form">
       <div class="form-row">
         <label class="form-label" for="login-email">Correo</label>
@@ -892,22 +892,13 @@ img { display: block; max-width: 100%; }
 
 <div id="toast" class="toast" role="alert"></div>
 
+<script src="js/pilarica-config.js"></script>
+<script src="js/pilarica-store.js"></script>
 <script>
 const ADMIN_AUTH_KEY = 'pilarica_admin_session';
-const PRODUCTS_KEY = 'pilarica_admin_products';
-const CERTS_KEY = 'pilarica_certs';
+const CERTS_KEY = PilaricaConfig.certsKey;
 const DEMO_EMAIL = 'admin@pilaricajoyas.com.mx';
 const DEMO_PASS = 'pilarica2025';
-
-const SEED_PRODUCTS = [
-  { id: 'PIL-001', name: 'Collar Candy Baguette', category: 'collares', material: 'Oro 18k', stone: 'Diamantes Baguette', size: '42 cm', currency: 'MXN', price: 48500, image: '', description: 'Cadena paperclip en oro 18k con colgante rectangular de esmalte rosa y diamantes baguette.', featured: true, inStock: true },
-  { id: 'PIL-002', name: 'Pulsera Marquise Star', category: 'pulseras', material: 'Oro 18k', stone: 'Diamantes Marquise', size: '17 cm', currency: 'MXN', price: 62000, image: '', description: 'Pulsera rígida de bolas texturizadas en oro 18k con medallones de diamantes.', featured: true, inStock: true },
-  { id: 'PIL-003', name: 'Collar Doble Corazón', category: 'collares', material: 'Oro Blanco 18k', stone: 'Pavé de Diamantes', size: '45 cm', currency: 'MXN', price: 55000, image: '', description: 'Dos corazones en pavé total de diamantes sobre cadena delicada.', featured: true, inStock: true },
-  { id: 'PIL-004', name: 'Anillo Pear Bicolor', category: 'anillos', material: 'Oro 18k', stone: 'Diamantes Amarillos', size: 'Talla 14', currency: 'MXN', price: 38000, image: '', description: 'Anillo abierto con alternancia de diamantes pera amarillos y blancos.', featured: true, inStock: true },
-  { id: 'PIL-005', name: 'Aretes Corazón Zafiro', category: 'aretes', material: 'Oro Rose 18k', stone: 'Zafiro Azul', size: '1.8 cm', currency: 'MXN', price: 42000, image: '', description: 'Aretes en forma de corazón con zafiro azul central.', featured: true, inStock: true },
-];
-
-const CATEGORIES = { anillos: 'Anillos', collares: 'Collares', aretes: 'Aretes', pulseras: 'Pulseras' };
 
 let products = [];
 let editingId = null;
@@ -945,28 +936,33 @@ function toast(msg, type) {
 }
 
 function formatPrice(n) {
-  return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 0 }).format(n);
+  return PilaricaStore.formatPrice(n);
 }
 
-function loadProducts() {
-  const saved = localStorage.getItem(PRODUCTS_KEY);
-  products = saved ? JSON.parse(saved) : [...SEED_PRODUCTS];
-  persistProducts();
-}
-
-function persistProducts() {
-  localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+async function loadProducts() {
+  if (PilaricaConfig.storage === 'supabase') {
+    await PilaricaStore.initAdmin();
+  } else {
+    await PilaricaStore.init();
+  }
+  products = PilaricaStore.getProducts(true);
 }
 
 function isLoggedIn() {
+  if (PilaricaConfig.storage === 'supabase') {
+    return !!PilaricaStore.getAccessToken();
+  }
   return sessionStorage.getItem(ADMIN_AUTH_KEY) === '1';
 }
 
-function showApp() {
+async function showApp() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app-shell').classList.add('app-visible');
-  document.getElementById('admin-user-label').textContent = DEMO_EMAIL;
-  loadProducts();
+  const label = PilaricaConfig.storage === 'supabase'
+    ? (PilaricaStore.getSessionEmail() || DEMO_EMAIL)
+    : DEMO_EMAIL;
+  document.getElementById('admin-user-label').textContent = label;
+  await loadProducts();
   renderProducts();
   renderStats();
   fillCertCatalogPick();
@@ -978,6 +974,7 @@ function showApp() {
 
 function showLogin() {
   sessionStorage.removeItem(ADMIN_AUTH_KEY);
+  PilaricaStore.signOut();
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('app-shell').classList.remove('app-visible');
 }
@@ -1025,14 +1022,14 @@ function renderProducts(filter) {
     <tr data-id="${p.id}">
       <td>
         <div style="display:flex;align-items:center;gap:12px;">
-          ${p.image ? `<img class="prod-thumb" src="${p.image}" alt="" />` : `<div class="prod-thumb" style="display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--stone);">IMG</div>`}
+          ${PilaricaStore.getProductImage(p) ? `<img class="prod-thumb" src="${PilaricaStore.getProductImage(p)}" alt="" />` : `<div class="prod-thumb" style="display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--stone);">IMG</div>`}
           <div class="prod-name-cell">
             <strong>${p.name}</strong>
             <span>${p.id}</span>
           </div>
         </div>
       </td>
-      <td class="hide-mobile">${CATEGORIES[p.category] || p.category}</td>
+      <td class="hide-mobile">${PilaricaStore.CATEGORY_LABELS[p.category] || p.category}</td>
       <td>${formatPrice(p.price)}</td>
       <td class="hide-mobile">
         ${p.inStock ? '<span class="badge badge-green">Disponible</span>' : '<span class="badge badge-muted">Agotado</span>'}
@@ -1103,7 +1100,7 @@ function updateImagePreview(src) {
   }
 }
 
-function saveProduct(e) {
+async function saveProduct(e) {
   e.preventDefault();
   const data = {
     id: document.getElementById('pf-id').value.trim(),
@@ -1118,39 +1115,59 @@ function saveProduct(e) {
     currency: 'MXN',
     inStock: getToggle('toggle-stock'),
     featured: getToggle('toggle-featured'),
+    active: true,
+    imageKey: editingId ? (products.find(x => x.id === editingId)?.imageKey || '') : '',
   };
   if (!data.id || !data.name || !data.price) {
     toast('Completa SKU, nombre y precio', 'warn');
     return;
   }
-  const idx = products.findIndex(p => p.id === data.id);
-  if (editingId) {
-    if (idx >= 0) products[idx] = data;
-  } else {
-    if (idx >= 0) { toast('Ese SKU ya existe', 'warn'); return; }
-    products.push(data);
+  if (!editingId && products.some(p => p.id === data.id)) {
+    toast('Ese SKU ya existe', 'warn');
+    return;
   }
-  persistProducts();
-  renderProducts();
-  renderStats();
-  fillCertCatalogPick();
-  updateCertPreview();
-  toast(editingId ? 'Pieza actualizada' : 'Pieza creada');
-  editingId = null;
-  document.getElementById('nav-editor').hidden = true;
-  switchPanel('products');
+  try {
+    await PilaricaStore.upsertProduct(data);
+    products = PilaricaStore.getProducts(true);
+    renderProducts();
+    renderStats();
+    fillCertCatalogPick();
+    updateCertPreview();
+    toast(editingId ? 'Pieza actualizada en el catálogo' : 'Pieza creada en el catálogo');
+    editingId = null;
+    document.getElementById('nav-editor').hidden = true;
+    switchPanel('products');
+  } catch (err) {
+    console.error(err);
+    if ((err.message || '').includes('Sesión expirada')) {
+      toast('Sesión expirada. Vuelve a iniciar sesión.', 'warn');
+      showLogin();
+      return;
+    }
+    if ((err.message || '').includes('permisos')) {
+      toast('Falta configurar permisos en Supabase. Ejecuta database/fix-rls.sql', 'warn');
+      return;
+    }
+    toast('No se pudo guardar en la base de datos', 'warn');
+  }
 }
 
-function deleteProduct() {
+async function deleteProduct() {
   if (!editingId || !confirm('¿Eliminar esta pieza del catálogo?')) return;
-  products = products.filter(p => p.id !== editingId);
-  persistProducts();
-  renderProducts();
-  renderStats();
-  toast('Pieza eliminada');
-  editingId = null;
-  document.getElementById('nav-editor').hidden = true;
-  switchPanel('products');
+  try {
+    await PilaricaStore.deleteProduct(editingId);
+    products = PilaricaStore.getProducts(true);
+    renderProducts();
+    renderStats();
+    fillCertCatalogPick();
+    toast('Pieza eliminada del catálogo');
+    editingId = null;
+    document.getElementById('nav-editor').hidden = true;
+    switchPanel('products');
+  } catch (err) {
+    console.error(err);
+    toast('No se pudo eliminar de la base de datos', 'warn');
+  }
 }
 
 function fillCertCatalogPick() {
@@ -1288,16 +1305,25 @@ function closeSidebar() {
   document.getElementById('sidebar-backdrop').classList.remove('visible');
 }
 
-document.getElementById('login-form').addEventListener('submit', e => {
+document.getElementById('login-form').addEventListener('submit', async e => {
   e.preventDefault();
   const email = document.getElementById('login-email').value.trim();
   const pass = document.getElementById('login-password').value;
   const err = document.getElementById('login-error');
-  if (email === DEMO_EMAIL && pass === DEMO_PASS) {
-    sessionStorage.setItem(ADMIN_AUTH_KEY, '1');
-    err.classList.remove('visible');
-    showApp();
-  } else {
+  err.classList.remove('visible');
+
+  try {
+    if (PilaricaConfig.storage === 'supabase') {
+      await PilaricaStore.signIn(email, pass);
+    } else if (email === DEMO_EMAIL && pass === DEMO_PASS) {
+      sessionStorage.setItem(ADMIN_AUTH_KEY, '1');
+    } else {
+      err.classList.add('visible');
+      return;
+    }
+    await showApp();
+  } catch (loginErr) {
+    console.error(loginErr);
     err.classList.add('visible');
   }
 });
@@ -1360,7 +1386,9 @@ document.getElementById('menu-toggle').addEventListener('click', () => {
 });
 document.getElementById('sidebar-backdrop').addEventListener('click', closeSidebar);
 
-if (isLoggedIn()) showApp();
+if (isLoggedIn()) {
+  showApp().catch(() => showLogin());
+}
 </script>
 </body>
 </html>
