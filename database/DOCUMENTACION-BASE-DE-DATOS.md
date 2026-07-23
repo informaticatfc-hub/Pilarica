@@ -2,8 +2,8 @@
 
 **Proyecto:** Tienda en línea + Panel administrativo  
 **Motor:** PostgreSQL (Supabase)  
-**Fecha:** Julio 2025  
-**Estado:** Fase 1 en producción parcial — catálogo en la nube; pagos y escritura admin pendientes
+**Fecha:** Julio 2025 (actualizado 4 jul 2026)  
+**Estado:** Fase 1 operativa — catálogo, contenido web, imágenes Storage, certificados en Supabase; pagos y login cliente fuera de alcance
 
 ---
 
@@ -23,18 +23,25 @@ Pilarica utiliza **Supabase** como backend: una base de datos PostgreSQL en la n
 | Proyecto Supabase creado | ✅ |
 | Tablas y relaciones definidas | ✅ |
 | Tienda lee catálogo desde Supabase | ✅ |
-| Productos de demostración cargados (`seed.sql`) | ✅ |
-| Seguridad básica (Row Level Security) | ✅ |
+| Admin CRUD productos (soft delete) | ✅ |
+| Contenido web editable (`site_content`) | ✅ |
+| Imágenes sitio → Storage `site-images` | ✅ |
+| Imágenes productos → Storage `product-images` | ✅ |
+| Certificados en Supabase (`certificates`) | ✅ |
+| Login admin con Supabase Auth | ✅ |
+| Productos demo (`seed.sql`) | ✅ |
+| Seguridad RLS | ✅ |
+| Checkout WhatsApp (sin pedidos en BD) | ✅ |
 
-**Lo que falta (acordado para fases siguientes)**
+**Fuera de alcance actual (acordado)**
 
 | Módulo | Estado |
 |--------|--------|
-| Admin escribe inventario en Supabase | ✅ |
-| Certificados guardados en base de datos | ⏳ Pendiente |
-| Login admin con Supabase Auth | ✅ (requiere setup-admin.sql) |
-| Subida de imágenes a Supabase Storage | ⏳ Pendiente |
-| Pedidos y pagos en línea | ⏳ Fase 2 |
+| Pagos en línea | ❌ Descartado por ahora |
+| Login/registro clientes | ❌ Descartado por ahora |
+| Pedidos persistidos (`orders`) | ⏳ Fase 2 |
+| Dominio + hosting producción | ⏳ Pendiente OK del cliente |
+| `siteBaseUrl` en producción | ⏳ Al conectar dominio |
 
 ---
 
@@ -70,15 +77,22 @@ Sitio web (HTML estático)
             ├── Tablas de negocio
             ├── auth.users (usuarios)
             ├── Row Level Security
-            └── Storage (futuro: imágenes)
+            └── Storage (site-images, product-images)
 ```
 
 ### Archivos SQL del repositorio
 
 | Archivo | Propósito |
 |---------|-----------|
-| `database/schema.sql` | Crea tablas, índices, triggers y políticas de seguridad |
-| `database/seed.sql` | Inserta 8 productos de demostración (opcional) |
+| `database/schema.sql` | Tablas, índices, triggers y RLS base |
+| `database/site-content.sql` | Tabla `site_content` + textos iniciales |
+| `database/site-content-sections.sql` | Valores, equipo, contacto, redes |
+| `database/seed.sql` | 8 productos demo (opcional) |
+| `database/setup-admin.sql` | Registrar admin en `admin_profiles` |
+| `database/fix-rls.sql` | Corregir permisos admin (productos + contenido) |
+| `database/site-storage.sql` | Bucket `site-images` |
+| `database/product-storage.sql` | Bucket `product-images` |
+| `database/certificates-rls.sql` | Permisos explícitos certificados |
 | `database/DOCUMENTACION-BASE-DE-DATOS.md` | Este documento |
 
 ---

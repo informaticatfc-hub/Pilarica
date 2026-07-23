@@ -17,8 +17,10 @@ create table if not exists products (
   price         numeric(12,2) not null default 0,
   currency      text not null default 'MXN',
   image_url     text,
+  gallery_urls  jsonb not null default '[]'::jsonb,
   featured      boolean not null default false,
   in_stock      boolean not null default true,
+  stock_qty     integer not null default 1 check (stock_qty >= 0),
   active        boolean not null default true,
   created_at    timestamptz not null default now(),
   updated_at    timestamptz not null default now()
