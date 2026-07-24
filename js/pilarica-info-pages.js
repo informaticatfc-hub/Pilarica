@@ -218,8 +218,15 @@ const PilaricaInfoPages = (() => {
   /** Páginas legales fijas en código — no se sobrescriben desde Supabase ni admin */
   const STATIC_SLUGS = ['aviso-de-privacidad', 'terminos-y-condiciones'];
 
+  function getStaticPage(slug) {
+    if (!STATIC_SLUGS.includes(slug)) return null;
+    const page = DEFAULTS[slug];
+    return page ? { ...page, items: page.items || [] } : null;
+  }
+
   function merge(remote) {
-    const src = remote || {};
+    const src = { ...(remote || {}) };
+    STATIC_SLUGS.forEach(slug => { delete src[slug]; });
     const out = {};
     SLUGS.forEach(slug => {
       const base = DEFAULTS[slug] || {};
@@ -248,6 +255,8 @@ const PilaricaInfoPages = (() => {
   }
 
   function get(slug) {
+    const staticPage = getStaticPage(slug);
+    if (staticPage) return staticPage;
     return getMergedPages()[slug] || null;
   }
 
@@ -316,7 +325,7 @@ const PilaricaInfoPages = (() => {
   }
 
   function renderPage(slug) {
-    const page = get(slug);
+    const page = getStaticPage(slug) || get(slug);
     if (!page) return false;
 
     const eyebrow = document.getElementById('info-eyebrow');
@@ -337,7 +346,9 @@ const PilaricaInfoPages = (() => {
           : '<p class="info-empty">Las preguntas frecuentes se publicarán aquí pronto.</p>';
         if (items.length) bindFaq(content);
       } else if (page.bodyHtml && page.bodyHtml.trim()) {
-        content.innerHTML = formatBodyHtml(page.bodyHtml);
+        content.innerHTML = STATIC_SLUGS.includes(slug)
+          ? page.bodyHtml.trim()
+          : formatBodyHtml(page.bodyHtml);
         _bindNavButtons(content);
         _bindInfoLinks(content);
       } else {
@@ -375,6 +386,7 @@ const PilaricaInfoPages = (() => {
     DEFAULTS,
     STATIC_SLUGS,
     TITLE_DOC,
+    getStaticPage,
     merge,
     getMergedPages,
     get,
