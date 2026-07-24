@@ -202,7 +202,15 @@ img { display: block; max-width: 100%; }
   position: absolute; top: 2px; right: 2px; width: 20px; height: 20px; padding: 0;
   border: none; background: rgba(0,0,0,0.55); color: #fff; cursor: pointer; font-size: 14px; line-height: 1;
 }
-.gallery-add-row { display: flex; flex-direction: column; gap: 8px; }
+.social-row-remove {
+  margin-top: 8px; padding: 6px 10px; font-size: 9px;
+  background: transparent; border: 1px solid rgba(139,69,69,0.35);
+  color: #8b4545; cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.social-row-remove:hover { background: #8b4545; color: var(--cream); }
+.social-row-card {
+  border: 1px solid var(--border); padding: 14px; margin-bottom: 12px; background: var(--cream-mid);
+}
 
 /* ——— App shell ——— */
 .app-shell { display: none; min-height: 100vh; }
@@ -1053,12 +1061,59 @@ img { display: block; max-width: 100%; }
           <div class="form-row"><label class="form-label">Etiqueta</label><input class="form-input" id="ct-social-eyebrow" /></div>
           <div class="form-row"><label class="form-label">Título</label><div class="rich-text-input" id="ct-social-title" contenteditable="true"></div></div>
           <div class="form-row"><label class="form-label">Texto</label><textarea class="form-textarea" id="ct-social-body"></textarea></div>
-          <div class="form-grid">
-            <div class="form-row"><label class="form-label">Plataforma</label><input class="form-input" id="ct-social-platform" placeholder="Instagram" /></div>
-            <div class="form-row"><label class="form-label">Usuario</label><input class="form-input" id="ct-social-handle" placeholder="@pilarica.joyas" /></div>
-          </div>
-          <div class="form-row"><label class="form-label">URL</label><input class="form-input" id="ct-social-url" placeholder="https://instagram.com/..." /></div>
+          <div id="ct-social-list"></div>
+          <button type="button" class="btn btn-outline btn-sm" id="ct-social-add" style="margin-bottom:12px;">+ Agregar red social</button>
           <button type="button" class="btn btn-gold btn-sm" data-save-content="social">Guardar redes</button>
+        </div>
+      </div>
+
+      <div class="admin-card" style="margin-top:20px;">
+        <div class="admin-card-head"><span class="admin-card-title">Páginas informativas</span></div>
+        <div class="admin-card-body">
+          <p class="content-field-note" style="margin-top:0;margin-bottom:20px;">Contenido del footer: Sobre Pilarica, Cuidado de joyas, FAQ y textos legales. Las páginas legales vacías solo muestran el encabezado en la tienda hasta que publiques el texto.</p>
+
+          <p class="editor-side-title">Sobre Pilarica</p>
+          <div class="form-row"><label class="form-label">Etiqueta</label><input class="form-input" id="ct-info-sobre-eyebrow" /></div>
+          <div class="form-row"><label class="form-label">Título</label><div class="rich-text-input" id="ct-info-sobre-title" contenteditable="true"></div></div>
+          <div class="form-row"><label class="form-label">Introducción</label><textarea class="form-textarea" id="ct-info-sobre-lead"></textarea></div>
+          <div class="form-row"><label class="form-label">Contenido</label><div class="rich-text-input info-body-editor" id="ct-info-sobre-body" contenteditable="true" data-placeholder="Secciones de la página…"></div></div>
+          <button type="button" class="btn btn-outline btn-sm" data-save-content="info_sobre">Guardar Sobre Pilarica</button>
+
+          <hr style="margin:24px 0;border:none;border-top:1px solid var(--border);" />
+
+          <p class="editor-side-title">Cuidado de joyas</p>
+          <div class="form-row"><label class="form-label">Etiqueta</label><input class="form-input" id="ct-info-cuidado-eyebrow" /></div>
+          <div class="form-row"><label class="form-label">Título</label><div class="rich-text-input" id="ct-info-cuidado-title" contenteditable="true"></div></div>
+          <div class="form-row"><label class="form-label">Introducción</label><textarea class="form-textarea" id="ct-info-cuidado-lead"></textarea></div>
+          <div class="form-row"><label class="form-label">Contenido (guía)</label><div class="rich-text-input info-body-editor" id="ct-info-cuidado-body" contenteditable="true"></div></div>
+          <button type="button" class="btn btn-outline btn-sm" data-save-content="info_cuidado">Guardar Cuidado de joyas</button>
+
+          <hr style="margin:24px 0;border:none;border-top:1px solid var(--border);" />
+
+          <p class="editor-side-title">Preguntas frecuentes</p>
+          <div class="form-row"><label class="form-label">Etiqueta</label><input class="form-input" id="ct-info-faq-eyebrow" /></div>
+          <div class="form-row"><label class="form-label">Título</label><div class="rich-text-input" id="ct-info-faq-title" contenteditable="true"></div></div>
+          <div class="form-row"><label class="form-label">Introducción</label><textarea class="form-textarea" id="ct-info-faq-lead"></textarea></div>
+          <div id="ct-faq-list"></div>
+          <button type="button" class="btn btn-outline btn-sm" id="ct-faq-add" style="margin-bottom:12px;">+ Agregar pregunta</button>
+          <button type="button" class="btn btn-outline btn-sm" data-save-content="info_faq">Guardar FAQ</button>
+
+          <hr style="margin:24px 0;border:none;border-top:1px solid var(--border);" />
+
+          <p class="editor-side-title">Textos legales</p>
+          <p class="content-field-note" style="margin-top:0;">Escribe el contenido completo de cada documento. Déjalos vacíos hasta tener el texto revisado por el negocio.</p>
+
+          <div class="form-row"><label class="form-label">Política de garantía — título</label><div class="rich-text-input" id="ct-info-garantia-title" contenteditable="true"></div></div>
+          <div class="form-row"><label class="form-label">Política de garantía — texto</label><div class="rich-text-input info-body-editor" id="ct-info-garantia-body" contenteditable="true"></div></div>
+          <button type="button" class="btn btn-outline btn-sm" data-save-content="info_garantia" style="margin-bottom:16px;">Guardar garantía</button>
+
+          <div class="form-row"><label class="form-label">Aviso de privacidad — título</label><div class="rich-text-input" id="ct-info-privacidad-title" contenteditable="true"></div></div>
+          <div class="form-row"><label class="form-label">Aviso de privacidad — texto</label><div class="rich-text-input info-body-editor" id="ct-info-privacidad-body" contenteditable="true"></div></div>
+          <button type="button" class="btn btn-outline btn-sm" data-save-content="info_privacidad" style="margin-bottom:16px;">Guardar privacidad</button>
+
+          <div class="form-row"><label class="form-label">Términos y condiciones — título</label><div class="rich-text-input" id="ct-info-terminos-title" contenteditable="true"></div></div>
+          <div class="form-row"><label class="form-label">Términos y condiciones — texto</label><div class="rich-text-input info-body-editor" id="ct-info-terminos-body" contenteditable="true"></div></div>
+          <button type="button" class="btn btn-outline btn-sm" data-save-content="info_terminos">Guardar términos</button>
         </div>
       </div>
     </section>
@@ -1206,6 +1261,7 @@ img { display: block; max-width: 100%; }
 <script src="js/pilarica-config.js"></script>
 <script src="js/pilarica-store.js"></script>
 <script src="js/pilarica-site-content.js"></script>
+<script src="js/pilarica-info-pages.js"></script>
 <script>
 const ADMIN_AUTH_KEY = 'pilarica_admin_session';
 const CERTS_KEY = PilaricaConfig.certsKey;
@@ -1771,13 +1827,128 @@ function loadContentForms() {
   set('ct-loc-hours-sun', (loc.hours || [])[2]?.time || '');
   set('ct-loc-map', loc.mapUrl);
 
-  const social = (c.social.items || [])[0] || {};
   set('ct-social-eyebrow', c.social.eyebrow);
   setRich('ct-social-title', c.social.titleHtml);
   set('ct-social-body', c.social.body);
-  set('ct-social-platform', social.platform);
-  set('ct-social-handle', social.handle);
-  set('ct-social-url', social.url);
+  renderSocialFields(c.social.items || []);
+  loadInfoPageForms();
+}
+
+function loadInfoPageForms() {
+  if (typeof PilaricaInfoPages === 'undefined') return;
+  const pages = PilaricaInfoPages.getMergedPages();
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+  const setRich = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html || ''; };
+
+  const sobre = pages['sobre-pilarica'] || {};
+  set('ct-info-sobre-eyebrow', sobre.eyebrow);
+  setRich('ct-info-sobre-title', sobre.titleHtml);
+  set('ct-info-sobre-lead', sobre.lead);
+  setRich('ct-info-sobre-body', sobre.bodyHtml);
+
+  const cuidado = pages['cuidado-de-joyas'] || {};
+  set('ct-info-cuidado-eyebrow', cuidado.eyebrow);
+  setRich('ct-info-cuidado-title', cuidado.titleHtml);
+  set('ct-info-cuidado-lead', cuidado.lead);
+  setRich('ct-info-cuidado-body', cuidado.bodyHtml);
+
+  const faq = pages['preguntas-frecuentes'] || {};
+  set('ct-info-faq-eyebrow', faq.eyebrow);
+  setRich('ct-info-faq-title', faq.titleHtml);
+  set('ct-info-faq-lead', faq.lead);
+  renderFaqFields(faq.items || []);
+
+  const garantia = pages['politica-de-garantia'] || {};
+  setRich('ct-info-garantia-title', garantia.titleHtml);
+  setRich('ct-info-garantia-body', garantia.bodyHtml);
+
+  const priv = pages['aviso-de-privacidad'] || {};
+  setRich('ct-info-privacidad-title', priv.titleHtml);
+  setRich('ct-info-privacidad-body', priv.bodyHtml);
+
+  const terminos = pages['terminos-y-condiciones'] || {};
+  setRich('ct-info-terminos-title', terminos.titleHtml);
+  setRich('ct-info-terminos-body', terminos.bodyHtml);
+}
+
+function renderFaqFields(items) {
+  const box = document.getElementById('ct-faq-list');
+  if (!box) return;
+  const list = items.length ? items : [{ q: '', a: '' }];
+  box.innerHTML = list.map((item, i) => `
+    <div class="faq-admin-row" data-faq-index="${i}">
+      <div class="form-row"><label class="form-label">Pregunta ${i + 1}</label><input class="form-input ct-faq-q" value="${_escAttr(item.q)}" placeholder="¿Cómo puedo comprar?" /></div>
+      <div class="form-row"><label class="form-label">Respuesta ${i + 1}</label><textarea class="form-textarea ct-faq-a" rows="3" placeholder="Respuesta…">${_escTextarea(item.a)}</textarea></div>
+      ${list.length > 1 ? `<button type="button" class="social-row-remove" data-faq-remove="${i}">Quitar</button>` : ''}
+    </div>`).join('');
+  box.querySelectorAll('[data-faq-remove]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = Number(btn.dataset.faqRemove);
+      const next = _readFaqFromForm().filter((_, j) => j !== idx);
+      renderFaqFields(next.length ? next : [{ q: '', a: '' }]);
+    });
+  });
+}
+
+function _escAttr(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+}
+
+function _escTextarea(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;');
+}
+
+function _readFaqFromForm() {
+  return Array.from(document.querySelectorAll('#ct-faq-list .faq-admin-row')).map(row => ({
+    q: row.querySelector('.ct-faq-q')?.value.trim() || '',
+    a: row.querySelector('.ct-faq-a')?.value.trim() || '',
+  }));
+}
+
+async function _saveInfoPageSlug(slug, patch) {
+  const current = PilaricaStore.getSiteSection('info_pages') || {};
+  const merged = typeof PilaricaInfoPages !== 'undefined'
+    ? PilaricaInfoPages.merge(current)
+    : { ...current };
+  const next = { ...current, [slug]: { ...merged[slug], ...patch } };
+  await PilaricaStore.saveSiteSection('info_pages', next);
+}
+
+function renderSocialFields(items) {
+  const box = document.getElementById('ct-social-list');
+  if (!box) return;
+  const list = items.length ? items : [{ platform: '', handle: '', url: '' }];
+  box.innerHTML = list.map((s, i) => `
+    <div class="social-row-card" data-social-index="${i}">
+      <div class="form-grid">
+        <div class="form-row">
+          <label class="form-label">Plataforma</label>
+          <input class="form-input ct-social-platform" value="${(s.platform || '').replace(/"/g, '&quot;')}" placeholder="Instagram, Facebook, TikTok…" />
+        </div>
+        <div class="form-row">
+          <label class="form-label">Usuario</label>
+          <input class="form-input ct-social-handle" value="${(s.handle || '').replace(/"/g, '&quot;')}" placeholder="@pilarica.joyas" />
+        </div>
+      </div>
+      <div class="form-row"><label class="form-label">URL</label><input class="form-input ct-social-url" value="${(s.url || '').replace(/"/g, '&quot;')}" placeholder="https://…" /></div>
+      ${list.length > 1 ? `<button type="button" class="social-row-remove" data-social-remove="${i}">Quitar</button>` : ''}
+    </div>`).join('');
+  box.querySelectorAll('[data-social-remove]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = Number(btn.dataset.socialRemove);
+      const next = _readSocialFromForm().filter((_, j) => j !== idx);
+      renderSocialFields(next.length ? next : [{ platform: '', handle: '', url: '' }]);
+    });
+  });
+}
+
+function _readSocialFromForm() {
+  const cards = document.querySelectorAll('#ct-social-list .social-row-card');
+  return Array.from(cards).map(card => ({
+    platform: card.querySelector('.ct-social-platform')?.value.trim() || '',
+    handle: card.querySelector('.ct-social-handle')?.value.trim() || '',
+    url: card.querySelector('.ct-social-url')?.value.trim() || '',
+  })).filter(s => s.platform || s.handle || s.url);
 }
 
 function _readValuesFromForm() {
@@ -2020,11 +2191,52 @@ async function saveContentSection(key) {
         eyebrow: document.getElementById('ct-social-eyebrow').value.trim(),
         titleHtml: getRichText('ct-social-title'),
         body: document.getElementById('ct-social-body').value.trim(),
-        items: [{
-          platform: document.getElementById('ct-social-platform').value.trim(),
-          handle: document.getElementById('ct-social-handle').value.trim(),
-          url: document.getElementById('ct-social-url').value.trim(),
-        }],
+        items: _readSocialFromForm(),
+      });
+    } else if (key === 'info_sobre') {
+      await _saveInfoPageSlug('sobre-pilarica', {
+        eyebrow: document.getElementById('ct-info-sobre-eyebrow').value.trim(),
+        titleHtml: getRichText('ct-info-sobre-title'),
+        lead: document.getElementById('ct-info-sobre-lead').value.trim(),
+        bodyHtml: getRichText('ct-info-sobre-body'),
+      });
+    } else if (key === 'info_cuidado') {
+      await _saveInfoPageSlug('cuidado-de-joyas', {
+        eyebrow: document.getElementById('ct-info-cuidado-eyebrow').value.trim(),
+        titleHtml: getRichText('ct-info-cuidado-title'),
+        lead: document.getElementById('ct-info-cuidado-lead').value.trim(),
+        bodyHtml: getRichText('ct-info-cuidado-body'),
+      });
+    } else if (key === 'info_faq') {
+      await _saveInfoPageSlug('preguntas-frecuentes', {
+        eyebrow: document.getElementById('ct-info-faq-eyebrow').value.trim(),
+        titleHtml: getRichText('ct-info-faq-title'),
+        lead: document.getElementById('ct-info-faq-lead').value.trim(),
+        items: _readFaqFromForm().filter(i => i.q && i.a),
+      });
+    } else if (key === 'info_garantia') {
+      const base = PilaricaInfoPages.get('politica-de-garantia') || {};
+      await _saveInfoPageSlug('politica-de-garantia', {
+        eyebrow: base.eyebrow,
+        lead: base.lead,
+        titleHtml: getRichText('ct-info-garantia-title'),
+        bodyHtml: getRichText('ct-info-garantia-body'),
+      });
+    } else if (key === 'info_privacidad') {
+      const base = PilaricaInfoPages.get('aviso-de-privacidad') || {};
+      await _saveInfoPageSlug('aviso-de-privacidad', {
+        eyebrow: base.eyebrow,
+        lead: base.lead,
+        titleHtml: getRichText('ct-info-privacidad-title'),
+        bodyHtml: getRichText('ct-info-privacidad-body'),
+      });
+    } else if (key === 'info_terminos') {
+      const base = PilaricaInfoPages.get('terminos-y-condiciones') || {};
+      await _saveInfoPageSlug('terminos-y-condiciones', {
+        eyebrow: base.eyebrow,
+        lead: base.lead,
+        titleHtml: getRichText('ct-info-terminos-title'),
+        bodyHtml: getRichText('ct-info-terminos-body'),
       });
     }
     toast('Contenido guardado');
@@ -2110,6 +2322,14 @@ document.querySelectorAll('.ct-image-file').forEach(input => {
   input.addEventListener('change', () => handleContentImageUpload(input));
 });
 
+document.getElementById('ct-social-add').addEventListener('click', () => {
+  renderSocialFields([..._readSocialFromForm(), { platform: '', handle: '', url: '' }]);
+});
+
+document.getElementById('ct-faq-add').addEventListener('click', () => {
+  renderFaqFields([..._readFaqFromForm(), { q: '', a: '' }]);
+});
+
 document.getElementById('pf-image').addEventListener('input', e => updateImagePreview(e.target.value.trim()));
 document.getElementById('pf-image-file').addEventListener('change', async e => {
   const file = e.target.files[0];
@@ -2145,7 +2365,7 @@ document.getElementById('pf-gallery-add-url').addEventListener('click', () => {
 });
 
 document.getElementById('btn-restore-content-defaults').addEventListener('click', async () => {
-  if (!confirm('¿Restaurar todo el contenido del sitio al diseño original?\n\nSe reemplazarán textos e imágenes del inicio, catálogo y Conócenos con los valores por defecto.')) return;
+  if (!confirm('¿Restaurar todo el contenido del sitio al diseño original?\n\nSe reemplazarán textos e imágenes del inicio, catálogo, Conócenos y páginas informativas con los valores por defecto.')) return;
   try {
     await PilaricaStore.restoreSiteContentDefaults();
     loadContentForms();

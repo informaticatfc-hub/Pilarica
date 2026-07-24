@@ -95,7 +95,7 @@ const PilaricaSiteContent = (() => {
     },
     social: {
       eyebrow: 'Comunidad',
-      titleHtml: 'Unete a nuestra<br/><em>comunidad</em>',
+      titleHtml: 'Únete a nuestra<br/><em>comunidad</em>',
       body: 'Inspiración, lanzamientos y joyas que cuentan historias.',
       items: [
         { platform: 'Instagram', handle: '@pilarica.joyas', url: 'https://www.instagram.com/pilarica.joyas' },
@@ -116,7 +116,10 @@ const PilaricaSiteContent = (() => {
   function _setImage(id, url, alt) {
     const el = document.getElementById(id);
     if (!el || !url) return;
-    el.src = url;
+    const src = typeof PilaricaStore !== 'undefined' && PilaricaStore.resolvePublicUrl
+      ? PilaricaStore.resolvePublicUrl(url)
+      : url;
+    el.src = src;
     if (alt) el.alt = alt;
   }
 

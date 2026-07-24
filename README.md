@@ -47,12 +47,16 @@ Editar `js/pilarica-config.js`:
 | Certificados | Admin → Certificados · Supabase `certificates` |
 | Checkout | WhatsApp (sin pagos en línea por ahora) |
 
-## Deploy (pendiente dominio)
+## Deploy (Hostinger u otro hosting)
 
-Subir carpeta del proyecto a Netlify, Vercel o similar. Configurar `siteBaseUrl` con la URL final.
+1. Sube **toda la carpeta** del proyecto al `public_html` de Hostinger.
+2. Incluye `.htaccess` (Apache) para rutas SPA (`/catalogo`, `/producto/SKU`).
+3. Activa **SSL/HTTPS** en el panel de Hostinger.
+4. Configura `siteBaseUrl` en `js/pilarica-config.js` con tu dominio final (ej. `https://pilarica.com`).
+5. En Supabase Auth → URL Configuration, agrega `https://tudominio.com/admin.html` como redirect permitido.
 
-Incluye `_redirects` para Netlify (SPA: todas las rutas sirven `index.html`). En Vercel, equivalente con `rewrites` en `vercel.json`.
+También incluye `_redirects` (Netlify) y `vercel.json` (Vercel) si usas esos servicios.
 
-URLs recomendadas en producción: `https://tudominio.com/` (inicio), `/catalogo`, `/producto/SKU` — sin `#` ni `index.html` visible.
+URLs recomendadas: `https://tudominio.com/` (inicio), `/catalogo`, `/producto/SKU` — sin `#` ni `index.html` visible.
 
 Documentación detallada: `database/DOCUMENTACION-BASE-DE-DATOS.md`

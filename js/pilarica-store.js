@@ -430,6 +430,9 @@ const PilaricaStore = (() => {
     for (const key of Object.keys(defaults)) {
       await saveSiteSection(key, { ...defaults[key] });
     }
+    if (typeof PilaricaInfoPages !== 'undefined') {
+      await saveSiteSection('info_pages', JSON.parse(JSON.stringify(PilaricaInfoPages.DEFAULTS)));
+    }
     return getSiteContent();
   }
 
@@ -438,6 +441,14 @@ const PilaricaStore = (() => {
     const p = window.location.pathname;
     if (p.endsWith('/index.html')) return p.slice(0, -('/index.html'.length));
     return '';
+  }
+
+  function resolvePublicUrl(url) {
+    if (!url) return '';
+    if (/^https?:\/\//i.test(url) || url.startsWith('data:')) return url;
+    const base = getAppBasePath();
+    const path = url.startsWith('/') ? url : `/${url}`;
+    return `${base}${path}`.replace(/\/{2,}/g, '/') || '/';
   }
 
   function buildSitePath(routePath) {
@@ -450,7 +461,7 @@ const PilaricaStore = (() => {
   function getProductImages(product) {
     const p = _normalize(product);
     const main = getProductImage(p);
-    const extras = p.images.filter(u => u && u !== main);
+    const extras = p.images.filter(u => u && u !== p.image).map(u => resolvePublicUrl(u));
     return main ? [main, ...extras] : extras;
   }
 
@@ -694,20 +705,25 @@ const PilaricaStore = (() => {
 
   function getProductImage(product) {
     if (!product) return '';
-    if (product.image) return product.image;
+    if (product.image) return resolvePublicUrl(product.image);
     if (product.imageKey && typeof PILARICA_IMAGES !== 'undefined' && PILARICA_IMAGES[product.imageKey]) {
-      return PILARICA_IMAGES[product.imageKey];
+      return resolvePublicUrl(PILARICA_IMAGES[product.imageKey]);
     }
     return '';
   }
 
   function getCategoryCover(cat) {
     const covers = getSiteSection('category_covers');
-    if (covers && covers[cat]) return covers[cat];
+    if (covers && covers[cat]) return resolvePublicUrl(covers[cat]);
     const fromBento = BENTO_COVERS[cat];
-    if (fromBento) return fromBento;
+    if (fromBento) return resolvePublicUrl(fromBento);
     const first = _products.find(p => p.category === cat && getProductImage(p));
     return first ? getProductImage(first) : '';
+  }
+
+  function getWhatsAppNumber() {
+    const loc = getSiteSection('locations');
+    return loc?.items?.[0]?.whatsapp || '529611555744';
   }
 
   function formatPrice(amount, currency = 'MXN') {
@@ -737,8 +753,10 @@ const PilaricaStore = (() => {
     getProductImage,
     getProductImages,
     getCategoryCover,
+    getWhatsAppNumber,
     formatPrice,
     getProductUrl,
+    resolvePublicUrl,
     getAppBasePath,
     buildSitePath,
     initSiteContent,
