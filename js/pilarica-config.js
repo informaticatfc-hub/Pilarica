@@ -10,7 +10,7 @@ const PilaricaConfig = {
   certsKey: 'pilarica_certs',
   siteContentKey: 'pilarica_site_content',
   siteBaseUrl: 'https://pilaricajoyas.com.mx',
-  valencyDesignUrl: 'https://valency12.github.io/Mi-portafolio/',
+  valencyDesignUrl: 'https://valency12.github.io/Mi-portafolio/', 
   supabase: {
     url: 'https://trhmmdtkewouinciiwsb.supabase.co',
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRyaG1tZHRrZXdvdWluY2lpd3NiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5NzEwMzUsImV4cCI6MjA5OTU0NzAzNX0.lhuwPA_OxGeSaYAI2TJnIS8mUS9l_szVwxJpALAi50U',

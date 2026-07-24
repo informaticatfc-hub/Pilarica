@@ -209,7 +209,7 @@ const PilaricaStore = (() => {
     let url = `${cfg.url}/rest/v1/products?order=created_at.asc`;
     if (!authenticated) url += '&active=eq.true';
 
-    const res = await fetch(url, { headers: _supabaseHeaders(authenticated) });
+    const res = await fetch(url, { headers: _supabaseHeaders(authenticated), cache: 'no-store' });
     if (!res.ok) {
       if (authenticated && res.status === 401) {
         clearSession();
@@ -275,6 +275,7 @@ const PilaricaStore = (() => {
     if (!cfg.url || !cfg.anonKey) throw new Error('Supabase no configurado');
     const res = await fetch(`${cfg.url}/rest/v1/site_content?select=section_key,data`, {
       headers: _supabaseHeaders(!!getAccessToken()),
+      cache: 'no-store',
     });
     if (!res.ok) throw new Error('Error al cargar contenido del sitio');
     const rows = await res.json();
@@ -353,17 +354,20 @@ const PilaricaStore = (() => {
   async function _saveSiteSectionToSupabase(sectionKey, data) {
     const cfg = _cfg();
     if (!getAccessToken()) throw new Error('Sesión admin requerida');
+    const headers = {
+      ..._supabaseHeaders(true),
+      Prefer: 'resolution=merge-duplicates,return=representation',
+    };
+
     const res = await fetch(`${cfg.url}/rest/v1/site_content?on_conflict=section_key`, {
       method: 'POST',
-      headers: {
-        ..._supabaseHeaders(true),
-        Prefer: 'resolution=merge-duplicates,return=representation',
-      },
+      headers,
       body: JSON.stringify({ section_key: sectionKey, data }),
     });
     if (!res.ok) {
+      const detail = await res.text();
       if (res.status === 403) throw new Error('Sin permisos para editar contenido');
-      throw new Error('Error al guardar contenido');
+      throw new Error(detail || 'Error al guardar contenido');
     }
     return res.json();
   }
@@ -403,9 +407,19 @@ const PilaricaStore = (() => {
 
   function getSiteContent() {
     if (typeof PilaricaSiteContent !== 'undefined') {
-      return PilaricaSiteContent.merge(_siteContent);
+      const merged = PilaricaSiteContent.merge(_siteContent);
+      Object.keys(_siteContent || {}).forEach(key => {
+        if (!(key in PilaricaSiteContent.DEFAULTS)) {
+          merged[key] = _siteContent[key];
+        }
+      });
+      return merged;
     }
     return { ..._siteContent };
+  }
+
+  function getRawSiteSection(key) {
+    return (_siteContent && _siteContent[key]) || null;
   }
 
   function getSiteSection(key) {
@@ -762,6 +776,7 @@ const PilaricaStore = (() => {
     initSiteContent,
     reloadSiteContent,
     getSiteContent,
+    getRawSiteSection,
     getSiteSection,
     saveSiteSection,
     restoreSiteContentDefaults,

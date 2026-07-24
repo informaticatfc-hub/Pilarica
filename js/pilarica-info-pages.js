@@ -11,7 +11,7 @@ const PilaricaInfoPages = (() => {
     'terminos-y-condiciones',
   ];
 
-  const TITLE_DOC = {
+  const TITLE_DOC = {           
     'sobre-pilarica': 'Sobre Pilarica — Pilarica',
     'cuidado-de-joyas': 'Cuidado de joyas — Pilarica',
     'politica-de-garantia': 'Política de garantía — Pilarica',
@@ -111,21 +111,122 @@ const PilaricaInfoPages = (() => {
       eyebrow: 'Legal',
       titleHtml: 'Aviso de <em>privacidad</em>',
       lead: 'Información sobre el tratamiento de datos personales.',
-      bodyHtml: '',
+      bodyHtml: `
+        <section class="info-block reveal">
+          <p class="info-text">Pilarica es responsable del tratamiento y protección de los datos personales que usted proporcione a través de nuestros medios de contacto.</p>
+        </section>
+        <section class="info-block reveal">
+          <p class="info-kicker">Datos personales</p>
+          <h2 class="info-heading">Qué información recopilamos</h2>
+          <p class="info-text">Pilarica podrá recibir datos personales como su nombre, número telefónico, correo electrónico y cualquier información que usted proporcione voluntariamente al contactarnos para solicitar información, consultar disponibilidad de productos, solicitar una cotización o agendar una cita.</p>
+          <p class="info-text">Actualmente, las consultas y solicitudes de cotización pueden realizarse principalmente a través de WhatsApp, teléfono o correo electrónico.</p>
+        </section>
+        <section class="info-block reveal">
+          <p class="info-kicker">Finalidad</p>
+          <h2 class="info-heading">Uso de la información</h2>
+          <p class="info-text">Los datos proporcionados serán utilizados únicamente para:</p>
+          <ul class="info-list">
+            <li>Atender sus consultas y solicitudes.</li>
+            <li>Proporcionar información y cotizaciones sobre nuestros productos.</li>
+            <li>Dar seguimiento a su interés en alguna pieza.</li>
+            <li>Coordinar citas y atención en nuestros puntos de venta.</li>
+          </ul>
+          <p class="info-text">Pilarica no utilizará sus datos para finalidades distintas a las aquí mencionadas sin informarle previamente cuando así lo requiera la legislación aplicable.</p>
+        </section>
+        <section class="info-block reveal">
+          <p class="info-kicker">Seguridad</p>
+          <h2 class="info-heading">Protección de sus datos</h2>
+          <p class="info-text">Pilarica procurará mantener sus datos personales protegidos y utilizarlos únicamente para las finalidades señaladas en este Aviso de Privacidad.</p>
+          <p class="info-text">Cuando usted se comunique con Pilarica mediante servicios externos como WhatsApp, el tratamiento de información realizado directamente por dichas plataformas también estará sujeto a sus propias políticas de privacidad.</p>
+        </section>
+        <section class="info-block reveal">
+          <p class="info-kicker">Sus derechos</p>
+          <h2 class="info-heading">Derechos sobre sus datos</h2>
+          <p class="info-text">Usted podrá solicitar información sobre sus datos personales, así como su corrección, eliminación u oponerse a su uso cuando corresponda.</p>
+          <p class="info-text">Para realizar cualquier solicitud relacionada con sus datos personales puede comunicarse con nosotros a través de:</p>
+          <ul class="info-list">
+            <li>Correo: <a href="mailto:mrk@pilaricajoyas.com.mx">mrk@pilaricajoyas.com.mx</a></li>
+            <li>Teléfono: <a href="tel:+529611555744">+52 (961) 155 5744</a></li>
+          </ul>
+        </section>
+        <section class="info-block reveal">
+          <p class="info-kicker">Actualizaciones</p>
+          <h2 class="info-heading">Cambios al Aviso de Privacidad</h2>
+          <p class="info-text">El presente Aviso de Privacidad podrá actualizarse cuando cambien los servicios o funcionalidades de Pilarica. Cualquier modificación estará disponible en este mismo sitio web.</p>
+        </section>`,
     },
     'terminos-y-condiciones': {
       eyebrow: 'Legal',
       titleHtml: 'Términos y <em>condiciones</em>',
       lead: 'Condiciones generales de uso del sitio y de compra.',
-      bodyHtml: '',
+      bodyHtml: `
+        <section class="info-block reveal">
+          <p class="info-text">Bienvenido al sitio web de Pilarica. Al navegar y utilizar este sitio, usted acepta los presentes Términos y Condiciones.</p>
+        </section>
+        <section class="info-block reveal">
+          <p class="info-kicker">Navegación</p>
+          <h2 class="info-heading">Uso del sitio</h2>
+          <p class="info-text">Este sitio web tiene como finalidad presentar el catálogo de productos de Pilarica, proporcionar información sobre la marca y facilitar el contacto con nuestros clientes.</p>
+          <p class="info-text">Los productos mostrados en el sitio están sujetos a disponibilidad. La publicación de una pieza en el catálogo no garantiza que se encuentre disponible al momento de realizar una consulta.</p>
+        </section>
+        <section class="info-block reveal">
+          <p class="info-kicker">Catálogo</p>
+          <h2 class="info-heading">Productos, precios y cotizaciones</h2>
+          <p class="info-text">Las imágenes de los productos tienen fines ilustrativos y buscan representar las piezas de la manera más fiel posible. Sin embargo, pueden existir ligeras variaciones en el color o apariencia dependiendo de la pantalla utilizada.</p>
+          <p class="info-text">Los precios, características y disponibilidad de los productos pueden cambiar sin previo aviso.</p>
+          <p class="info-text">Las solicitudes de información y cotizaciones realizadas mediante WhatsApp, teléfono o correo electrónico no representan por sí mismas una compra confirmada. La disponibilidad, precio final y condiciones de compra serán confirmados directamente por Pilarica antes de concretar cualquier operación.</p>
+        </section>
+        <section class="info-block reveal">
+          <p class="info-kicker">Atención</p>
+          <h2 class="info-heading">Compras y atención</h2>
+          <p class="info-text">Actualmente, este sitio web funciona como un catálogo informativo y medio de contacto. Las compras no se procesan directamente a través del sitio web.</p>
+          <p class="info-text">Para consultar disponibilidad, solicitar una cotización o recibir atención personalizada, puede comunicarse con Pilarica mediante los canales de contacto disponibles en este sitio.</p>
+        </section>
+        <section class="info-block reveal">
+          <p class="info-kicker">Compromiso</p>
+          <h2 class="info-heading">Garantía</h2>
+          <p class="info-text">Las condiciones aplicables a garantías dependerán del producto adquirido y de las circunstancias de cada caso. Para conocer las condiciones vigentes, consulte nuestra <a href="/politica-de-garantia" data-info-link="politica-de-garantia">Política de Garantía</a> o comuníquese directamente con Pilarica.</p>
+        </section>
+        <section class="info-block reveal">
+          <p class="info-kicker">Contenido</p>
+          <h2 class="info-heading">Propiedad intelectual</h2>
+          <p class="info-text">El contenido de este sitio web, incluyendo fotografías, imágenes, logotipos, textos, diseño y demás elementos visuales relacionados con Pilarica, se encuentra protegido por la legislación aplicable y no podrá ser utilizado, reproducido o distribuido sin la autorización correspondiente de sus respectivos titulares.</p>
+        </section>
+        <section class="info-block reveal">
+          <p class="info-kicker">Terceros</p>
+          <h2 class="info-heading">Enlaces externos</h2>
+          <p class="info-text">El sitio puede contener enlaces a servicios externos, como WhatsApp u otras plataformas. Pilarica no es responsable del funcionamiento, disponibilidad o políticas de privacidad de dichos servicios.</p>
+        </section>
+        <section class="info-block reveal">
+          <p class="info-kicker">Vigencia</p>
+          <h2 class="info-heading">Modificaciones</h2>
+          <p class="info-text">Pilarica podrá modificar el contenido del sitio, sus productos, precios y los presentes Términos y Condiciones cuando resulte necesario.</p>
+          <p class="info-text">La versión vigente estará disponible en esta misma sección.</p>
+        </section>
+        <section class="info-block reveal">
+          <p class="info-kicker">Contacto</p>
+          <h2 class="info-heading">¿Dudas?</h2>
+          <p class="info-text">Para cualquier duda relacionada con nuestros productos o estos Términos y Condiciones, puede comunicarse con nosotros:</p>
+          <ul class="info-list">
+            <li>Correo: <a href="mailto:mrk@pilaricajoyas.com.mx">mrk@pilaricajoyas.com.mx</a></li>
+            <li>Teléfono: <a href="tel:+529611555744">+52 (961) 155 5744</a></li>
+          </ul>
+        </section>`,
     },
   };
+
+  /** Páginas legales fijas en código — no se sobrescriben desde Supabase ni admin */
+  const STATIC_SLUGS = ['aviso-de-privacidad', 'terminos-y-condiciones'];
 
   function merge(remote) {
     const src = remote || {};
     const out = {};
     SLUGS.forEach(slug => {
       const base = DEFAULTS[slug] || {};
+      if (STATIC_SLUGS.includes(slug)) {
+        out[slug] = { ...base, items: base.items || [] };
+        return;
+      }
       const patch = src[slug] || {};
       out[slug] = {
         ...base,
@@ -138,9 +239,12 @@ const PilaricaInfoPages = (() => {
 
   function getMergedPages() {
     const remote = typeof PilaricaStore !== 'undefined'
-      ? PilaricaStore.getSiteSection('info_pages')
+      ? (PilaricaStore.getRawSiteSection
+        ? PilaricaStore.getRawSiteSection('info_pages')
+        : PilaricaStore.getSiteSection('info_pages'))
       : null;
-    return merge(remote);
+    const merged = merge(remote);
+    return merged;
   }
 
   function get(slug) {
@@ -189,6 +293,28 @@ const PilaricaInfoPages = (() => {
     });
   }
 
+  function _bindInfoLinks(scope) {
+    scope.querySelectorAll('[data-info-link]').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        if (typeof AppController !== 'undefined') {
+          AppController.navigate('info', { infoSlug: link.dataset.infoLink });
+        }
+      });
+    });
+  }
+
+  function formatBodyHtml(html) {
+    if (!html || !html.trim()) return '';
+    if (/<[a-z][\s\S]*>/i.test(html)) return html;
+    return html
+      .split(/\n{2,}/)
+      .map(block => block.trim())
+      .filter(Boolean)
+      .map(block => `<p>${block.replace(/\n/g, '<br/>')}</p>`)
+      .join('');
+  }
+
   function renderPage(slug) {
     const page = get(slug);
     if (!page) return false;
@@ -211,8 +337,9 @@ const PilaricaInfoPages = (() => {
           : '<p class="info-empty">Las preguntas frecuentes se publicarán aquí pronto.</p>';
         if (items.length) bindFaq(content);
       } else if (page.bodyHtml && page.bodyHtml.trim()) {
-        content.innerHTML = page.bodyHtml;
+        content.innerHTML = formatBodyHtml(page.bodyHtml);
         _bindNavButtons(content);
+        _bindInfoLinks(content);
       } else {
         content.innerHTML = '';
       }
@@ -246,6 +373,7 @@ const PilaricaInfoPages = (() => {
   return {
     SLUGS,
     DEFAULTS,
+    STATIC_SLUGS,
     TITLE_DOC,
     merge,
     getMergedPages,

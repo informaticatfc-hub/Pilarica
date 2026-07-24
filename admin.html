@@ -1070,7 +1070,7 @@ img { display: block; max-width: 100%; }
       <div class="admin-card" style="margin-top:20px;">
         <div class="admin-card-head"><span class="admin-card-title">Páginas informativas</span></div>
         <div class="admin-card-body">
-          <p class="content-field-note" style="margin-top:0;margin-bottom:20px;">Contenido del footer: Sobre Pilarica, Cuidado de joyas, FAQ y textos legales. Las páginas legales vacías solo muestran el encabezado en la tienda hasta que publiques el texto.</p>
+          <p class="content-field-note" style="margin-top:0;margin-bottom:20px;">Contenido del footer: Sobre Pilarica, Cuidado de joyas y FAQ. Los textos legales (privacidad, términos, garantía) están fijos en el código fuente.</p>
 
           <p class="editor-side-title">Sobre Pilarica</p>
           <div class="form-row"><label class="form-label">Etiqueta</label><input class="form-input" id="ct-info-sobre-eyebrow" /></div>
@@ -1097,23 +1097,6 @@ img { display: block; max-width: 100%; }
           <div id="ct-faq-list"></div>
           <button type="button" class="btn btn-outline btn-sm" id="ct-faq-add" style="margin-bottom:12px;">+ Agregar pregunta</button>
           <button type="button" class="btn btn-outline btn-sm" data-save-content="info_faq">Guardar FAQ</button>
-
-          <hr style="margin:24px 0;border:none;border-top:1px solid var(--border);" />
-
-          <p class="editor-side-title">Textos legales</p>
-          <p class="content-field-note" style="margin-top:0;">Escribe el contenido completo de cada documento. Déjalos vacíos hasta tener el texto revisado por el negocio.</p>
-
-          <div class="form-row"><label class="form-label">Política de garantía — título</label><div class="rich-text-input" id="ct-info-garantia-title" contenteditable="true"></div></div>
-          <div class="form-row"><label class="form-label">Política de garantía — texto</label><div class="rich-text-input info-body-editor" id="ct-info-garantia-body" contenteditable="true"></div></div>
-          <button type="button" class="btn btn-outline btn-sm" data-save-content="info_garantia" style="margin-bottom:16px;">Guardar garantía</button>
-
-          <div class="form-row"><label class="form-label">Aviso de privacidad — título</label><div class="rich-text-input" id="ct-info-privacidad-title" contenteditable="true"></div></div>
-          <div class="form-row"><label class="form-label">Aviso de privacidad — texto</label><div class="rich-text-input info-body-editor" id="ct-info-privacidad-body" contenteditable="true"></div></div>
-          <button type="button" class="btn btn-outline btn-sm" data-save-content="info_privacidad" style="margin-bottom:16px;">Guardar privacidad</button>
-
-          <div class="form-row"><label class="form-label">Términos y condiciones — título</label><div class="rich-text-input" id="ct-info-terminos-title" contenteditable="true"></div></div>
-          <div class="form-row"><label class="form-label">Términos y condiciones — texto</label><div class="rich-text-input info-body-editor" id="ct-info-terminos-body" contenteditable="true"></div></div>
-          <button type="button" class="btn btn-outline btn-sm" data-save-content="info_terminos">Guardar términos</button>
         </div>
       </div>
     </section>
@@ -1857,18 +1840,6 @@ function loadInfoPageForms() {
   setRich('ct-info-faq-title', faq.titleHtml);
   set('ct-info-faq-lead', faq.lead);
   renderFaqFields(faq.items || []);
-
-  const garantia = pages['politica-de-garantia'] || {};
-  setRich('ct-info-garantia-title', garantia.titleHtml);
-  setRich('ct-info-garantia-body', garantia.bodyHtml);
-
-  const priv = pages['aviso-de-privacidad'] || {};
-  setRich('ct-info-privacidad-title', priv.titleHtml);
-  setRich('ct-info-privacidad-body', priv.bodyHtml);
-
-  const terminos = pages['terminos-y-condiciones'] || {};
-  setRich('ct-info-terminos-title', terminos.titleHtml);
-  setRich('ct-info-terminos-body', terminos.bodyHtml);
 }
 
 function renderFaqFields(items) {
@@ -1906,11 +1877,14 @@ function _readFaqFromForm() {
 }
 
 async function _saveInfoPageSlug(slug, patch) {
-  const current = PilaricaStore.getSiteSection('info_pages') || {};
+  const current = (PilaricaStore.getRawSiteSection && PilaricaStore.getRawSiteSection('info_pages'))
+    || PilaricaStore.getSiteSection('info_pages')
+    || {};
   const merged = typeof PilaricaInfoPages !== 'undefined'
     ? PilaricaInfoPages.merge(current)
     : { ...current };
-  const next = { ...current, [slug]: { ...merged[slug], ...patch } };
+  merged[slug] = { ...merged[slug], ...patch };
+  const next = { ...current, [slug]: merged[slug] };
   await PilaricaStore.saveSiteSection('info_pages', next);
 }
 
@@ -1963,6 +1937,7 @@ function _readValuesFromForm() {
 function getRichText(id) {
   const el = document.getElementById(id);
   if (!el) return '';
+  if (el.tagName === 'TEXTAREA') return el.value.trim();
   return normalizeRichHtml(el.innerHTML.trim());
 }
 
@@ -2214,30 +2189,10 @@ async function saveContentSection(key) {
         lead: document.getElementById('ct-info-faq-lead').value.trim(),
         items: _readFaqFromForm().filter(i => i.q && i.a),
       });
-    } else if (key === 'info_garantia') {
-      const base = PilaricaInfoPages.get('politica-de-garantia') || {};
-      await _saveInfoPageSlug('politica-de-garantia', {
-        eyebrow: base.eyebrow,
-        lead: base.lead,
-        titleHtml: getRichText('ct-info-garantia-title'),
-        bodyHtml: getRichText('ct-info-garantia-body'),
-      });
-    } else if (key === 'info_privacidad') {
-      const base = PilaricaInfoPages.get('aviso-de-privacidad') || {};
-      await _saveInfoPageSlug('aviso-de-privacidad', {
-        eyebrow: base.eyebrow,
-        lead: base.lead,
-        titleHtml: getRichText('ct-info-privacidad-title'),
-        bodyHtml: getRichText('ct-info-privacidad-body'),
-      });
-    } else if (key === 'info_terminos') {
-      const base = PilaricaInfoPages.get('terminos-y-condiciones') || {};
-      await _saveInfoPageSlug('terminos-y-condiciones', {
-        eyebrow: base.eyebrow,
-        lead: base.lead,
-        titleHtml: getRichText('ct-info-terminos-title'),
-        bodyHtml: getRichText('ct-info-terminos-body'),
-      });
+    }
+    if (key.startsWith('info_')) {
+      await PilaricaStore.reloadSiteContent();
+      loadInfoPageForms();
     }
     toast('Contenido guardado');
   } catch (err) {

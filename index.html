@@ -1317,6 +1317,18 @@ button { font-family: var(--sans); cursor: pointer; }
   font-size: 15px; font-weight: 300; color: var(--stone); line-height: 1.8;
   padding-left: 18px; position: relative;
 }
+.info-text a {
+  color: var(--gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.info-text a:hover { color: var(--ink); }
+.info-list a {
+  color: var(--gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.info-list a:hover { color: var(--ink); }
 .info-list li::before {
   content: ''; position: absolute; left: 0; top: 0.72em;
   width: 6px; height: 1px; background: var(--gold);
@@ -1403,7 +1415,7 @@ button { font-family: var(--sans); cursor: pointer; }
 }
 @media (max-width: 700px) {
   .nav-links { display: none; }
-  .nav-hamburger { display: flex; }
+  .nav-links-wrap { gap: 0; }
   .hero-title { font-size: clamp(42px,12vw,72px); }
   .values-grid { grid-template-columns: 1fr; }
   .product-grid { grid-template-columns: 1fr 1fr; }
@@ -1464,10 +1476,6 @@ button { font-family: var(--sans); cursor: pointer; }
       <span class="nav-cart-count" id="nav-cart-count" hidden>0</span>
     </button>
   </div>
-
-  <button class="nav-hamburger" aria-label="Abrir menú" data-nav="catalog">
-    <span></span><span></span><span></span>
-  </button>
 </nav>
 
 
