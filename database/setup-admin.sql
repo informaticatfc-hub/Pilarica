@@ -3,8 +3,8 @@
 
 -- PASO 1 (manual en el dashboard):
 --   Authentication → Users → Add user → Create new user
---   Email:    mrk@pilaricajoyas.com.mx
---   Password: PilaricaJoyas@2026!  (o la que definan; debe coincidir con Supabase Auth)
+--   Email:    mrk@pilaricajoyas.com.mx  (o el correo que prefieran)
+--   Password: contraseña segura definida en el dashboard (no la subas a Git)
 --   Marcar: Auto Confirm User
 
 -- PASO 2 (ejecutar este SQL — cambia el email si usaste otro):
