@@ -2065,26 +2065,70 @@ const CartModel = (() => {
     try { localStorage.setItem('pilarica_cart', JSON.stringify(_items)); } catch (e) {}
   }
 
+  function _getStock(p) {
+    if (!p) return 0;
+    return typeof p.stockQty === 'number' ? p.stockQty : (p.inStock ? 1 : 0);
+  }
+
+  function _clampAll() {
+    let changed = false;
+    _items.forEach(item => {
+      const p = ProductModel.getById(item.productId);
+      const max = _getStock(p);
+      if (max <= 0) {
+        changed = true;
+        item.qty = 0;
+      } else if (item.qty > max) {
+        item.qty = max;
+        changed = true;
+      }
+    });
+    const before = _items.length;
+    _items = _items.filter(i => i.qty > 0);
+    if (changed || _items.length !== before) _persist();
+  }
+
   return {
+    clampToStock: _clampAll,
+    getStock(p) { return _getStock(p); },
     add(productId) {
+      const p = ProductModel.getById(productId);
+      const max = _getStock(p);
+      if (!p || max <= 0) return { ok: false, reason: 'out', stock: 0 };
       const existing = _items.find(i => i.productId === productId);
+      const current = existing ? existing.qty : 0;
+      if (current >= max) return { ok: false, reason: 'max', stock: max };
       if (existing) existing.qty += 1;
       else _items.push({ productId, qty: 1, addedAt: new Date().toISOString() });
       _persist();
-      return _items;
+      return { ok: true, stock: max, qty: current + 1 };
     },
     getItems() {
       return _items.map(i => ({ ...i }));
     },
     setQty(productId, qty) {
+      const p = ProductModel.getById(productId);
+      const max = _getStock(p);
       const item = _items.find(i => i.productId === productId);
-      if (!item) return;
+      if (!item) return { ok: false, reason: 'missing' };
       if (qty <= 0) {
         _items = _items.filter(i => i.productId !== productId);
-      } else {
-        item.qty = qty;
+        _persist();
+        return { ok: true };
       }
+      if (max <= 0) {
+        _items = _items.filter(i => i.productId !== productId);
+        _persist();
+        return { ok: false, reason: 'out', stock: 0 };
+      }
+      if (qty > max) {
+        item.qty = max;
+        _persist();
+        return { ok: false, reason: 'max', stock: max };
+      }
+      item.qty = qty;
       _persist();
+      return { ok: true, stock: max };
     },
     remove(productId) {
       _items = _items.filter(i => i.productId !== productId);
@@ -2601,6 +2645,7 @@ const CartView = (() => {
   }
 
   function render() {
+    CartModel.clampToStock();
     const list = document.getElementById('cart-items');
     const subtotalEl = document.getElementById('cart-subtotal');
     const footer = document.getElementById('cart-footer');
@@ -2649,7 +2694,11 @@ const CartView = (() => {
       btn.addEventListener('click', () => {
         const id = btn.dataset.cartPlus;
         const item = CartModel.getItems().find(i => i.productId === id);
-        if (item) CartModel.setQty(id, item.qty + 1);
+        if (!item) return;
+        const result = CartModel.setQty(id, item.qty + 1);
+        if (!result.ok && result.reason === 'max') {
+          UIView.toast(`Solo quedan ${result.stock}`, 'warn');
+        }
         render();
       });
     });
@@ -3065,7 +3114,12 @@ const AppController = (() => {
   function addToCart(productId) {
     const p = ProductModel.getById(productId);
     if (!p || !p.inStock) return;
-    CartModel.add(productId);
+    const result = CartModel.add(productId);
+    if (!result.ok) {
+      if (result.reason === 'max') UIView.toast(`Solo quedan ${result.stock}`, 'warn');
+      else UIView.toast('Pieza no disponible', 'warn');
+      return;
+    }
     CartView.updateBadge();
     UIView.toast(`${p.name} agregado al carrito`, 'success');
   }

@@ -880,6 +880,30 @@ img { display: block; max-width: 100%; }
   font-style: italic;
   margin-bottom: 16px;
 }
+.quote-saved-warn {
+  display: block;
+  font-size: 10px;
+  color: #9a4a2a;
+  margin-top: 4px;
+}
+.quote-doc-shipping-note {
+  margin-top: 10px;
+  font-size: 11px;
+  color: #8a7f72;
+  font-style: italic;
+}
+.quote-doc-stock-warn {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid #d4a574;
+  background: #faf6f0;
+  font-size: 11px;
+  color: #9a4a2a;
+}
+.quote-doc-stock-warn ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
 .quote-piece-actions {
   display: flex;
   flex-wrap: wrap;
@@ -970,7 +994,7 @@ img { display: block; max-width: 100%; }
     <form id="login-form">
       <div class="form-row">
         <label class="form-label" for="login-email">Correo</label>
-        <input class="form-input" id="login-email" type="email" placeholder="admin@pilaricajoyas.com.mx" autocomplete="username" required />
+        <input class="form-input" id="login-email" type="email" placeholder="mrk@pilaricajoyas.com.mx" autocomplete="username" required />
       </div>
       <div class="form-row">
         <label class="form-label" for="login-password">Contraseña</label>
@@ -1443,8 +1467,12 @@ img { display: block; max-width: 100%; }
               </div>
             </div>
             <div class="form-row">
-              <label class="form-label" for="cot-price">Precio *</label>
+              <label class="form-label" for="cot-price">Precio unitario *</label>
               <input class="form-input" id="cot-price" type="text" placeholder="$48,500 MXN" />
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="cot-qty">Cantidad *</label>
+              <input class="form-input" id="cot-qty" type="number" min="1" step="1" value="1" />
             </div>
           </div>
           <div class="quote-piece-actions">
@@ -1453,6 +1481,17 @@ img { display: block; max-width: 100%; }
 
           <p class="editor-side-title" style="margin-bottom:8px;">Piezas en esta cotización</p>
           <div id="quote-saved-items" class="quote-saved-list"></div>
+
+          <div class="form-grid">
+            <div class="form-row">
+              <label class="form-label" for="cot-discount">Descuento</label>
+              <input class="form-input" id="cot-discount" type="text" placeholder="$0 o 10%" />
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="cot-shipping">Envío <span style="font-weight:400;color:var(--stone);">(no va al PDF aún)</span></label>
+              <input class="form-input" id="cot-shipping" type="text" placeholder="Ej. $350 MXN" />
+            </div>
+          </div>
 
           <div class="form-row">
             <label class="form-label" for="cot-notes">Notas (envío, forma de pago, etc.)</label>
@@ -1620,12 +1659,12 @@ img { display: block; max-width: 100%; }
 <script src="js/pilarica-store.js"></script>
 <script src="js/pilarica-site-content.js"></script>
 <script src="js/pilarica-info-pages.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script>
 <script>
 const ADMIN_AUTH_KEY = 'pilarica_admin_session';
 const CERTS_KEY = PilaricaConfig.certsKey;
-const DEMO_EMAIL = 'admin@pilaricajoyas.com.mx';
-const DEMO_PASS = 'pilarica2025';
+const DEMO_EMAIL = 'mrk@pilaricajoyas.com.mx';
+const DEMO_PASS = 'PilaricaJoyas@2026!';
 
 let products = [];
 let editingId = null;
@@ -2095,13 +2134,44 @@ function parseQuotePriceAmount(str) {
   return Number.isFinite(n) ? n : 0;
 }
 
+function parseQuoteDiscountAmount(subtotal, raw) {
+  const text = String(raw || '').trim();
+  if (!text) return 0;
+  if (/%/.test(text)) {
+    const pct = parseFloat(text.replace(/[^\d.,]/g, '').replace(/,/g, ''));
+    if (!Number.isFinite(pct) || pct <= 0) return 0;
+    return Math.min(subtotal, subtotal * (pct / 100));
+  }
+  return Math.min(subtotal, parseQuotePriceAmount(text));
+}
+
+function getProductStockQty(sku) {
+  const p = findProductBySku(sku);
+  if (!p) return null;
+  return typeof p.stockQty === 'number' ? p.stockQty : (p.inStock ? 1 : 0);
+}
+
+function getQuoteStockWarning(item) {
+  const stock = getProductStockQty(item.sku);
+  if (stock == null || !item.sku) return '';
+  const qty = item.qty || 1;
+  if (qty > stock) return `Solo hay ${stock} en stock (cotizas ${qty})`;
+  return '';
+}
+
 function clearQuotePieceForm() {
   ['cot-sku', 'cot-product', 'cot-material', 'cot-stone', 'cot-size', 'cot-category', 'cot-price'].forEach(id => setCertField(id, ''));
+  const qtyEl = document.getElementById('cot-qty');
+  if (qtyEl) qtyEl.value = '1';
 }
 
 function readQuotePieceForm() {
   const sku = document.getElementById('cot-sku')?.value.trim() || '';
   const product = findProductBySku(sku);
+  const qty = Math.max(1, parseInt(document.getElementById('cot-qty')?.value, 10) || 1);
+  const unitPriceRaw = document.getElementById('cot-price')?.value.trim() || '';
+  const unitAmount = parseQuotePriceAmount(unitPriceRaw);
+  const lineAmount = unitAmount * qty;
   return {
     sku,
     productName: document.getElementById('cot-product')?.value.trim() || '',
@@ -2109,7 +2179,12 @@ function readQuotePieceForm() {
     stone: document.getElementById('cot-stone')?.value.trim() || '',
     size: document.getElementById('cot-size')?.value.trim() || '',
     category: document.getElementById('cot-category')?.value.trim() || '',
-    price: document.getElementById('cot-price')?.value.trim() || '',
+    unitPrice: unitPriceRaw,
+    unitAmount,
+    qty,
+    price: lineAmount > 0 ? formatPrice(lineAmount) : unitPriceRaw,
+    lineAmount,
+    stockQty: product ? getProductStockQty(sku) : null,
     imageUrl: product ? quoteImageFullUrl(PilaricaStore.getProductImage(product)) : '',
   };
 }
@@ -2117,12 +2192,19 @@ function readQuotePieceForm() {
 function validateQuotePieceItem(item, label) {
   const who = label ? ` (${label})` : '';
   if (!item.productName) { toast(`Ingresa el nombre de la pieza${who}`, 'warn'); return false; }
-  if (!item.price) { toast(`Ingresa el precio de la pieza${who}`, 'warn'); return false; }
+  if (!item.unitPrice && !item.lineAmount) { toast(`Ingresa el precio de la pieza${who}`, 'warn'); return false; }
+  if (!item.qty || item.qty < 1) { toast(`Indica una cantidad válida${who}`, 'warn'); return false; }
   return true;
+}
+
+function notifyQuoteStockWarning(item) {
+  const msg = getQuoteStockWarning(item);
+  if (msg) toast('Atención: ' + msg, 'warn');
 }
 
 function addQuotePieceToSaved(item) {
   quoteSavedItems.push({ ...item });
+  notifyQuoteStockWarning(item);
   renderQuoteSavedList();
   updateQuotePreview();
 }
@@ -2134,14 +2216,20 @@ function renderQuoteSavedList() {
     box.innerHTML = '<p class="quote-saved-empty">Aún no hay piezas. Usa Cargar o + Otra pieza.</p>';
     return;
   }
-  box.innerHTML = quoteSavedItems.map((item, i) => `
+  box.innerHTML = quoteSavedItems.map((item, i) => {
+    const warn = getQuoteStockWarning(item);
+    const qtyLabel = (item.qty || 1) > 1 ? ` · x${item.qty}` : '';
+    const unitLabel = item.unitPrice && (item.qty || 1) > 1 ? ` (${escapeQuoteHtml(item.unitPrice)} c/u)` : '';
+    return `
     <div class="quote-saved-item" data-index="${i}">
       <div class="quote-saved-info">
         <strong>${escapeQuoteHtml(item.productName)}</strong>
-        <span>${escapeQuoteHtml(item.sku || 'Sin SKU')} · ${escapeQuoteHtml(item.price)}</span>
+        <span>${escapeQuoteHtml(item.sku || 'Sin SKU')}${qtyLabel}${unitLabel} · ${escapeQuoteHtml(item.price)}</span>
+        ${warn ? `<span class="quote-saved-warn">${escapeQuoteHtml(warn)}</span>` : ''}
       </div>
       <button type="button" class="btn btn-outline btn-sm quote-saved-remove">Quitar</button>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 function prefillQuotePieceFormFromSku(silent) {
@@ -2187,9 +2275,19 @@ function commitQuotePieceFromForm() {
   toast('Pieza agregada a la cotización');
 }
 
+function computeQuoteTotals(items, discountRaw) {
+  const subtotal = items.reduce((sum, item) => sum + (item.lineAmount || parseQuotePriceAmount(item.price)), 0);
+  const discountAmount = parseQuoteDiscountAmount(subtotal, discountRaw);
+  const total = Math.max(0, subtotal - discountAmount);
+  const pieceCount = items.reduce((sum, item) => sum + (item.qty || 1), 0);
+  return { subtotal, discountAmount, total, pieceCount };
+}
+
 function getQuoteFormData() {
   const items = quoteSavedItems.slice();
-  const totalAmount = items.reduce((sum, item) => sum + parseQuotePriceAmount(item.price), 0);
+  const discountRaw = document.getElementById('cot-discount')?.value.trim() || '';
+  const shippingRaw = document.getElementById('cot-shipping')?.value.trim() || '';
+  const totals = computeQuoteTotals(items, discountRaw);
   return {
     quoteNum: document.getElementById('cot-quote-num').value.trim() || generateQuoteNum(),
     client: document.getElementById('cot-client').value.trim(),
@@ -2197,9 +2295,34 @@ function getQuoteFormData() {
     date: document.getElementById('cot-date').value,
     validity: document.getElementById('cot-validity').value.trim() || '7 días naturales',
     notes: document.getElementById('cot-notes').value.trim(),
+    discountRaw,
+    shippingRaw,
     items,
-    total: totalAmount > 0 ? formatPrice(totalAmount) : '$0 MXN',
+    subtotal: totals.subtotal > 0 ? formatPrice(totals.subtotal) : '$0 MXN',
+    discount: totals.discountAmount > 0 ? formatPrice(totals.discountAmount) : '',
+    total: totals.total > 0 ? formatPrice(totals.total) : '$0 MXN',
+    pieceCount: totals.pieceCount,
+    stockWarnings: items.map(getQuoteStockWarning).filter(Boolean),
   };
+}
+
+function buildQuoteTotalsRows(data, inline) {
+  const pieceNote = data.pieceCount > 1 ? ` · ${data.pieceCount} piezas` : '';
+  const discountRow = data.discount
+    ? (inline
+      ? `<tr><td style="padding:8px 10px;border:1px solid #c9bfb0;text-align:right;color:#444;background:#faf8f5;width:72%;">Descuento</td><td style="padding:8px 10px;border:1px solid #c9bfb0;text-align:right;color:#9a4a2a;background:#faf8f5;">− ${escapeQuoteHtml(data.discount)}</td></tr>`
+      : `<tr><td>Descuento</td><td>− ${escapeQuoteHtml(data.discount)}</td></tr>`)
+    : '';
+  if (inline) {
+    return `
+      <tr><td style="padding:8px 10px;border:1px solid #c9bfb0;text-align:right;color:#444;background:#faf8f5;width:72%;">Subtotal (MXN)${pieceNote}</td><td style="padding:8px 10px;border:1px solid #c9bfb0;text-align:right;color:#111;background:#faf8f5;">${escapeQuoteHtml(data.subtotal || '$0 MXN')}</td></tr>
+      ${discountRow}
+      <tr><td style="padding:8px 10px;border:1px solid #c9bfb0;text-align:right;color:#444;background:#f3efe8;width:72%;font-weight:600;">Total cotizado (MXN)</td><td style="padding:8px 10px;border:1px solid #c9bfb0;text-align:right;font-weight:700;font-size:12px;color:#111;background:#f3efe8;">${escapeQuoteHtml(data.total || '$0 MXN')}</td></tr>`;
+  }
+  return `
+      <tr><td>Subtotal (MXN)${pieceNote}</td><td>${escapeQuoteHtml(data.subtotal || '$0 MXN')}</td></tr>
+      ${discountRow}
+      <tr><td>Total cotizado (MXN)</td><td>${escapeQuoteHtml(data.total || '$0 MXN')}</td></tr>`;
 }
 
 function buildQuoteLineRow(item) {
@@ -2211,6 +2334,9 @@ function buildQuoteLineRow(item) {
     ? `<tr><td>${escapeQuoteHtml(label)}:</td><td>${escapeQuoteHtml(val)}</td></tr>`
     : '';
 
+  const qty = item.qty || 1;
+  const unitLabel = item.unitPrice ? escapeQuoteHtml(item.unitPrice) : '';
+
   return `
     <tr>
       <td>
@@ -2221,6 +2347,8 @@ function buildQuoteLineRow(item) {
             <table class="quote-doc-specs">
               <tbody>
                 ${specRow('SKU', item.sku)}
+                ${specRow('Cantidad', String(qty))}
+                ${qty > 1 && unitLabel ? specRow('Precio unitario', unitLabel) : ''}
                 ${specRow('Material', item.material)}
                 ${specRow('Piedra', item.stone)}
                 ${specRow('Talla', item.size)}
@@ -2280,11 +2408,12 @@ function buildQuoteDocumentHtml(data) {
       </table>
 
       <table class="quote-doc-total">
-        <tr>
-          <td>Total cotizado (MXN)${items.length > 1 ? ` · ${items.length} piezas` : ''}</td>
-          <td>${escapeQuoteHtml(data.total || '$0 MXN')}</td>
-        </tr>
+        ${buildQuoteTotalsRows(data, false)}
       </table>
+
+      ${data.shippingRaw ? `<p class="quote-doc-shipping-note">Envío (referencia interna): ${escapeQuoteHtml(data.shippingRaw)}</p>` : ''}
+
+      ${(data.stockWarnings || []).length ? `<div class="quote-doc-stock-warn"><strong>Atención stock</strong><ul>${data.stockWarnings.map(w => `<li>${escapeQuoteHtml(w)}</li>`).join('')}</ul></div>` : ''}
 
       ${notesBlock}
 
@@ -2303,6 +2432,8 @@ function buildQuotePdfHtml(data) {
     : '';
 
   const pdfLine = (item) => {
+    const qty = item.qty || 1;
+    const unitLabel = item.unitPrice ? escapeQuoteHtml(item.unitPrice) : '';
     const img = item.imageUrl
       ? `<img src="${escapeQuoteHtml(item.imageUrl)}" crossorigin="anonymous" style="width:88px;height:88px;object-fit:cover;border:1px solid #ddd5c8;display:block;background:#f3efe8;" />`
       : '<div style="width:88px;height:88px;border:1px solid #ddd5c8;background:#f3efe8;font-size:9px;color:#8a7f72;text-align:center;line-height:88px;">Sin imagen</div>';
@@ -2312,7 +2443,7 @@ function buildQuotePdfHtml(data) {
           <td style="vertical-align:top;padding-right:12px;">${img}</td>
           <td style="vertical-align:top;">
             <div style="font-size:11px;font-weight:700;color:#111;margin-bottom:6px;">${escapeQuoteHtml(item.productName || 'Pieza')}</div>
-            <table cellpadding="0" cellspacing="0" border="0">${pdfSpec('SKU', item.sku)}${pdfSpec('Material', item.material)}${pdfSpec('Piedra', item.stone)}${pdfSpec('Talla', item.size)}${pdfSpec('Categoría', item.category)}</table>
+            <table cellpadding="0" cellspacing="0" border="0">${pdfSpec('SKU', item.sku)}${pdfSpec('Cantidad', String(qty))}${qty > 1 && unitLabel ? pdfSpec('Precio unitario', unitLabel) : ''}${pdfSpec('Material', item.material)}${pdfSpec('Piedra', item.stone)}${pdfSpec('Talla', item.size)}${pdfSpec('Categoría', item.category)}</table>
           </td>
         </tr></table>
       </td>
@@ -2325,7 +2456,7 @@ function buildQuotePdfHtml(data) {
     ? `<div style="margin-top:12px;padding-top:10px;border-top:1px solid #ece6dc;font-size:11px;color:#444;line-height:1.5;white-space:pre-wrap;"><span style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:#8a7f72;font-weight:700;">Notas y condiciones</span><br>${escapeQuoteHtml(data.notes)}</div>`
     : '';
 
-  return `<div id="quote-pdf-root" style="background:#fff;color:#222;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.45;padding:32px;width:730px;box-sizing:border-box;">
+  return `<div id="quote-pdf-root" style="background:#fff;color:#222;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.45;padding:32px;width:794px;box-sizing:border-box;">
     <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:14px;border-bottom:1px solid #c9bfb0;">
       <tr>
         <td style="vertical-align:top;padding-bottom:12px;">
@@ -2363,10 +2494,7 @@ function buildQuotePdfHtml(data) {
       <tbody>${lines}</tbody>
     </table>
     <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;font-size:11px;">
-      <tr>
-        <td style="padding:8px 10px;border:1px solid #c9bfb0;text-align:right;color:#444;background:#faf8f5;width:72%;">Total cotizado (MXN)${items.length > 1 ? ` · ${items.length} piezas` : ''}</td>
-        <td style="padding:8px 10px;border:1px solid #c9bfb0;text-align:right;font-weight:700;font-size:12px;color:#111;background:#f3efe8;">${escapeQuoteHtml(data.total || '$0 MXN')}</td>
-      </tr>
+      ${buildQuoteTotalsRows(data, true)}
     </table>
     ${notes}
     <div style="margin-top:14px;padding-top:10px;border-top:1px solid #c9bfb0;font-size:10px;color:#666;line-height:1.5;">
@@ -2400,64 +2528,152 @@ function validateQuoteForm() {
   return true;
 }
 
+function waitForNextPaint() {
+  return new Promise(resolve => {
+    requestAnimationFrame(() => requestAnimationFrame(resolve));
+  });
+}
+
+function sanitizeQuoteFilename(name) {
+  return String(name || 'cotizacion')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^\w.-]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 80) || 'cotizacion';
+}
+
+async function captureQuoteElementToPdf(sourceEl, filename) {
+  const { domToPng } = await import('https://cdn.jsdelivr.net/npm/modern-screenshot@4.7.0/+esm');
+  const { jsPDF } = window.jspdf;
+
+  const host = document.createElement('div');
+  host.setAttribute('data-pdf-export-root', 'true');
+  Object.assign(host.style, {
+    position: 'fixed',
+    left: '-12000px',
+    top: '0',
+    width: '794px',
+    background: '#ffffff',
+    overflow: 'visible',
+    pointerEvents: 'none',
+    zIndex: '2147483646',
+  });
+
+  Object.assign(sourceEl.style, {
+    width: '794px',
+    height: 'auto',
+    minHeight: '1123px',
+    maxHeight: 'none',
+    margin: '0',
+    transform: 'none',
+    boxShadow: 'none',
+    border: 'none',
+    background: '#ffffff',
+    color: '#111111',
+    position: 'relative',
+    overflow: 'visible',
+  });
+
+  host.appendChild(sourceEl);
+  document.body.appendChild(host);
+
+  try {
+    if (document.fonts?.ready) await document.fonts.ready;
+    await waitForQuoteImages(sourceEl);
+    await waitForNextPaint();
+
+    const fullHeight = Math.max(sourceEl.scrollHeight, sourceEl.offsetHeight, 1123);
+    const dataUrl = await domToPng(sourceEl, {
+      scale: 2,
+      backgroundColor: '#ffffff',
+      width: 794,
+      height: fullHeight,
+      style: {
+        transform: 'none',
+        overflow: 'visible',
+        height: `${fullHeight}px`,
+      },
+    });
+
+    if (!dataUrl.startsWith('data:image')) {
+      throw new Error('No se pudo generar la imagen del documento');
+    }
+
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+      compress: true,
+    });
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+    pdf.setFillColor(255, 255, 255);
+    pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+
+    const props = pdf.getImageProperties(dataUrl);
+    const imgWidth = pageWidth;
+    const imgHeight = (props.height * imgWidth) / props.width;
+    const renderHeight = Math.min(imgHeight, pageHeight);
+    const renderWidth = imgHeight > pageHeight
+      ? (props.width * pageHeight) / props.height
+      : imgWidth;
+
+    pdf.addImage(
+      dataUrl,
+      'PNG',
+      (pageWidth - renderWidth) / 2,
+      0,
+      renderWidth,
+      renderHeight,
+    );
+
+    const safeName = sanitizeQuoteFilename(filename);
+    pdf.save(safeName.endsWith('.pdf') ? safeName : `${safeName}.pdf`);
+  } finally {
+    host.remove();
+  }
+}
+
 async function downloadQuotePdf() {
   if (!validateQuoteForm()) return;
-  if (typeof html2pdf === 'undefined') {
+  if (!window.jspdf) {
     toast('No se cargó el generador de PDF. Recarga la página.', 'warn');
     return;
   }
 
   const data = getQuoteFormData();
+  if (data.stockWarnings.length) {
+    toast('Revisa el stock: ' + data.stockWarnings.join(' · '), 'warn');
+  }
   updateQuotePreview();
 
   const status = document.createElement('p');
   status.textContent = 'Generando PDF…';
   status.style.cssText = 'position:fixed;top:16px;left:50%;transform:translateX(-50%);font-family:Arial,sans-serif;font-size:14px;color:#444;z-index:100001;margin:0;background:#fff;padding:8px 16px;border:1px solid #ddd;border-radius:4px;';
-
-  const overlay = document.createElement('div');
-  overlay.style.cssText = 'position:fixed;left:0;top:0;width:100%;height:100%;background:#fff;z-index:100000;overflow:auto;padding:24px;box-sizing:border-box;';
+  document.body.appendChild(status);
 
   const mount = document.createElement('div');
-  mount.style.cssText = 'width:730px;margin:40px auto 24px;';
   mount.innerHTML = buildQuotePdfHtml(data);
   const el = mount.querySelector('#quote-pdf-root');
   if (!el) {
     toast('No hay contenido para el PDF', 'warn');
-    overlay.remove();
     status.remove();
     return;
   }
-  overlay.appendChild(mount);
-  document.body.appendChild(overlay);
-  document.body.appendChild(status);
 
   try {
-    await waitForQuoteImages(el);
-    await new Promise(r => setTimeout(r, 250));
-
     const clientSlug = data.client.replace(/[^\w\s-áéíóúñÁÉÍÓÚÑ]/g, '').trim().replace(/\s+/g, '-').slice(0, 24) || 'cliente';
     const filename = `Cotizacion-Pilarica-${data.quoteNum}-${clientSlug}.pdf`;
-
-    await html2pdf().set({
-      margin: [8, 8, 8, 8],
-      filename,
-      image: { type: 'jpeg', quality: 0.92 },
-      html2canvas: {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        logging: false,
-      },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    }).from(el).save();
-
+    await captureQuoteElementToPdf(el, filename);
     toast('PDF descargado');
   } catch (err) {
     console.error(err);
     toast('No se pudo generar el PDF', 'warn');
   } finally {
-    overlay.remove();
     status.remove();
   }
 }
@@ -2466,7 +2682,7 @@ function resetQuoteForm() {
   quoteSavedItems = [];
   clearQuotePieceForm();
   renderQuoteSavedList();
-  ['cot-client', 'cot-phone', 'cot-notes'].forEach(id => setCertField(id, ''));
+  ['cot-client', 'cot-phone', 'cot-date', 'cot-validity', 'cot-notes', 'cot-discount', 'cot-shipping'].forEach(id => setCertField(id, ''));
   document.getElementById('cot-date').value = new Date().toISOString().split('T')[0];
   document.getElementById('cot-validity').value = '7 días naturales';
   document.getElementById('cot-quote-num').value = generateQuoteNum();
@@ -2515,10 +2731,11 @@ function initQuoteForm() {
     updateQuotePreview();
   });
 
-  ['cot-client', 'cot-phone', 'cot-date', 'cot-validity', 'cot-notes'].forEach(id => {
+  ['cot-client', 'cot-phone', 'cot-date', 'cot-validity', 'cot-notes', 'cot-discount', 'cot-shipping'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', updateQuotePreview);
   });
+  document.getElementById('cot-qty')?.addEventListener('input', updateQuotePreview);
 }
 
 function formatWhatsAppDisplay(num) {
