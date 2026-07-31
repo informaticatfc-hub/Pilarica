@@ -627,6 +627,275 @@ img { display: block; max-width: 100%; }
   font-size: 13px; font-weight: 300; color: var(--stone);
 }
 
+/* Cotizaciones */
+.quote-preview-wrap {
+  background: #f5f2ed;
+  border: 1px solid var(--border);
+  padding: 20px;
+  overflow: auto;
+}
+.quote-doc {
+  background: #fff;
+  color: #222;
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 28px 32px 32px;
+  border: 1px solid #ddd5c8;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  line-height: 1.45;
+  box-sizing: border-box;
+}
+.quote-doc * { box-sizing: border-box; }
+.quote-doc-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #c9bfb0;
+  margin-bottom: 14px;
+}
+.quote-doc-brand {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #111;
+  line-height: 1.2;
+}
+.quote-doc-brand-sub {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8a7f72;
+  margin-top: 2px;
+}
+.quote-doc-meta {
+  text-align: right;
+  font-size: 11px;
+  color: #444;
+  line-height: 1.5;
+}
+.quote-doc-meta strong {
+  display: block;
+  font-size: 11px;
+  color: #111;
+  margin-bottom: 2px;
+}
+.quote-doc-heading {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #111;
+  margin: 0 0 14px;
+}
+.quote-doc-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 24px;
+  margin-bottom: 16px;
+  font-size: 11px;
+}
+.quote-doc-info-grid dt {
+  color: #8a7f72;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1px;
+}
+.quote-doc-info-grid dd {
+  margin: 0;
+  color: #222;
+  font-weight: 400;
+}
+.quote-doc-block {
+  margin-bottom: 14px;
+}
+.quote-doc-kicker {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8a7f72;
+  margin-bottom: 6px;
+}
+.quote-doc-lines {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  margin-bottom: 12px;
+}
+.quote-doc-lines th {
+  text-align: left;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a7f72;
+  font-weight: 600;
+  padding: 6px 8px;
+  border-bottom: 1px solid #c9bfb0;
+  background: #faf8f5;
+}
+.quote-doc-lines th:last-child { text-align: right; width: 28%; }
+.quote-doc-lines td {
+  padding: 10px 8px;
+  vertical-align: top;
+  border-bottom: 1px solid #ece6dc;
+  color: #222;
+}
+.quote-doc-lines td:last-child {
+  text-align: right;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.quote-doc-line-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.quote-doc-piece-img {
+  width: 88px;
+  height: 88px;
+  min-width: 88px;
+  object-fit: cover;
+  background: #f3efe8;
+  border: 1px solid #ddd5c8;
+  display: block;
+}
+.quote-doc-piece-img.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: #8a7f72;
+  text-align: center;
+  padding: 6px;
+}
+.quote-doc-piece-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 6px;
+  line-height: 1.35;
+}
+.quote-doc-specs {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+}
+.quote-doc-specs td {
+  padding: 2px 0;
+  vertical-align: top;
+  color: #444;
+  line-height: 1.4;
+}
+.quote-doc-specs td:first-child {
+  width: 34%;
+  color: #8a7f72;
+  padding-right: 8px;
+}
+.quote-doc-total {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  margin-top: 4px;
+}
+.quote-doc-total td {
+  padding: 8px 10px;
+  border: 1px solid #c9bfb0;
+}
+.quote-doc-total td:first-child {
+  text-align: right;
+  color: #444;
+  background: #faf8f5;
+  width: 72%;
+}
+.quote-doc-total td:last-child {
+  text-align: right;
+  font-weight: 700;
+  font-size: 12px;
+  color: #111;
+  background: #f3efe8;
+}
+.quote-doc-notes {
+  font-size: 11px;
+  color: #444;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #ece6dc;
+}
+.quote-doc-footer {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid #c9bfb0;
+  font-size: 10px;
+  color: #666;
+  line-height: 1.5;
+}
+.quote-doc-footer strong { color: #222; font-weight: 600; }
+.quote-sku-row {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+.quote-sku-row .form-input { flex: 1; }
+.quote-item-card {
+  border: 1px solid var(--border);
+  padding: 16px;
+  margin-bottom: 12px;
+  background: var(--cream-dark);
+}
+.quote-saved-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.quote-saved-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid var(--border);
+  font-size: 12px;
+}
+.quote-saved-info strong {
+  display: block;
+  font-size: 13px;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.quote-saved-info span {
+  color: var(--stone);
+  font-size: 11px;
+}
+.quote-saved-empty {
+  font-size: 12px;
+  color: var(--stone);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.quote-piece-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.quote-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.quote-pdf-source {
+  display: none;
+}
+
 @media print {
   body * { visibility: hidden; }
   #print-zone, #print-zone * { visibility: visible; }
@@ -741,6 +1010,10 @@ img { display: block; max-width: 100%; }
       <button type="button" class="sidebar-link" data-panel="content">
         <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M7 8h10M7 12h10M7 16h6" stroke="currentColor" stroke-width="1.2"/></svg>
         Contenido web
+      </button>
+      <button type="button" class="sidebar-link" data-panel="quotes">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.2"/><path d="M14 2v6h6M8 13h8M8 17h5" stroke="currentColor" stroke-width="1.2"/></svg>
+        Cotizaciones
       </button>
       <button type="button" class="sidebar-link" data-panel="certificates">
         <svg viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.2"/><path d="M14 2v6h6M9 15l2 2 4-4" stroke="currentColor" stroke-width="1.2"/></svg>
@@ -1101,6 +1374,106 @@ img { display: block; max-width: 100%; }
       </div>
     </section>
 
+    </section>
+
+    <!-- COTIZACIONES -->
+    <section class="admin-panel" id="panel-quotes">
+      <div class="dash-grid">
+
+        <div class="panel">
+          <p class="panel-title">Nueva cotización</p>
+          <p class="dash-form-note">Completa los datos del cliente, carga piezas con SKU y agrégalas a la cotización.</p>
+
+          <div class="form-row">
+            <label class="form-label" for="cot-client">Nombre del cliente *</label>
+            <input class="form-input" id="cot-client" type="text" placeholder="Nombre completo" />
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label class="form-label" for="cot-phone">Teléfono / WhatsApp</label>
+              <input class="form-input" id="cot-phone" type="tel" placeholder="+52 961 000 0000" />
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="cot-date">Fecha de cotización</label>
+              <input class="form-input" id="cot-date" type="date" />
+            </div>
+          </div>
+          <input type="hidden" id="cot-quote-num" />
+
+          <div class="form-grid">
+            <div class="form-row">
+              <label class="form-label" for="cot-validity">Vigencia</label>
+              <input class="form-input" id="cot-validity" type="text" value="7 días naturales" />
+            </div>
+          </div>
+
+          <hr class="form-divider" />
+
+          <p class="editor-side-title" style="margin-bottom:12px;">Agregar pieza</p>
+          <div class="quote-item-card" id="quote-piece-form">
+            <div class="form-row">
+              <label class="form-label" for="cot-sku">SKU / ID</label>
+              <div class="quote-sku-row">
+                <input class="form-input" id="cot-sku" type="text" placeholder="Ej. PIL-001" autocomplete="off" />
+                <button type="button" class="btn btn-outline btn-sm" id="cot-sku-load">Cargar</button>
+              </div>
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="cot-product">Nombre de la pieza *</label>
+              <input class="form-input" id="cot-product" type="text" placeholder="Nombre del producto" />
+            </div>
+            <div class="form-grid">
+              <div class="form-row">
+                <label class="form-label" for="cot-material">Material</label>
+                <input class="form-input" id="cot-material" type="text" placeholder="Oro 18k" />
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="cot-stone">Piedra</label>
+                <input class="form-input" id="cot-stone" type="text" placeholder="Diamantes" />
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-row">
+                <label class="form-label" for="cot-size">Talla / Medida</label>
+                <input class="form-input" id="cot-size" type="text" placeholder="Talla 14" />
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="cot-category">Categoría</label>
+                <input class="form-input" id="cot-category" type="text" readonly placeholder="—" />
+              </div>
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="cot-price">Precio *</label>
+              <input class="form-input" id="cot-price" type="text" placeholder="$48,500 MXN" />
+            </div>
+          </div>
+          <div class="quote-piece-actions">
+            <button type="button" class="btn btn-outline btn-sm" id="btn-add-quote-item">+ Otra pieza</button>
+          </div>
+
+          <p class="editor-side-title" style="margin-bottom:8px;">Piezas en esta cotización</p>
+          <div id="quote-saved-items" class="quote-saved-list"></div>
+
+          <div class="form-row">
+            <label class="form-label" for="cot-notes">Notas (envío, forma de pago, etc.)</label>
+            <textarea class="form-textarea" id="cot-notes" rows="3" placeholder="Ej. Incluye certificado de autenticidad. Envío a CDMX en 3–5 días hábiles."></textarea>
+          </div>
+
+          <div class="quote-actions">
+            <button type="button" class="btn btn-gold" id="btn-download-quote-pdf">Descargar PDF</button>
+            <button type="button" class="btn btn-outline btn-sm" id="btn-reset-quote">Limpiar</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <p class="panel-title">Vista previa</p>
+          <p class="dash-form-note" style="margin-bottom:16px;">Así se verá el PDF formal listo para enviar por WhatsApp.</p>
+          <div class="quote-preview-wrap" id="quote-preview-wrap"></div>
+        </div>
+
+      </div>
+    </section>
+
     <!-- CERTIFICADOS -->
     <section class="admin-panel" id="panel-certificates">
       <div class="dash-grid">
@@ -1239,12 +1612,15 @@ img { display: block; max-width: 100%; }
   </main>
 </div>
 
+<div id="quote-pdf-source" class="quote-pdf-source" aria-hidden="true"></div>
+
 <div id="toast" class="toast" role="alert"></div>
 
 <script src="js/pilarica-config.js"></script>
 <script src="js/pilarica-store.js"></script>
 <script src="js/pilarica-site-content.js"></script>
 <script src="js/pilarica-info-pages.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous"></script>
 <script>
 const ADMIN_AUTH_KEY = 'pilarica_admin_session';
 const CERTS_KEY = PilaricaConfig.certsKey;
@@ -1312,6 +1688,7 @@ async function showApp() {
   renderStats();
   fillCertCatalogPick();
   renderCertHistory();
+  initQuoteForm();
   document.getElementById('cert-date').value = new Date().toISOString().split('T')[0];
   updateCertPreview();
 }
@@ -1331,7 +1708,7 @@ function switchPanel(name) {
   });
   const panel = document.getElementById('panel-' + name);
   if (panel) panel.classList.add('panel-active');
-  const titles = { products: 'Productos', editor: editingId ? 'Editar pieza' : 'Nueva pieza', content: 'Contenido web', certificates: 'Certificados' };
+  const titles = { products: 'Productos', editor: editingId ? 'Editar pieza' : 'Nueva pieza', content: 'Contenido web', quotes: 'Cotizaciones', certificates: 'Certificados' };
   document.getElementById('topbar-title').textContent = titles[name] || 'Panel';
   closeSidebar();
 }
@@ -1677,6 +2054,479 @@ function resetCertForm() {
   document.getElementById('cert-date').value = new Date().toISOString().split('T')[0];
   document.getElementById('cert-prev-serial').textContent = 'PIL-000000';
   updateCertPreview();
+}
+
+let quoteSavedItems = [];
+let quoteSkuDebounce = null;
+
+function escapeQuoteHtml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function generateQuoteNum() {
+  const ymd = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const rnd = String(Math.floor(Math.random() * 900) + 100);
+  return `COT-${ymd}-${rnd}`;
+}
+
+function quoteImageFullUrl(url) {
+  if (!url) return '';
+  if (/^https?:\/\//i.test(url) || url.startsWith('data:')) return url;
+  const rel = PilaricaStore.resolvePublicUrl(url);
+  if (/^https?:\/\//i.test(rel)) return rel;
+  const origin = (PilaricaConfig.siteBaseUrl || '').replace(/\/$/, '') || window.location.origin;
+  const path = rel.startsWith('/') ? rel : `/${rel}`;
+  return `${origin}${path}`;
+}
+
+function findProductBySku(raw) {
+  const sku = (raw || '').trim();
+  if (!sku) return null;
+  return products.find(p => p.id.toLowerCase() === sku.toLowerCase()) || null;
+}
+
+function parseQuotePriceAmount(str) {
+  const cleaned = String(str || '').replace(/[^\d.,]/g, '').replace(/,/g, '');
+  const n = parseFloat(cleaned);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function clearQuotePieceForm() {
+  ['cot-sku', 'cot-product', 'cot-material', 'cot-stone', 'cot-size', 'cot-category', 'cot-price'].forEach(id => setCertField(id, ''));
+}
+
+function readQuotePieceForm() {
+  const sku = document.getElementById('cot-sku')?.value.trim() || '';
+  const product = findProductBySku(sku);
+  return {
+    sku,
+    productName: document.getElementById('cot-product')?.value.trim() || '',
+    material: document.getElementById('cot-material')?.value.trim() || '',
+    stone: document.getElementById('cot-stone')?.value.trim() || '',
+    size: document.getElementById('cot-size')?.value.trim() || '',
+    category: document.getElementById('cot-category')?.value.trim() || '',
+    price: document.getElementById('cot-price')?.value.trim() || '',
+    imageUrl: product ? quoteImageFullUrl(PilaricaStore.getProductImage(product)) : '',
+  };
+}
+
+function validateQuotePieceItem(item, label) {
+  const who = label ? ` (${label})` : '';
+  if (!item.productName) { toast(`Ingresa el nombre de la pieza${who}`, 'warn'); return false; }
+  if (!item.price) { toast(`Ingresa el precio de la pieza${who}`, 'warn'); return false; }
+  return true;
+}
+
+function addQuotePieceToSaved(item) {
+  quoteSavedItems.push({ ...item });
+  renderQuoteSavedList();
+  updateQuotePreview();
+}
+
+function renderQuoteSavedList() {
+  const box = document.getElementById('quote-saved-items');
+  if (!box) return;
+  if (!quoteSavedItems.length) {
+    box.innerHTML = '<p class="quote-saved-empty">Aún no hay piezas. Usa Cargar o + Otra pieza.</p>';
+    return;
+  }
+  box.innerHTML = quoteSavedItems.map((item, i) => `
+    <div class="quote-saved-item" data-index="${i}">
+      <div class="quote-saved-info">
+        <strong>${escapeQuoteHtml(item.productName)}</strong>
+        <span>${escapeQuoteHtml(item.sku || 'Sin SKU')} · ${escapeQuoteHtml(item.price)}</span>
+      </div>
+      <button type="button" class="btn btn-outline btn-sm quote-saved-remove">Quitar</button>
+    </div>`).join('');
+}
+
+function prefillQuotePieceFormFromSku(silent) {
+  const skuInput = document.getElementById('cot-sku');
+  const p = findProductBySku(skuInput?.value.trim());
+  if (!p) {
+    if (!silent) toast('No se encontró una pieza con ese SKU', 'warn');
+    return false;
+  }
+  setCertField('cot-sku', p.id);
+  setCertField('cot-product', p.name);
+  setCertField('cot-material', p.material || '');
+  setCertField('cot-stone', p.stone && p.stone !== 'Sin piedra' ? p.stone : '');
+  setCertField('cot-size', p.size || '');
+  setCertField('cot-category', PilaricaStore.CATEGORY_LABELS[p.category] || p.category || '');
+  setCertField('cot-price', typeof p.price === 'number' ? formatPrice(p.price) : (p.price || ''));
+  if (!silent) toast('Datos cargados: ' + p.name);
+  return true;
+}
+
+function loadAndCommitQuotePiece() {
+  const sku = document.getElementById('cot-sku')?.value.trim();
+  if (!sku) { toast('Ingresa un SKU', 'warn'); return; }
+  if (!prefillQuotePieceFormFromSku(true)) return;
+  const item = readQuotePieceForm();
+  if (!validateQuotePieceItem(item)) return;
+  addQuotePieceToSaved(item);
+  clearQuotePieceForm();
+  toast('Pieza agregada a la cotización');
+}
+
+function commitQuotePieceFromForm() {
+  const item = readQuotePieceForm();
+  const hasData = item.productName || item.sku || item.price;
+  if (!hasData) {
+    clearQuotePieceForm();
+    toast('Formulario listo para otra pieza');
+    return;
+  }
+  if (!validateQuotePieceItem(item)) return;
+  addQuotePieceToSaved(item);
+  clearQuotePieceForm();
+  toast('Pieza agregada a la cotización');
+}
+
+function getQuoteFormData() {
+  const items = quoteSavedItems.slice();
+  const totalAmount = items.reduce((sum, item) => sum + parseQuotePriceAmount(item.price), 0);
+  return {
+    quoteNum: document.getElementById('cot-quote-num').value.trim() || generateQuoteNum(),
+    client: document.getElementById('cot-client').value.trim(),
+    phone: document.getElementById('cot-phone').value.trim(),
+    date: document.getElementById('cot-date').value,
+    validity: document.getElementById('cot-validity').value.trim() || '7 días naturales',
+    notes: document.getElementById('cot-notes').value.trim(),
+    items,
+    total: totalAmount > 0 ? formatPrice(totalAmount) : '$0 MXN',
+  };
+}
+
+function buildQuoteLineRow(item) {
+  const imgBlock = item.imageUrl
+    ? `<img class="quote-doc-piece-img" src="${escapeQuoteHtml(item.imageUrl)}" alt="${escapeQuoteHtml(item.productName)}" crossorigin="anonymous" />`
+    : '<div class="quote-doc-piece-img placeholder">Sin imagen</div>';
+
+  const specRow = (label, val) => val
+    ? `<tr><td>${escapeQuoteHtml(label)}:</td><td>${escapeQuoteHtml(val)}</td></tr>`
+    : '';
+
+  return `
+    <tr>
+      <td>
+        <div class="quote-doc-line-item">
+          ${imgBlock}
+          <div>
+            <p class="quote-doc-piece-name">${escapeQuoteHtml(item.productName || 'Pieza')}</p>
+            <table class="quote-doc-specs">
+              <tbody>
+                ${specRow('SKU', item.sku)}
+                ${specRow('Material', item.material)}
+                ${specRow('Piedra', item.stone)}
+                ${specRow('Talla', item.size)}
+                ${specRow('Categoría', item.category)}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </td>
+      <td>${escapeQuoteHtml(item.price || '$0 MXN')}</td>
+    </tr>`;
+}
+
+function buildQuoteDocumentHtml(data) {
+  const items = (data.items || []).filter(item => item.productName || item.sku || item.price);
+  const lineRows = items.length
+    ? items.map(buildQuoteLineRow).join('')
+    : buildQuoteLineRow({ productName: 'Pieza', price: '$0 MXN' });
+
+  const notesBlock = data.notes
+    ? `<div class="quote-doc-notes"><strong style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:#8a7f72;">Notas y condiciones</strong><br>${escapeQuoteHtml(data.notes)}</div>`
+    : '';
+
+  const wa = PilaricaStore.getWhatsAppNumber();
+  const waDisplay = formatWhatsAppDisplay(wa);
+
+  return `
+    <div class="quote-doc">
+      <div class="quote-doc-top">
+        <div>
+          <div class="quote-doc-brand">PILARICA</div>
+          <div class="quote-doc-brand-sub">Joyas de autor</div>
+        </div>
+        <div class="quote-doc-meta">
+          <strong>Folio ${escapeQuoteHtml(data.quoteNum)}</strong>
+          Fecha: ${escapeQuoteHtml(formatCertDate(data.date))}<br>
+          Vigencia: ${escapeQuoteHtml(data.validity)}
+        </div>
+      </div>
+
+      <h1 class="quote-doc-heading">Cotización</h1>
+
+      <dl class="quote-doc-info-grid">
+        <div><dt>Cliente</dt><dd>${escapeQuoteHtml(data.client || '—')}</dd></div>
+        <div><dt>Teléfono</dt><dd>${escapeQuoteHtml(data.phone || '—')}</dd></div>
+      </dl>
+
+      <div class="quote-doc-kicker">Detalle de la cotización</div>
+      <table class="quote-doc-lines">
+        <thead>
+          <tr>
+            <th>Concepto</th>
+            <th>Importe</th>
+          </tr>
+        </thead>
+        <tbody>${lineRows}</tbody>
+      </table>
+
+      <table class="quote-doc-total">
+        <tr>
+          <td>Total cotizado (MXN)${items.length > 1 ? ` · ${items.length} piezas` : ''}</td>
+          <td>${escapeQuoteHtml(data.total || '$0 MXN')}</td>
+        </tr>
+      </table>
+
+      ${notesBlock}
+
+      <div class="quote-doc-footer">
+        <strong>Pilarica Joyas</strong> · WhatsApp ${escapeQuoteHtml(waDisplay)} · mrk@pilaricajoyas.com.mx · pilaricajoyas.com.mx
+      </div>
+    </div>`;
+}
+
+function buildQuotePdfHtml(data) {
+  const items = (data.items || []).filter(item => item.productName || item.sku || item.price);
+  const waDisplay = formatWhatsAppDisplay(PilaricaStore.getWhatsAppNumber());
+
+  const pdfSpec = (label, val) => val
+    ? `<tr><td style="color:#8a7f72;font-size:10px;padding:2px 8px 2px 0;vertical-align:top;">${escapeQuoteHtml(label)}:</td><td style="font-size:10px;color:#444;padding:2px 0;">${escapeQuoteHtml(val)}</td></tr>`
+    : '';
+
+  const pdfLine = (item) => {
+    const img = item.imageUrl
+      ? `<img src="${escapeQuoteHtml(item.imageUrl)}" crossorigin="anonymous" style="width:88px;height:88px;object-fit:cover;border:1px solid #ddd5c8;display:block;background:#f3efe8;" />`
+      : '<div style="width:88px;height:88px;border:1px solid #ddd5c8;background:#f3efe8;font-size:9px;color:#8a7f72;text-align:center;line-height:88px;">Sin imagen</div>';
+    return `<tr>
+      <td style="padding:10px 8px;border-bottom:1px solid #ece6dc;vertical-align:top;">
+        <table cellpadding="0" cellspacing="0" border="0"><tr>
+          <td style="vertical-align:top;padding-right:12px;">${img}</td>
+          <td style="vertical-align:top;">
+            <div style="font-size:11px;font-weight:700;color:#111;margin-bottom:6px;">${escapeQuoteHtml(item.productName || 'Pieza')}</div>
+            <table cellpadding="0" cellspacing="0" border="0">${pdfSpec('SKU', item.sku)}${pdfSpec('Material', item.material)}${pdfSpec('Piedra', item.stone)}${pdfSpec('Talla', item.size)}${pdfSpec('Categoría', item.category)}</table>
+          </td>
+        </tr></table>
+      </td>
+      <td style="padding:10px 8px;border-bottom:1px solid #ece6dc;text-align:right;font-weight:600;font-size:11px;vertical-align:top;white-space:nowrap;">${escapeQuoteHtml(item.price || '$0 MXN')}</td>
+    </tr>`;
+  };
+
+  const lines = items.length ? items.map(pdfLine).join('') : pdfLine({ productName: 'Pieza', price: '$0 MXN' });
+  const notes = data.notes
+    ? `<div style="margin-top:12px;padding-top:10px;border-top:1px solid #ece6dc;font-size:11px;color:#444;line-height:1.5;white-space:pre-wrap;"><span style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:#8a7f72;font-weight:700;">Notas y condiciones</span><br>${escapeQuoteHtml(data.notes)}</div>`
+    : '';
+
+  return `<div id="quote-pdf-root" style="background:#fff;color:#222;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.45;padding:32px;width:730px;box-sizing:border-box;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:14px;border-bottom:1px solid #c9bfb0;">
+      <tr>
+        <td style="vertical-align:top;padding-bottom:12px;">
+          <div style="font-size:15px;font-weight:700;letter-spacing:0.06em;color:#111;">PILARICA</div>
+          <div style="font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:#8a7f72;margin-top:2px;">Joyas de autor</div>
+        </td>
+        <td style="vertical-align:top;text-align:right;font-size:11px;color:#444;line-height:1.5;padding-bottom:12px;">
+          <strong style="display:block;color:#111;font-size:11px;">Folio ${escapeQuoteHtml(data.quoteNum)}</strong>
+          Fecha: ${escapeQuoteHtml(formatCertDate(data.date))}<br>
+          Vigencia: ${escapeQuoteHtml(data.validity)}
+        </td>
+      </tr>
+    </table>
+    <div style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px;color:#111;">Cotización</div>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;font-size:11px;">
+      <tr>
+        <td width="50%" style="vertical-align:top;padding-right:12px;">
+          <div style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:#8a7f72;margin-bottom:2px;">Cliente</div>
+          <div style="color:#222;">${escapeQuoteHtml(data.client || '—')}</div>
+        </td>
+        <td width="50%" style="vertical-align:top;">
+          <div style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:#8a7f72;margin-bottom:2px;">Teléfono</div>
+          <div style="color:#222;">${escapeQuoteHtml(data.phone || '—')}</div>
+        </td>
+      </tr>
+    </table>
+    <div style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#8a7f72;margin-bottom:6px;">Detalle de la cotización</div>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;font-size:11px;margin-bottom:12px;">
+      <thead>
+        <tr>
+          <th style="text-align:left;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:#8a7f72;padding:6px 8px;border-bottom:1px solid #c9bfb0;background:#faf8f5;">Concepto</th>
+          <th style="text-align:right;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:#8a7f72;padding:6px 8px;border-bottom:1px solid #c9bfb0;background:#faf8f5;width:28%;">Importe</th>
+        </tr>
+      </thead>
+      <tbody>${lines}</tbody>
+    </table>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;font-size:11px;">
+      <tr>
+        <td style="padding:8px 10px;border:1px solid #c9bfb0;text-align:right;color:#444;background:#faf8f5;width:72%;">Total cotizado (MXN)${items.length > 1 ? ` · ${items.length} piezas` : ''}</td>
+        <td style="padding:8px 10px;border:1px solid #c9bfb0;text-align:right;font-weight:700;font-size:12px;color:#111;background:#f3efe8;">${escapeQuoteHtml(data.total || '$0 MXN')}</td>
+      </tr>
+    </table>
+    ${notes}
+    <div style="margin-top:14px;padding-top:10px;border-top:1px solid #c9bfb0;font-size:10px;color:#666;line-height:1.5;">
+      <strong style="color:#222;">Pilarica Joyas</strong> · WhatsApp ${escapeQuoteHtml(waDisplay)} · mrk@pilaricajoyas.com.mx · pilaricajoyas.com.mx
+    </div>
+  </div>`;
+}
+
+function waitForQuoteImages(container) {
+  const imgs = container.querySelectorAll('img');
+  return Promise.all([...imgs].map(img => {
+    if (img.complete && img.naturalWidth) return Promise.resolve();
+    return new Promise(resolve => {
+      img.onload = resolve;
+      img.onerror = resolve;
+      setTimeout(resolve, 4000);
+    });
+  }));
+}
+
+function updateQuotePreview() {
+  const wrap = document.getElementById('quote-preview-wrap');
+  if (!wrap) return;
+  wrap.innerHTML = buildQuoteDocumentHtml(getQuoteFormData());
+}
+
+function validateQuoteForm() {
+  const client = document.getElementById('cot-client').value.trim();
+  if (!client) { toast('Ingresa el nombre del cliente', 'warn'); return false; }
+  if (!quoteSavedItems.length) { toast('Agrega al menos una pieza con Cargar o + Otra pieza', 'warn'); return false; }
+  return true;
+}
+
+async function downloadQuotePdf() {
+  if (!validateQuoteForm()) return;
+  if (typeof html2pdf === 'undefined') {
+    toast('No se cargó el generador de PDF. Recarga la página.', 'warn');
+    return;
+  }
+
+  const data = getQuoteFormData();
+  updateQuotePreview();
+
+  const status = document.createElement('p');
+  status.textContent = 'Generando PDF…';
+  status.style.cssText = 'position:fixed;top:16px;left:50%;transform:translateX(-50%);font-family:Arial,sans-serif;font-size:14px;color:#444;z-index:100001;margin:0;background:#fff;padding:8px 16px;border:1px solid #ddd;border-radius:4px;';
+
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;left:0;top:0;width:100%;height:100%;background:#fff;z-index:100000;overflow:auto;padding:24px;box-sizing:border-box;';
+
+  const mount = document.createElement('div');
+  mount.style.cssText = 'width:730px;margin:40px auto 24px;';
+  mount.innerHTML = buildQuotePdfHtml(data);
+  const el = mount.querySelector('#quote-pdf-root');
+  if (!el) {
+    toast('No hay contenido para el PDF', 'warn');
+    overlay.remove();
+    status.remove();
+    return;
+  }
+  overlay.appendChild(mount);
+  document.body.appendChild(overlay);
+  document.body.appendChild(status);
+
+  try {
+    await waitForQuoteImages(el);
+    await new Promise(r => setTimeout(r, 250));
+
+    const clientSlug = data.client.replace(/[^\w\s-áéíóúñÁÉÍÓÚÑ]/g, '').trim().replace(/\s+/g, '-').slice(0, 24) || 'cliente';
+    const filename = `Cotizacion-Pilarica-${data.quoteNum}-${clientSlug}.pdf`;
+
+    await html2pdf().set({
+      margin: [8, 8, 8, 8],
+      filename,
+      image: { type: 'jpeg', quality: 0.92 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+      },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    }).from(el).save();
+
+    toast('PDF descargado');
+  } catch (err) {
+    console.error(err);
+    toast('No se pudo generar el PDF', 'warn');
+  } finally {
+    overlay.remove();
+    status.remove();
+  }
+}
+
+function resetQuoteForm() {
+  quoteSavedItems = [];
+  clearQuotePieceForm();
+  renderQuoteSavedList();
+  ['cot-client', 'cot-phone', 'cot-notes'].forEach(id => setCertField(id, ''));
+  document.getElementById('cot-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('cot-validity').value = '7 días naturales';
+  document.getElementById('cot-quote-num').value = generateQuoteNum();
+  updateQuotePreview();
+}
+
+function initQuoteForm() {
+  const dateEl = document.getElementById('cot-date');
+  const numEl = document.getElementById('cot-quote-num');
+  if (dateEl && !dateEl.value) dateEl.value = new Date().toISOString().split('T')[0];
+  if (numEl && !numEl.value) numEl.value = generateQuoteNum();
+  renderQuoteSavedList();
+  updateQuotePreview();
+
+  if (initQuoteForm._ready) return;
+  initQuoteForm._ready = true;
+
+  document.getElementById('cot-sku-load')?.addEventListener('click', loadAndCommitQuotePiece);
+  document.getElementById('btn-add-quote-item')?.addEventListener('click', commitQuotePieceFromForm);
+  document.getElementById('btn-download-quote-pdf')?.addEventListener('click', downloadQuotePdf);
+  document.getElementById('btn-reset-quote')?.addEventListener('click', resetQuoteForm);
+
+  document.getElementById('cot-sku')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      loadAndCommitQuotePiece();
+    }
+  });
+
+  document.getElementById('cot-sku')?.addEventListener('input', () => {
+    clearTimeout(quoteSkuDebounce);
+    quoteSkuDebounce = setTimeout(() => {
+      const val = document.getElementById('cot-sku')?.value.trim();
+      if (val && findProductBySku(val)) prefillQuotePieceFormFromSku(true);
+    }, 600);
+  });
+
+  document.getElementById('quote-saved-items')?.addEventListener('click', e => {
+    const btn = e.target.closest('.quote-saved-remove');
+    if (!btn) return;
+    const row = btn.closest('.quote-saved-item');
+    const idx = Number(row?.dataset.index);
+    if (!Number.isFinite(idx)) return;
+    quoteSavedItems.splice(idx, 1);
+    renderQuoteSavedList();
+    updateQuotePreview();
+  });
+
+  ['cot-client', 'cot-phone', 'cot-date', 'cot-validity', 'cot-notes'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', updateQuotePreview);
+  });
+}
+
+function formatWhatsAppDisplay(num) {
+  const d = String(num || '').replace(/\D/g, '');
+  if (d.length === 12 && d.startsWith('52')) {
+    return `+52 ${d.slice(2, 5)} ${d.slice(5, 8)} ${d.slice(8)}`;
+  }
+  return String(num || '').startsWith('+') ? num : `+${d || num}`;
 }
 
 function populateCertPreview(cert) {

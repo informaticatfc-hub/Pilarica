@@ -8,7 +8,8 @@ Sitio estático (HTML + JavaScript) con backend **Supabase** (PostgreSQL, Auth, 
 npx serve . -s -l tcp://localhost:63885
 ```
 
-El flag `-s` activa rutas limpias (`/catalogo`, `/producto/SKU`) como en producción.
+El flag `-s` activa rutas limpias (`/catalogo`, `/producto/SKU`) como en producción.  
+`serve.json` evita que el admin quede atrapado en la SPA: usa **`/admin.html`** (no `/admin`).
 
 - Tienda: http://localhost:63885/
 - Catálogo: http://localhost:63885/catalogo
