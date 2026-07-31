@@ -1,0 +1,12 @@
+{
+  "cleanUrls": false,
+  "redirects": [
+    { "source": "/admin", "destination": "/admin.html", "type": 302 }
+  ],
+  "rewrites": [
+    {
+      "source": "/((?!admin\\.html|admin|assets|js|database|.*\\..*).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

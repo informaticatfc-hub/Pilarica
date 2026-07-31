@@ -1,0 +1,3452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Panel administrativo — Pilarica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Jost:wght@300;400;500&display=swap');
+
+:root {
+  --gold: #B8975A;
+  --gold-light: #D4B87A;
+  --ink: #1A1714;
+  --ink-mid: #3D3830;
+  --stone: #7A746C;
+  --cream: #FDFAF5;
+  --cream-dark: #F2EDE3;
+  --cream-mid: #EAE3D6;
+  --border: rgba(184,151,90,0.2);
+  --border-md: rgba(184,151,90,0.4);
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Jost', system-ui, sans-serif;
+  --nav-h: 72px;
+  --sidebar-w: 260px;
+  --ease: cubic-bezier(0.4,0,0.2,1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  font-family: var(--sans);
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+button, input, select, textarea { font-family: var(--sans); }
+img { display: block; max-width: 100%; }
+
+/* ——— Login ——— */
+.login-screen {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 32px 5vw;
+  background: linear-gradient(135deg, var(--cream) 0%, var(--cream-dark) 100%);
+}
+.login-card {
+  width: 100%; max-width: 420px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  padding: 40px 36px 36px;
+}
+.login-brand {
+  font-family: var(--serif);
+  font-size: 32px; font-weight: 300;
+  letter-spacing: 0.1em; text-align: center;
+  margin-bottom: 4px;
+}
+.login-tagline {
+  text-align: center;
+  font-size: 9px; letter-spacing: 0.35em;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 32px;
+}
+.login-title {
+  font-family: var(--serif);
+  font-size: 24px; font-weight: 300;
+  margin-bottom: 6px;
+}
+.login-sub {
+  font-size: 13px; font-weight: 300; color: var(--stone);
+  margin-bottom: 24px;
+}
+.form-label {
+  display: block;
+  font-size: 9px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 6px;
+}
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  font-size: 14px; font-weight: 300;
+  color: var(--ink);
+  background: var(--cream-dark);
+  border: 1px solid var(--border);
+  padding: 11px 14px;
+  transition: border-color 0.2s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none; border-color: var(--gold);
+}
+.form-row { margin-bottom: 16px; }
+.password-field {
+  position: relative;
+}
+.password-field .form-input {
+  padding-right: 44px;
+}
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  bottom: 11px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--stone);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.password-toggle:hover { color: var(--gold); }
+.password-toggle svg { width: 18px; height: 18px; }
+.rich-text-wrap { margin-bottom: 0; }
+.rich-text-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.rich-text-toolbar .rt-btn {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  background: var(--cream);
+  color: var(--ink-mid);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.rich-text-toolbar .rt-btn:hover,
+.rich-text-toolbar .rt-btn.is-active {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.rich-text-toolbar .rt-btn em { font-style: italic; color: var(--gold); }
+.rich-text-hint {
+  font-size: 10px;
+  color: var(--stone);
+  margin-top: 6px;
+}
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-textarea { min-height: 88px; resize: vertical; }
+.form-error {
+  font-size: 12px; color: #9a4a4a;
+  margin-top: 8px; display: none;
+}
+.form-error.visible { display: block; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  font-weight: 500; padding: 12px 22px;
+  border: none; cursor: pointer; transition: all 0.2s var(--ease);
+}
+.btn-gold { background: var(--gold); color: var(--cream); }
+.btn-gold:hover { background: var(--ink); }
+.btn-outline {
+  background: transparent; color: var(--ink-mid);
+  border: 1px solid var(--border-md);
+}
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+.btn-ink { background: var(--ink); color: var(--cream); }
+.btn-ink:hover { background: var(--gold); }
+.btn-sm { padding: 8px 14px; font-size: 9px; }
+.btn-danger { background: transparent; color: #8b4545; border: 1px solid rgba(139,69,69,0.35); }
+.btn-danger:hover { background: #8b4545; color: var(--cream); }
+.btn-block { width: 100%; }
+
+.login-back {
+  display: block; text-align: center; margin-top: 20px;
+  font-size: 11px; letter-spacing: 0.1em; color: var(--stone);
+  text-decoration: none; transition: color 0.2s;
+}
+.login-back:hover { color: var(--gold); }
+.login-forgot {
+  display: block; width: 100%; margin-top: 12px; padding: 0;
+  background: none; border: none; cursor: pointer;
+  font-size: 11px; letter-spacing: 0.08em; color: var(--stone);
+  text-decoration: underline; text-underline-offset: 3px;
+}
+.login-forgot:hover { color: var(--gold); }
+.login-forgot-msg {
+  margin-top: 12px; font-size: 12px; line-height: 1.5; color: var(--ink-mid);
+}
+.login-forgot-msg.ok { color: #3d6b4f; }
+.login-forgot-msg.err { color: #8b4545; }
+
+.gallery-list {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; min-height: 0;
+}
+.gallery-item {
+  position: relative; width: 72px; height: 72px; background: var(--cream-mid); overflow: hidden;
+}
+.gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+.gallery-item-remove {
+  position: absolute; top: 2px; right: 2px; width: 20px; height: 20px; padding: 0;
+  border: none; background: rgba(0,0,0,0.55); color: #fff; cursor: pointer; font-size: 14px; line-height: 1;
+}
+.social-row-remove {
+  margin-top: 8px; padding: 6px 10px; font-size: 9px;
+  background: transparent; border: 1px solid rgba(139,69,69,0.35);
+  color: #8b4545; cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.social-row-remove:hover { background: #8b4545; color: var(--cream); }
+.social-row-card {
+  border: 1px solid var(--border); padding: 14px; margin-bottom: 12px; background: var(--cream-mid);
+}
+
+/* ——— App shell ——— */
+.app-shell { display: none; min-height: 100vh; }
+.app-shell.app-visible { display: flex; }
+
+.admin-topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--nav-h);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px 0 calc(var(--sidebar-w) + 20px);
+  background: rgba(253,250,245,0.96);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.admin-topbar-title {
+  font-family: var(--serif); font-size: 22px; font-weight: 300;
+}
+.admin-topbar-actions { display: flex; align-items: center; gap: 10px; }
+.admin-user {
+  font-size: 11px; color: var(--stone); letter-spacing: 0.06em;
+  display: none;
+}
+.menu-toggle {
+  display: none;
+  width: 38px; height: 38px;
+  background: transparent; border: 1px solid var(--border-md);
+  color: var(--ink-mid); font-size: 18px; cursor: pointer;
+}
+
+.admin-sidebar {
+  position: fixed; top: 0; left: 0; bottom: 0; z-index: 110;
+  width: var(--sidebar-w);
+  background: var(--ink);
+  color: var(--cream);
+  display: flex; flex-direction: column;
+  padding: 24px 0;
+  transition: transform 0.35s var(--ease);
+}
+.sidebar-brand {
+  padding: 0 24px 28px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 20px;
+}
+.sidebar-brand-name {
+  font-family: var(--serif);
+  font-size: 26px; font-weight: 300; letter-spacing: 0.08em;
+}
+.sidebar-brand-sub {
+  font-size: 8px; letter-spacing: 0.35em;
+  text-transform: uppercase; color: var(--gold-light);
+  margin-top: 4px;
+}
+.sidebar-nav { flex: 1; padding: 0 12px; }
+.sidebar-link {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; text-align: left;
+  padding: 12px 14px; margin-bottom: 4px;
+  background: transparent; border: none;
+  color: rgba(253,250,245,0.55);
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.2s;
+  border-radius: 2px;
+}
+.sidebar-link svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.7; }
+.sidebar-link:hover { color: var(--cream); background: rgba(255,255,255,0.06); }
+.sidebar-link.active {
+  color: var(--cream); background: rgba(184,151,90,0.22);
+}
+.sidebar-link.active svg { opacity: 1; color: var(--gold-light); }
+.sidebar-foot {
+  padding: 20px 24px 0;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.sidebar-foot a {
+  font-size: 10px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: rgba(253,250,245,0.4);
+  text-decoration: none; transition: color 0.2s;
+}
+.sidebar-foot a:hover { color: var(--gold-light); }
+
+.admin-main {
+  margin-left: var(--sidebar-w);
+  margin-top: var(--nav-h);
+  padding: 32px 28px 64px;
+  flex: 1; min-width: 0;
+}
+.admin-panel { display: none; animation: fadeIn 0.35s ease; }
+.admin-panel.panel-active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.panel-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.panel-header h2 {
+  font-family: var(--serif);
+  font-size: clamp(28px, 4vw, 36px); font-weight: 300;
+  line-height: 1.1;
+}
+.panel-header p {
+  font-size: 13px; font-weight: 300; color: var(--stone);
+  margin-top: 6px; max-width: 520px;
+}
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px; margin-bottom: 28px;
+}
+.stat-box {
+  background: var(--cream-dark);
+  border: 1px solid var(--border);
+  padding: 18px 20px;
+}
+.stat-box-num {
+  font-family: var(--serif);
+  font-size: 28px; color: var(--gold); line-height: 1;
+}
+.stat-box-label {
+  font-size: 9px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--stone);
+  margin-top: 6px;
+}
+
+.admin-card {
+  background: var(--cream-dark);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.admin-card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+}
+.admin-card-title {
+  font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold);
+}
+.admin-card-body {
+  padding: 22px 22px 24px;
+}
+.rich-text-input {
+  width: 100%;
+  min-height: 52px;
+  font-size: 15px;
+  font-weight: 300;
+  font-family: var(--serif);
+  color: var(--ink);
+  background: var(--cream-dark);
+  border: 1px solid var(--border);
+  padding: 11px 14px;
+  transition: border-color 0.2s;
+  line-height: 1.45;
+}
+.rich-text-input:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+.rich-text-input em { font-style: italic; color: var(--gold); }
+.rich-text-input strong { font-weight: 600; }
+.rich-text-input:empty::before {
+  content: attr(data-placeholder);
+  color: var(--stone);
+  font-style: normal;
+  font-family: var(--sans);
+  font-size: 14px;
+}
+.image-preview-sm {
+  aspect-ratio: 16/10;
+  max-height: 160px;
+  margin-bottom: 10px;
+}
+.content-cover-field .image-preview-sm { max-height: 100px; }
+.content-field-note {
+  font-size: 11px; color: var(--stone);
+  margin-top: 8px; margin-bottom: 0;
+}
+
+/* Tabla productos */
+.products-table-wrap { overflow-x: auto; }
+.products-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 13px; font-weight: 300;
+}
+.products-table th {
+  text-align: left; padding: 12px 16px;
+  font-size: 9px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--stone);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.products-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.products-table tr:last-child td { border-bottom: none; }
+.products-table tr:hover td { background: rgba(184,151,90,0.04); }
+.prod-thumb {
+  width: 48px; height: 48px; object-fit: cover;
+  background: var(--cream-mid);
+}
+.prod-name-cell strong {
+  display: block; font-family: var(--serif);
+  font-size: 16px; font-weight: 400; color: var(--ink);
+}
+.prod-name-cell span { font-size: 11px; color: var(--stone); }
+.badge {
+  display: inline-block;
+  font-size: 8px; letter-spacing: 0.14em;
+  text-transform: uppercase; padding: 4px 8px;
+}
+.badge-gold { background: rgba(184,151,90,0.15); color: var(--gold); }
+.badge-muted { background: rgba(122,116,108,0.12); color: var(--stone); }
+.badge-green { background: rgba(90,122,90,0.12); color: #5a7a5a; }
+.row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* Formulario producto */
+.product-editor {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px; align-items: start;
+}
+.editor-main, .editor-side {
+  background: var(--cream-dark);
+  border: 1px solid var(--border);
+  padding: 24px 22px;
+}
+.editor-side-title {
+  font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 16px;
+}
+.image-preview {
+  aspect-ratio: 4/5; background: var(--cream-mid);
+  overflow: hidden; margin-bottom: 14px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--stone); font-size: 12px; text-align: center; padding: 16px;
+}
+.image-preview img { width: 100%; height: 100%; object-fit: cover; }
+.toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+}
+.toggle-row:last-child { border-bottom: none; }
+.toggle-label { font-size: 13px; font-weight: 300; }
+.toggle {
+  width: 44px; height: 24px;
+  background: var(--cream-mid); border: 1px solid var(--border);
+  border-radius: 99px; position: relative; cursor: pointer;
+  transition: background 0.2s;
+}
+.toggle.on { background: var(--gold); border-color: var(--gold); }
+.toggle::after {
+  content: ''; position: absolute;
+  top: 3px; left: 3px;
+  width: 16px; height: 16px;
+  background: var(--cream); border-radius: 50%;
+  transition: transform 0.2s var(--ease);
+}
+.toggle.on::after { transform: translateX(20px); }
+.editor-actions {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-top: 24px; padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+/* Certificados — mismo formato que panel original */
+.dash-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 24px; }
+.panel {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  padding: 28px 28px 24px;
+}
+.panel-title {
+  font-family: var(--serif); font-size: 20px;
+  font-weight: 300; color: var(--ink);
+  margin-bottom: 20px; padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.form-select {
+  width: 100%; font-size: 14px; font-weight: 300; color: var(--ink);
+  background: var(--cream-dark); border: 1px solid var(--border);
+  padding: 11px 14px; outline: none; border-radius: 0;
+  transition: border-color 0.2s; appearance: none;
+}
+.form-select:focus { border-color: var(--gold); }
+.form-divider {
+  margin: 20px 0; border: none;
+  border-top: 1px solid var(--border);
+}
+.dash-form-note {
+  font-size: 11px; font-weight: 300; color: var(--stone);
+  font-style: italic; margin-bottom: 16px;
+}
+.btn-save {
+  width: 100%; font-size: 11px;
+  letter-spacing: 0.25em; text-transform: uppercase; font-weight: 500;
+  color: var(--cream); background: var(--gold); border: none;
+  padding: 13px; cursor: pointer; transition: background 0.2s;
+}
+.btn-save:hover { background: var(--ink); }
+.cert-label {
+  font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--stone); margin-bottom: 10px; display: block;
+}
+#certificate-card {
+  width: 100%; aspect-ratio: 85.6/54;
+  background: var(--cream);
+  border: 1px solid var(--border-md);
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+  padding: 14px 18px 12px;
+  font-family: var(--serif);
+}
+.cert-bg-ring {
+  position: absolute; right: -24px; top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.07; pointer-events: none;
+}
+.cert-corner { position: absolute; width: 18px; height: 18px; border-color: var(--gold); border-style: solid; }
+.cert-corner.tl { top: 7px; left: 7px; border-width: 1px 0 0 1px; }
+.cert-corner.tr { top: 7px; right: 7px; border-width: 1px 1px 0 0; }
+.cert-corner.bl { bottom: 7px; left: 7px; border-width: 0 0 1px 1px; }
+.cert-corner.br { bottom: 7px; right: 7px; border-width: 0 1px 1px 0; }
+.cert-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.cert-brand-name { font-size: 19px; font-weight: 300; letter-spacing: 0.1em; color: var(--ink); line-height: 1; }
+.cert-brand-sub {
+  font-family: var(--sans); font-size: 7px;
+  letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--gold); font-weight: 300; margin-top: 3px; display: block;
+}
+.cert-auth-badge {
+  font-family: var(--sans); font-size: 6.5px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gold); border: 0.5px solid var(--border-md);
+  padding: 3px 7px; font-weight: 400; align-self: flex-start;
+}
+.cert-divider {
+  width: 100%; height: 1px; margin: 7px 0;
+  background: linear-gradient(90deg, transparent, var(--gold) 20%, var(--gold) 80%, transparent);
+  opacity: 0.4;
+}
+.cert-product-name {
+  font-size: 16px; font-weight: 300; font-style: italic;
+  color: var(--ink); line-height: 1.2; margin-bottom: 5px;
+}
+.cert-details-row { display: flex; gap: 18px; margin-top: 4px; }
+.cert-detail-item {
+  font-family: var(--sans); font-size: 7.5px;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--stone); font-weight: 300;
+}
+.cert-detail-item strong {
+  display: block; font-size: 9.5px; font-weight: 400;
+  color: var(--ink-mid); letter-spacing: 0.03em;
+  text-transform: none; margin-top: 2px;
+  font-family: var(--serif);
+}
+.cert-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+.cert-client-label {
+  font-family: var(--sans); font-size: 8px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--stone); font-weight: 300;
+}
+.cert-client-name {
+  font-family: var(--serif); font-size: 12px;
+  font-weight: 300; color: var(--ink);
+  letter-spacing: 0.04em; display: block; margin-top: 2px;
+}
+.cert-serial-block { text-align: right; }
+.cert-serial {
+  font-family: var(--sans); font-size: 7px;
+  letter-spacing: 0.18em; color: rgba(122,116,108,0.5);
+  font-weight: 300; display: block;
+}
+.cert-actions { display: flex; gap: 10px; margin-top: 14px; }
+.btn-print {
+  flex: 1; font-size: 11px;
+  letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500;
+  color: var(--cream); background: var(--ink); border: none;
+  padding: 11px; cursor: pointer; transition: background 0.2s;
+}
+.btn-print:hover { background: var(--gold); }
+.btn-clear {
+  font-size: 11px; letter-spacing: 0.15em;
+  text-transform: uppercase; font-weight: 400; color: var(--stone);
+  background: transparent; border: 1px solid var(--border);
+  padding: 11px 18px; cursor: pointer; transition: all 0.2s;
+}
+.btn-clear:hover { border-color: var(--gold); color: var(--gold); }
+.hist-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 0; border-bottom: 1px solid var(--border);
+  gap: 12px; flex-wrap: wrap;
+}
+.hist-item:last-child { border-bottom: none; }
+.hist-name { font-family: var(--serif); font-size: 15px; font-weight: 300; color: var(--ink); }
+.hist-sub { font-size: 12px; font-weight: 300; color: var(--stone); margin-top: 2px; }
+.hist-serial { color: var(--gold); }
+.hist-meta { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.hist-date { font-size: 11px; font-weight: 300; color: var(--stone); }
+.hist-reprint {
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gold); background: transparent;
+  border: 1px solid var(--border-md); padding: 5px 10px;
+  cursor: pointer; transition: all 0.2s; font-weight: 400;
+}
+.hist-reprint:hover { background: var(--gold); color: var(--cream); }
+.empty-state {
+  text-align: center; padding: 24px 0;
+  font-size: 13px; font-weight: 300; color: var(--stone);
+}
+
+/* Cotizaciones */
+.quote-preview-wrap {
+  background: #f5f2ed;
+  border: 1px solid var(--border);
+  padding: 20px;
+  overflow: auto;
+}
+.quote-doc {
+  background: #fff;
+  color: #222;
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 28px 32px 32px;
+  border: 1px solid #ddd5c8;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  line-height: 1.45;
+  box-sizing: border-box;
+}
+.quote-doc * { box-sizing: border-box; }
+.quote-doc-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #c9bfb0;
+  margin-bottom: 14px;
+}
+.quote-doc-brand {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #111;
+  line-height: 1.2;
+}
+.quote-doc-brand-sub {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8a7f72;
+  margin-top: 2px;
+}
+.quote-doc-meta {
+  text-align: right;
+  font-size: 11px;
+  color: #444;
+  line-height: 1.5;
+}
+.quote-doc-meta strong {
+  display: block;
+  font-size: 11px;
+  color: #111;
+  margin-bottom: 2px;
+}
+.quote-doc-heading {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #111;
+  margin: 0 0 14px;
+}
+.quote-doc-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 24px;
+  margin-bottom: 16px;
+  font-size: 11px;
+}
+.quote-doc-info-grid dt {
+  color: #8a7f72;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1px;
+}
+.quote-doc-info-grid dd {
+  margin: 0;
+  color: #222;
+  font-weight: 400;
+}
+.quote-doc-block {
+  margin-bottom: 14px;
+}
+.quote-doc-kicker {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8a7f72;
+  margin-bottom: 6px;
+}
+.quote-doc-lines {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  margin-bottom: 12px;
+}
+.quote-doc-lines th {
+  text-align: left;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a7f72;
+  font-weight: 600;
+  padding: 6px 8px;
+  border-bottom: 1px solid #c9bfb0;
+  background: #faf8f5;
+}
+.quote-doc-lines th:last-child { text-align: right; width: 28%; }
+.quote-doc-lines td {
+  padding: 10px 8px;
+  vertical-align: top;
+  border-bottom: 1px solid #ece6dc;
+  color: #222;
+}
+.quote-doc-lines td:last-child {
+  text-align: right;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.quote-doc-line-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.quote-doc-piece-img {
+  width: 88px;
+  height: 88px;
+  min-width: 88px;
+  object-fit: cover;
+  background: #f3efe8;
+  border: 1px solid #ddd5c8;
+  display: block;
+}
+.quote-doc-piece-img.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: #8a7f72;
+  text-align: center;
+  padding: 6px;
+}
+.quote-doc-piece-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 6px;
+  line-height: 1.35;
+}
+.quote-doc-specs {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+}
+.quote-doc-specs td {
+  padding: 2px 0;
+  vertical-align: top;
+  color: #444;
+  line-height: 1.4;
+}
+.quote-doc-specs td:first-child {
+  width: 34%;
+  color: #8a7f72;
+  padding-right: 8px;
+}
+.quote-doc-total {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  margin-top: 4px;
+}
+.quote-doc-total td {
+  padding: 8px 10px;
+  border: 1px solid #c9bfb0;
+}
+.quote-doc-total td:first-child {
+  text-align: right;
+  color: #444;
+  background: #faf8f5;
+  width: 72%;
+}
+.quote-doc-total td:last-child {
+  text-align: right;
+  font-weight: 700;
+  font-size: 12px;
+  color: #111;
+  background: #f3efe8;
+}
+.quote-doc-notes {
+  font-size: 11px;
+  color: #444;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #ece6dc;
+}
+.quote-doc-footer {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid #c9bfb0;
+  font-size: 10px;
+  color: #666;
+  line-height: 1.5;
+}
+.quote-doc-footer strong { color: #222; font-weight: 600; }
+.quote-sku-row {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+.quote-sku-row .form-input { flex: 1; }
+.quote-item-card {
+  border: 1px solid var(--border);
+  padding: 16px;
+  margin-bottom: 12px;
+  background: var(--cream-dark);
+}
+.quote-saved-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.quote-saved-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid var(--border);
+  font-size: 12px;
+}
+.quote-saved-info strong {
+  display: block;
+  font-size: 13px;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.quote-saved-info span {
+  color: var(--stone);
+  font-size: 11px;
+}
+.quote-saved-empty {
+  font-size: 12px;
+  color: var(--stone);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.quote-saved-warn {
+  display: block;
+  font-size: 10px;
+  color: #9a4a2a;
+  margin-top: 4px;
+}
+.quote-doc-shipping-note {
+  margin-top: 10px;
+  font-size: 11px;
+  color: #8a7f72;
+  font-style: italic;
+}
+.quote-doc-stock-warn {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid #d4a574;
+  background: #faf6f0;
+  font-size: 11px;
+  color: #9a4a2a;
+}
+.quote-doc-stock-warn ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+.quote-piece-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.quote-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.quote-pdf-source {
+  display: none;
+}
+
+@media print {
+  body * { visibility: hidden; }
+  #print-zone, #print-zone * { visibility: visible; }
+  #print-zone {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: white;
+  }
+  #certificate-card {
+    width: 85.6mm !important; height: 54mm !important;
+    padding: 5mm 6mm 4mm !important;
+    border: 0.5pt solid #B8975A !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    aspect-ratio: unset !important;
+  }
+  .admin-sidebar, .admin-topbar, .panel:not(:has(#print-zone)) { display: none !important; }
+}
+
+.toast {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
+  z-index: 500; padding: 12px 24px;
+  font-size: 12px; letter-spacing: 0.06em;
+  background: var(--ink); color: var(--cream);
+  opacity: 0; transition: transform 0.35s var(--ease), opacity 0.35s;
+  pointer-events: none; white-space: nowrap;
+}
+.toast.toast-show { transform: translateX(-50%) translateY(0); opacity: 1; }
+.toast-warn { background: var(--gold); }
+
+.sidebar-backdrop {
+  display: none; position: fixed; inset: 0; z-index: 105;
+  background: rgba(26,23,20,0.45);
+}
+
+@media (max-width: 1024px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .product-editor { grid-template-columns: 1fr; }
+  .dash-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .admin-topbar { padding-left: 20px; }
+  .menu-toggle { display: flex; align-items: center; justify-content: center; }
+  .admin-user { display: none; }
+  .admin-sidebar {
+    transform: translateX(-100%);
+    box-shadow: 8px 0 32px rgba(0,0,0,0.2);
+  }
+  .admin-sidebar.sidebar-open { transform: translateX(0); }
+  .sidebar-backdrop.visible { display: block; }
+  .admin-main { margin-left: 0; padding: 24px 18px 48px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .products-table .hide-mobile { display: none; }
+  .panel-header { flex-direction: column; align-items: stretch; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 420px) {
+  .stats-row { grid-template-columns: 1fr; }
+}
+  </style>
+</head>
+<body>
+
+<div id="login-screen" class="login-screen">
+  <div class="login-card">
+    <p class="login-brand">Pilarica</p>
+    <p class="login-tagline">Panel administrativo</p>
+    <h1 class="login-title">Iniciar sesión</h1>
+    <p class="login-sub">Acceso con tu cuenta de administrador en Supabase.</p>
+    <form id="login-form">
+      <div class="form-row">
+        <label class="form-label" for="login-email">Correo</label>
+        <input class="form-input" id="login-email" type="email" placeholder="mrk@pilaricajoyas.com.mx" autocomplete="username" required />
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="login-password">Contraseña</label>
+        <div class="password-field">
+          <input class="form-input" id="login-password" type="password" placeholder="••••••••" autocomplete="current-password" required />
+          <button type="button" class="password-toggle" id="login-password-toggle" aria-label="Mostrar contraseña" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.4"/></svg>
+          </button>
+        </div>
+      </div>
+      <p class="form-error" id="login-error">Correo o contraseña incorrectos.</p>
+      <button type="submit" class="btn btn-gold btn-block" style="margin-top:8px;">Entrar al panel</button>
+      <button type="button" class="login-forgot" id="login-forgot-btn">¿Olvidaste tu contraseña?</button>
+      <p class="login-forgot-msg" id="login-forgot-msg" hidden></p>
+    </form>
+    <a class="login-back" href="/">← Volver a la tienda</a>
+  </div>
+</div>
+
+<div id="app-shell" class="app-shell">
+  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+  <aside class="admin-sidebar" id="admin-sidebar">
+    <div class="sidebar-brand">
+      <p class="sidebar-brand-name">Pilarica</p>
+      <p class="sidebar-brand-sub">Administración</p>
+    </div>
+    <nav class="sidebar-nav" aria-label="Menú administrativo">
+      <button type="button" class="sidebar-link active" data-panel="products">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="1.2"/><rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="1.2"/><rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="1.2"/><rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="1.2"/></svg>
+        Productos
+      </button>
+      <button type="button" class="sidebar-link" data-panel="editor" id="nav-editor" hidden>
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" stroke="currentColor" stroke-width="1.2"/></svg>
+        Editar pieza
+      </button>
+      <button type="button" class="sidebar-link" data-panel="content">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M7 8h10M7 12h10M7 16h6" stroke="currentColor" stroke-width="1.2"/></svg>
+        Contenido web
+      </button>
+      <button type="button" class="sidebar-link" data-panel="quotes">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.2"/><path d="M14 2v6h6M8 13h8M8 17h5" stroke="currentColor" stroke-width="1.2"/></svg>
+        Cotizaciones
+      </button>
+      <button type="button" class="sidebar-link" data-panel="certificates">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.2"/><path d="M14 2v6h6M9 15l2 2 4-4" stroke="currentColor" stroke-width="1.2"/></svg>
+        Certificados
+      </button>
+    </nav>
+    <div class="sidebar-foot">
+      <a href="index.html">← Ver tienda pública</a>
+    </div>
+  </aside>
+
+  <header class="admin-topbar">
+    <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">☰</button>
+    <h1 class="admin-topbar-title" id="topbar-title">Productos</h1>
+    <div class="admin-topbar-actions">
+      <span class="admin-user" id="admin-user-label">admin@pilarica</span>
+      <button type="button" class="btn btn-outline btn-sm" id="logout-btn">Salir</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+
+    <!-- LISTA PRODUCTOS -->
+    <section class="admin-panel panel-active" id="panel-products">
+      <div class="panel-header">
+        <div>
+          <h2>Catálogo de <em style="font-family:var(--serif);font-style:italic;">productos</em></h2>
+          <p>Administra precios, imágenes, stock y piezas destacadas. Los cambios se guardan en Supabase.</p>
+        </div>
+        <button type="button" class="btn btn-gold" id="btn-new-product">+ Nueva pieza</button>
+      </div>
+
+      <div class="stats-row" id="stats-row"></div>
+
+      <div class="admin-card">
+        <div class="admin-card-head">
+          <span class="admin-card-title">Todas las piezas</span>
+          <input class="form-input" id="product-search" type="search" placeholder="Buscar por nombre o SKU…" style="max-width:240px;padding:8px 12px;font-size:13px;" />
+        </div>
+        <div class="products-table-wrap">
+          <table class="products-table">
+            <thead>
+              <tr>
+                <th>Pieza</th>
+                <th class="hide-mobile">Categoría</th>
+                <th>Precio</th>
+                <th class="hide-mobile">Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="products-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDITOR PRODUCTO -->
+    <section class="admin-panel" id="panel-editor">
+      <div class="panel-header">
+        <div>
+          <h2 id="editor-heading">Nueva pieza</h2>
+          <p>Completa los datos de la joya. No necesitas tocar código — solo llena el formulario y guarda.</p>
+        </div>
+      </div>
+
+      <form id="product-form" class="product-editor">
+        <div class="editor-main">
+          <div class="form-grid">
+            <div class="form-row">
+              <label class="form-label" for="pf-id">SKU / ID *</label>
+              <input class="form-input" id="pf-id" required placeholder="PIL-006" />
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="pf-category">Categoría *</label>
+              <select class="form-select" id="pf-category" required>
+                <option value="anillos">Anillos</option>
+                <option value="collares">Collares</option>
+                <option value="aretes">Aretes</option>
+                <option value="pulseras">Pulseras</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="pf-name">Nombre de la pieza *</label>
+            <input class="form-input" id="pf-name" required placeholder="Ej. Collar Tennis Diamantes" />
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="pf-desc">Descripción</label>
+            <textarea class="form-textarea" id="pf-desc" placeholder="Descripción para la ficha del producto…"></textarea>
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label class="form-label" for="pf-material">Metal / Material</label>
+              <input class="form-input" id="pf-material" placeholder="Oro 18k" />
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="pf-stone">Piedra</label>
+              <input class="form-input" id="pf-stone" placeholder="Diamantes" />
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label class="form-label" for="pf-size">Medida / Talla</label>
+              <input class="form-input" id="pf-size" placeholder="42 cm" />
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="pf-price">Precio (MXN) *</label>
+              <input class="form-input" id="pf-price" type="number" min="0" step="1" required placeholder="48500" />
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="pf-stock">Stock (unidades) *</label>
+              <input class="form-input" id="pf-stock" type="number" min="0" step="1" required value="1" placeholder="1" />
+              <p class="content-field-note" style="margin-top:6px;margin-bottom:0;">0 = agotado. Para piezas únicas usa 1.</p>
+            </div>
+          </div>
+          <div class="editor-actions">
+            <button type="submit" class="btn btn-gold">Guardar pieza</button>
+            <button type="button" class="btn btn-outline" id="btn-cancel-edit">Cancelar</button>
+            <button type="button" class="btn btn-outline btn-sm" id="btn-hide-product" hidden>Ocultar del catálogo</button>
+            <button type="button" class="btn btn-danger btn-sm" id="btn-delete-product" hidden>Eliminar permanentemente</button>
+          </div>
+        </div>
+
+        <div class="editor-side">
+          <p class="editor-side-title">Imagen</p>
+          <div class="image-preview" id="image-preview">
+            <span>Sin imagen</span>
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="pf-image">Ruta o URL de imagen</label>
+            <input class="form-input" id="pf-image" placeholder="assets/products/collares/..." />
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="pf-image-file">Subir imagen</label>
+            <input class="form-input" id="pf-image-file" type="file" accept="image/*" />
+          </div>
+          <p class="cert-note" style="margin-top:12px;margin-bottom:0;">Sube una foto desde tu computadora (Supabase Storage) o usa una ruta en <code style="font-size:11px;">assets/products/</code>.</p>
+
+          <p class="editor-side-title" style="margin-top:24px;">Galería adicional</p>
+          <p class="cert-note" style="margin-top:0;margin-bottom:10px;">Imágenes extra para la ficha del producto (la portada es la imagen principal de arriba).</p>
+          <div class="gallery-list" id="pf-gallery-list"></div>
+          <div class="gallery-add-row">
+            <input class="form-input" id="pf-gallery-file" type="file" accept="image/*" multiple />
+            <button type="button" class="btn btn-outline btn-sm" id="pf-gallery-add-url">+ Agregar URL</button>
+          </div>
+
+          <p class="editor-side-title" style="margin-top:24px;">Visibilidad</p>
+          <div class="toggle-row">
+            <span class="toggle-label">Pieza destacada</span>
+            <button type="button" class="toggle" id="toggle-featured" aria-pressed="false"></button>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">Visible en tienda</span>
+            <button type="button" class="toggle on" id="toggle-active" aria-pressed="true"></button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- CONTENIDO WEB -->
+    <section class="admin-panel" id="panel-content">
+      <div class="panel-header">
+        <div>
+          <h2>Contenido del <em style="font-family:var(--serif);font-style:italic;">sitio</em></h2>
+          <p>Edita textos e imágenes del inicio, catálogo y página Conócenos. Los cambios se ven en la tienda al recargar.</p>
+        </div>
+        <button type="button" class="btn btn-outline btn-sm" id="btn-restore-content-defaults">Restaurar diseño original</button>
+      </div>
+
+      <div class="admin-card" style="margin-bottom:20px;">
+        <div class="admin-card-head"><span class="admin-card-title">Hero — Inicio</span></div>
+        <div class="admin-card-body">
+          <div class="form-grid">
+            <div class="form-row"><label class="form-label">Etiqueta superior</label><input class="form-input" id="ct-hero-eyebrow" /></div>
+            <div class="form-row"><label class="form-label">Título</label><div class="rich-text-input" id="ct-hero-title" contenteditable="true" data-placeholder="El lujo que mereces sentir."></div></div>
+          </div>
+          <div class="form-row"><label class="form-label">Texto</label><textarea class="form-textarea" id="ct-hero-body"></textarea></div>
+          <div class="form-row">
+            <label class="form-label">Imagen</label>
+            <div class="image-preview image-preview-sm" id="ct-hero-image-preview"><span>Sin imagen</span></div>
+            <input type="hidden" id="ct-hero-image" />
+            <input class="form-input ct-image-file" type="file" accept="image/*" data-target="ct-hero-image" data-preview="ct-hero-image-preview" data-folder="hero" />
+            <p class="content-field-note">Selecciona una imagen desde tu computadora. Pulsa «Guardar hero» para aplicar el cambio en la tienda.</p>
+          </div>
+          <div class="form-grid" id="ct-hero-stats"></div>
+          <button type="button" class="btn btn-gold btn-sm" data-save-content="hero">Guardar hero</button>
+        </div>
+      </div>
+
+      <div class="admin-card" style="margin-bottom:20px;">
+        <div class="admin-card-head"><span class="admin-card-title">Portadas del catálogo (bento)</span></div>
+        <div class="admin-card-body">
+          <div class="form-grid">
+            <div class="form-row content-cover-field">
+              <label class="form-label">Anillos</label>
+              <div class="image-preview image-preview-sm" id="ct-cover-anillos-preview"><span>Sin imagen</span></div>
+              <input type="hidden" id="ct-cover-anillos" />
+              <input class="form-input ct-image-file" type="file" accept="image/*" data-target="ct-cover-anillos" data-preview="ct-cover-anillos-preview" data-folder="bento" />
+            </div>
+            <div class="form-row content-cover-field">
+              <label class="form-label">Collares</label>
+              <div class="image-preview image-preview-sm" id="ct-cover-collares-preview"><span>Sin imagen</span></div>
+              <input type="hidden" id="ct-cover-collares" />
+              <input class="form-input ct-image-file" type="file" accept="image/*" data-target="ct-cover-collares" data-preview="ct-cover-collares-preview" data-folder="bento" />
+            </div>
+            <div class="form-row content-cover-field">
+              <label class="form-label">Aretes</label>
+              <div class="image-preview image-preview-sm" id="ct-cover-aretes-preview"><span>Sin imagen</span></div>
+              <input type="hidden" id="ct-cover-aretes" />
+              <input class="form-input ct-image-file" type="file" accept="image/*" data-target="ct-cover-aretes" data-preview="ct-cover-aretes-preview" data-folder="bento" />
+            </div>
+            <div class="form-row content-cover-field">
+              <label class="form-label">Pulseras</label>
+              <div class="image-preview image-preview-sm" id="ct-cover-pulseras-preview"><span>Sin imagen</span></div>
+              <input type="hidden" id="ct-cover-pulseras" />
+              <input class="form-input ct-image-file" type="file" accept="image/*" data-target="ct-cover-pulseras" data-preview="ct-cover-pulseras-preview" data-folder="bento" />
+            </div>
+          </div>
+          <button type="button" class="btn btn-gold btn-sm" data-save-content="category_covers">Guardar portadas</button>
+        </div>
+      </div>
+
+      <div class="admin-card" style="margin-bottom:20px;">
+        <div class="admin-card-head"><span class="admin-card-title">Encabezado catálogo</span></div>
+        <div class="admin-card-body">
+          <div class="form-row"><label class="form-label">Etiqueta</label><input class="form-input" id="ct-catalog-eyebrow" /></div>
+          <div class="form-row"><label class="form-label">Título</label><div class="rich-text-input" id="ct-catalog-title" contenteditable="true" data-placeholder="Nuestras piezas"></div></div>
+          <div class="form-row"><label class="form-label">Texto</label><textarea class="form-textarea" id="ct-catalog-body"></textarea></div>
+          <button type="button" class="btn btn-gold btn-sm" data-save-content="catalog_hero">Guardar catálogo</button>
+        </div>
+      </div>
+
+      <div class="admin-card" style="margin-bottom:20px;">
+        <div class="admin-card-head"><span class="admin-card-title">Historia — Conócenos</span></div>
+        <div class="admin-card-body">
+          <div class="form-row"><label class="form-label">Etiqueta</label><input class="form-input" id="ct-about-eyebrow" /></div>
+          <div class="form-row"><label class="form-label">Título</label><div class="rich-text-input" id="ct-about-title" contenteditable="true" data-placeholder="Más que joyas, momentos"></div></div>
+          <div class="form-row"><label class="form-label">Historia</label><textarea class="form-textarea" id="ct-about-story"></textarea></div>
+          <div class="form-row">
+            <label class="form-label">Imagen</label>
+            <div class="image-preview image-preview-sm" id="ct-about-image-preview"><span>Sin imagen</span></div>
+            <input type="hidden" id="ct-about-image" />
+            <input class="form-input ct-image-file" type="file" accept="image/*" data-target="ct-about-image" data-preview="ct-about-image-preview" data-folder="about" />
+            <p class="content-field-note">Selecciona una imagen y guarda la sección para publicarla.</p>
+          </div>
+          <div class="form-row"><label class="form-label">Misión — título</label><div class="rich-text-input" id="ct-mission-title" contenteditable="true" data-placeholder="Nuestra misión"></div></div>
+          <div class="form-row"><label class="form-label">Misión — texto</label><textarea class="form-textarea" id="ct-mission-body"></textarea></div>
+          <button type="button" class="btn btn-gold btn-sm" data-save-content="about_bundle">Guardar historia</button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-head"><span class="admin-card-title">Cita y secciones del inicio</span></div>
+        <div class="admin-card-body">
+          <div class="form-row"><label class="form-label">Cita</label><div class="rich-text-input" id="ct-quote-text" contenteditable="true" data-placeholder="Texto de la cita…" style="min-height:88px;"></div></div>
+          <div class="form-row"><label class="form-label">Autor cita</label><input class="form-input" id="ct-quote-cite" /></div>
+          <button type="button" class="btn btn-outline btn-sm" data-save-content="quote">Guardar cita</button>
+          <hr style="margin:20px 0;border:none;border-top:1px solid var(--border);" />
+          <div class="form-row"><label class="form-label">Destacados — título</label><div class="rich-text-input" id="ct-featured-title" contenteditable="true" data-placeholder="Nuestra selección"></div></div>
+          <div class="form-row"><label class="form-label">Destacados — texto</label><textarea class="form-textarea" id="ct-featured-body"></textarea></div>
+          <button type="button" class="btn btn-outline btn-sm" data-save-content="featured">Guardar destacados</button>
+          <hr style="margin:20px 0;border:none;border-top:1px solid var(--border);" />
+          <div class="form-row"><label class="form-label">Promesa — título</label><div class="rich-text-input" id="ct-brand-title" contenteditable="true" data-placeholder="Joyería con alma y propósito"></div></div>
+          <div class="form-row"><label class="form-label">Promesa — texto</label><textarea class="form-textarea" id="ct-brand-body"></textarea></div>
+          <button type="button" class="btn btn-outline btn-sm" data-save-content="brand">Guardar promesa</button>
+        </div>
+      </div>
+
+      <div class="admin-card" style="margin-bottom:20px;">
+        <div class="admin-card-head"><span class="admin-card-title">Valores — Inicio y Conócenos</span></div>
+        <div class="admin-card-body">
+          <div class="form-row"><label class="form-label">Título sección</label><div class="rich-text-input" id="ct-values-title" contenteditable="true"></div></div>
+          <div id="ct-values-fields"></div>
+          <button type="button" class="btn btn-gold btn-sm" data-save-content="values">Guardar valores</button>
+        </div>
+      </div>
+
+      <div class="admin-card" style="margin-bottom:20px;">
+        <div class="admin-card-head"><span class="admin-card-title">Equipo — Conócenos</span></div>
+        <div class="admin-card-body">
+          <div class="form-row"><label class="form-label">Etiqueta</label><input class="form-input" id="ct-team-eyebrow" /></div>
+          <div class="form-row"><label class="form-label">Título</label><div class="rich-text-input" id="ct-team-title" contenteditable="true"></div></div>
+          <div class="form-grid">
+            <div class="form-row"><label class="form-label">Nombre</label><input class="form-input" id="ct-team-name" /></div>
+            <div class="form-row"><label class="form-label">Iniciales</label><input class="form-input" id="ct-team-initials" maxlength="3" /></div>
+          </div>
+          <div class="form-row"><label class="form-label">Cargo</label><input class="form-input" id="ct-team-role" /></div>
+          <div class="form-row"><label class="form-label">Biografía</label><textarea class="form-textarea" id="ct-team-bio"></textarea></div>
+          <button type="button" class="btn btn-gold btn-sm" data-save-content="team">Guardar equipo</button>
+        </div>
+      </div>
+
+      <div class="admin-card" style="margin-bottom:20px;">
+        <div class="admin-card-head"><span class="admin-card-title">Contacto — Ubicación</span></div>
+        <div class="admin-card-body">
+          <div class="form-row"><label class="form-label">Etiqueta</label><input class="form-input" id="ct-loc-eyebrow" /></div>
+          <div class="form-row"><label class="form-label">Título</label><div class="rich-text-input" id="ct-loc-title" contenteditable="true"></div></div>
+          <div class="form-row"><label class="form-label">Nombre del lugar</label><input class="form-input" id="ct-loc-name" /></div>
+          <div class="form-row"><label class="form-label">Dirección</label><textarea class="form-textarea" id="ct-loc-address"></textarea></div>
+          <div class="form-grid">
+            <div class="form-row"><label class="form-label">Teléfono</label><input class="form-input" id="ct-loc-phone" /></div>
+            <div class="form-row"><label class="form-label">WhatsApp (solo números)</label><input class="form-input" id="ct-loc-whatsapp" /></div>
+          </div>
+          <div class="form-row"><label class="form-label">Correo</label><input class="form-input" id="ct-loc-email" type="email" /></div>
+          <div class="form-row"><label class="form-label">Horario — L-V</label><input class="form-input" id="ct-loc-hours-wd" placeholder="10:00 - 20:00" /></div>
+          <div class="form-grid">
+            <div class="form-row"><label class="form-label">Horario — Sábado</label><input class="form-input" id="ct-loc-hours-sat" /></div>
+            <div class="form-row"><label class="form-label">Horario — Domingo</label><input class="form-input" id="ct-loc-hours-sun" /></div>
+          </div>
+          <div class="form-row"><label class="form-label">Enlace mapa</label><input class="form-input" id="ct-loc-map" placeholder="https://maps.google.com/..." /></div>
+          <button type="button" class="btn btn-gold btn-sm" data-save-content="locations">Guardar contacto</button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-head"><span class="admin-card-title">Redes sociales</span></div>
+        <div class="admin-card-body">
+          <div class="form-row"><label class="form-label">Etiqueta</label><input class="form-input" id="ct-social-eyebrow" /></div>
+          <div class="form-row"><label class="form-label">Título</label><div class="rich-text-input" id="ct-social-title" contenteditable="true"></div></div>
+          <div class="form-row"><label class="form-label">Texto</label><textarea class="form-textarea" id="ct-social-body"></textarea></div>
+          <div id="ct-social-list"></div>
+          <button type="button" class="btn btn-outline btn-sm" id="ct-social-add" style="margin-bottom:12px;">+ Agregar red social</button>
+          <button type="button" class="btn btn-gold btn-sm" data-save-content="social">Guardar redes</button>
+        </div>
+      </div>
+
+      <div class="admin-card" style="margin-top:20px;">
+        <div class="admin-card-head"><span class="admin-card-title">Páginas informativas</span></div>
+        <div class="admin-card-body">
+          <p class="content-field-note" style="margin-top:0;margin-bottom:20px;">Contenido del footer: Sobre Pilarica, Cuidado de joyas y FAQ. Los textos legales (privacidad, términos, garantía) están fijos en el código fuente.</p>
+
+          <p class="editor-side-title">Sobre Pilarica</p>
+          <div class="form-row"><label class="form-label">Etiqueta</label><input class="form-input" id="ct-info-sobre-eyebrow" /></div>
+          <div class="form-row"><label class="form-label">Título</label><div class="rich-text-input" id="ct-info-sobre-title" contenteditable="true"></div></div>
+          <div class="form-row"><label class="form-label">Introducción</label><textarea class="form-textarea" id="ct-info-sobre-lead"></textarea></div>
+          <div class="form-row"><label class="form-label">Contenido</label><div class="rich-text-input info-body-editor" id="ct-info-sobre-body" contenteditable="true" data-placeholder="Secciones de la página…"></div></div>
+          <button type="button" class="btn btn-outline btn-sm" data-save-content="info_sobre">Guardar Sobre Pilarica</button>
+
+          <hr style="margin:24px 0;border:none;border-top:1px solid var(--border);" />
+
+          <p class="editor-side-title">Cuidado de joyas</p>
+          <div class="form-row"><label class="form-label">Etiqueta</label><input class="form-input" id="ct-info-cuidado-eyebrow" /></div>
+          <div class="form-row"><label class="form-label">Título</label><div class="rich-text-input" id="ct-info-cuidado-title" contenteditable="true"></div></div>
+          <div class="form-row"><label class="form-label">Introducción</label><textarea class="form-textarea" id="ct-info-cuidado-lead"></textarea></div>
+          <div class="form-row"><label class="form-label">Contenido (guía)</label><div class="rich-text-input info-body-editor" id="ct-info-cuidado-body" contenteditable="true"></div></div>
+          <button type="button" class="btn btn-outline btn-sm" data-save-content="info_cuidado">Guardar Cuidado de joyas</button>
+
+          <hr style="margin:24px 0;border:none;border-top:1px solid var(--border);" />
+
+          <p class="editor-side-title">Preguntas frecuentes</p>
+          <div class="form-row"><label class="form-label">Etiqueta</label><input class="form-input" id="ct-info-faq-eyebrow" /></div>
+          <div class="form-row"><label class="form-label">Título</label><div class="rich-text-input" id="ct-info-faq-title" contenteditable="true"></div></div>
+          <div class="form-row"><label class="form-label">Introducción</label><textarea class="form-textarea" id="ct-info-faq-lead"></textarea></div>
+          <div id="ct-faq-list"></div>
+          <button type="button" class="btn btn-outline btn-sm" id="ct-faq-add" style="margin-bottom:12px;">+ Agregar pregunta</button>
+          <button type="button" class="btn btn-outline btn-sm" data-save-content="info_faq">Guardar FAQ</button>
+        </div>
+      </div>
+    </section>
+
+    </section>
+
+    <!-- COTIZACIONES -->
+    <section class="admin-panel" id="panel-quotes">
+      <div class="dash-grid">
+
+        <div class="panel">
+          <p class="panel-title">Nueva cotización</p>
+          <p class="dash-form-note">Completa los datos del cliente, carga piezas con SKU y agrégalas a la cotización.</p>
+
+          <div class="form-row">
+            <label class="form-label" for="cot-client">Nombre del cliente *</label>
+            <input class="form-input" id="cot-client" type="text" placeholder="Nombre completo" />
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label class="form-label" for="cot-phone">Teléfono / WhatsApp</label>
+              <input class="form-input" id="cot-phone" type="tel" placeholder="+52 961 000 0000" />
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="cot-date">Fecha de cotización</label>
+              <input class="form-input" id="cot-date" type="date" />
+            </div>
+          </div>
+          <input type="hidden" id="cot-quote-num" />
+
+          <div class="form-grid">
+            <div class="form-row">
+              <label class="form-label" for="cot-validity">Vigencia</label>
+              <input class="form-input" id="cot-validity" type="text" value="7 días naturales" />
+            </div>
+          </div>
+
+          <hr class="form-divider" />
+
+          <p class="editor-side-title" style="margin-bottom:12px;">Agregar pieza</p>
+          <div class="quote-item-card" id="quote-piece-form">
+            <div class="form-row">
+              <label class="form-label" for="cot-sku">SKU / ID</label>
+              <div class="quote-sku-row">
+                <input class="form-input" id="cot-sku" type="text" placeholder="Ej. PIL-001" autocomplete="off" />
+                <button type="button" class="btn btn-outline btn-sm" id="cot-sku-load">Cargar</button>
+              </div>
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="cot-product">Nombre de la pieza *</label>
+              <input class="form-input" id="cot-product" type="text" placeholder="Nombre del producto" />
+            </div>
+            <div class="form-grid">
+              <div class="form-row">
+                <label class="form-label" for="cot-material">Material</label>
+                <input class="form-input" id="cot-material" type="text" placeholder="Oro 18k" />
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="cot-stone">Piedra</label>
+                <input class="form-input" id="cot-stone" type="text" placeholder="Diamantes" />
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-row">
+                <label class="form-label" for="cot-size">Talla / Medida</label>
+                <input class="form-input" id="cot-size" type="text" placeholder="Talla 14" />
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="cot-category">Categoría</label>
+                <input class="form-input" id="cot-category" type="text" readonly placeholder="—" />
+              </div>
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="cot-price">Precio unitario *</label>
+              <input class="form-input" id="cot-price" type="text" placeholder="$48,500 MXN" />
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="cot-qty">Cantidad *</label>
+              <input class="form-input" id="cot-qty" type="number" min="1" step="1" value="1" />
+            </div>
+          </div>
+          <div class="quote-piece-actions">
+            <button type="button" class="btn btn-outline btn-sm" id="btn-add-quote-item">+ Otra pieza</button>
+          </div>
+
+          <p class="editor-side-title" style="margin-bottom:8px;">Piezas en esta cotización</p>
+          <div id="quote-saved-items" class="quote-saved-list"></div>
+
+          <div class="form-grid">
+            <div class="form-row">
+              <label class="form-label" for="cot-discount">Descuento</label>
+              <input class="form-input" id="cot-discount" type="text" placeholder="$0 o 10%" />
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="cot-shipping">Envío <span style="font-weight:400;color:var(--stone);">(no va al PDF aún)</span></label>
+              <input class="form-input" id="cot-shipping" type="text" placeholder="Ej. $350 MXN" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-label" for="cot-notes">Notas (envío, forma de pago, etc.)</label>
+            <textarea class="form-textarea" id="cot-notes" rows="3" placeholder="Ej. Incluye certificado de autenticidad. Envío a CDMX en 3–5 días hábiles."></textarea>
+          </div>
+
+          <div class="quote-actions">
+            <button type="button" class="btn btn-gold" id="btn-download-quote-pdf">Descargar PDF</button>
+            <button type="button" class="btn btn-outline btn-sm" id="btn-reset-quote">Limpiar</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <p class="panel-title">Vista previa</p>
+          <p class="dash-form-note" style="margin-bottom:16px;">Así se verá el PDF formal listo para enviar por WhatsApp.</p>
+          <div class="quote-preview-wrap" id="quote-preview-wrap"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CERTIFICADOS -->
+    <section class="admin-panel" id="panel-certificates">
+      <div class="dash-grid">
+
+        <div class="panel">
+          <p class="panel-title">Emitir certificado</p>
+          <p class="dash-form-note">Completa los datos al momento de la compra. El certificado se genera una sola vez por transacción.</p>
+
+          <div class="form-row">
+            <label class="form-label" for="cert-catalog-pick">Cargar desde catálogo</label>
+            <select class="form-select" id="cert-catalog-pick">
+              <option value="">— Seleccionar pieza —</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label class="form-label" for="cert-product">Nombre del producto *</label>
+            <input class="form-input" id="cert-product" type="text" placeholder="Ej. Anillo Eternity Diamantes" autocomplete="off" />
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label class="form-label" for="cert-material">Material *</label>
+              <select class="form-select" id="cert-material">
+                <option value="">Seleccionar</option>
+                <option>Oro 18k</option>
+                <option>Oro 14k</option>
+                <option>Plata 925</option>
+                <option>Oro Rose 18k</option>
+                <option>Oro Blanco 18k</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="cert-stone">Piedra principal</label>
+              <select class="form-select" id="cert-stone">
+                <option value="">Sin piedra</option>
+                <option>Diamante natural</option>
+                <option>Diamante amarillo</option>
+                <option>Zafiro azul</option>
+                <option>Esmeralda</option>
+                <option>Rubí</option>
+                <option>Perla cultivada</option>
+                <option>Topacio azul</option>
+                <option>Pavé de diamantes</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label class="form-label" for="cert-size">Talla / Medida</label>
+              <input class="form-input" id="cert-size" type="text" placeholder="Ej. Talla 14 · 42 cm" />
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="cert-price">Precio de venta</label>
+              <input class="form-input" id="cert-price" type="text" placeholder="Ej. $48,500 MXN" />
+            </div>
+          </div>
+
+          <hr class="form-divider" />
+
+          <div class="form-row">
+            <label class="form-label" for="cert-client">Nombre del cliente *</label>
+            <input class="form-input" id="cert-client" type="text" placeholder="Nombre completo del cliente" />
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="cert-date">Fecha de compra *</label>
+            <input class="form-input" id="cert-date" type="date" />
+          </div>
+
+          <button type="button" class="btn-save" id="btn-save-cert">* Guardar y emitir certificado</button>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:20px;">
+
+          <div class="panel">
+            <p class="panel-title">Vista previa</p>
+            <span class="cert-label">Tarjeta física — 85.6 × 54 mm</span>
+
+            <div id="print-zone">
+              <div id="certificate-card" role="img" aria-label="Certificado de autenticidad">
+                <div class="cert-corner tl"></div>
+                <div class="cert-corner tr"></div>
+                <div class="cert-corner bl"></div>
+                <div class="cert-corner br"></div>
+                <svg class="cert-bg-ring" width="90" height="90" viewBox="0 0 90 90" fill="none">
+                  <circle cx="45" cy="45" r="42" stroke="#B8975A" stroke-width="0.8"/>
+                  <circle cx="45" cy="45" r="32" stroke="#B8975A" stroke-width="0.4"/>
+                  <circle cx="45" cy="3" r="4" fill="#B8975A"/>
+                </svg>
+                <div class="cert-top">
+                  <div>
+                    <div class="cert-brand-name">Pilarica</div>
+                    <span class="cert-brand-sub">Joyería de Autor</span>
+                  </div>
+                  <div class="cert-auth-badge">Certificado de Autenticidad</div>
+                </div>
+                <div class="cert-divider"></div>
+                <div class="cert-mid">
+                  <div class="cert-product-name" id="cert-prev-name">Nombre del producto</div>
+                  <div class="cert-details-row">
+                    <div class="cert-detail-item">Material<strong id="cert-prev-material">—</strong></div>
+                    <div class="cert-detail-item">Piedra<strong id="cert-prev-stone">—</strong></div>
+                    <div class="cert-detail-item">Talla<strong id="cert-prev-size">—</strong></div>
+                  </div>
+                </div>
+                <div class="cert-divider"></div>
+                <div class="cert-bottom">
+                  <div>
+                    <span class="cert-client-label">Para</span>
+                    <span class="cert-client-name" id="cert-prev-client">Nombre del cliente</span>
+                  </div>
+                  <div class="cert-serial-block">
+                    <span class="cert-serial" id="cert-prev-date">—</span>
+                    <span class="cert-serial" id="cert-prev-serial">PIL-000000</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="cert-actions">
+              <button type="button" class="btn-print" id="btn-print-cert">Imprimir certificado</button>
+              <button type="button" class="btn-clear" id="btn-reset-cert">Limpiar</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <p class="panel-title">Certificados emitidos</p>
+            <div id="cert-history-list">
+              <p class="empty-state">Los certificados emitidos aparecerán aquí.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div id="quote-pdf-source" class="quote-pdf-source" aria-hidden="true"></div>
+
+<div id="toast" class="toast" role="alert"></div>
+
+<script src="js/pilarica-config.js"></script>
+<script src="js/pilarica-store.js"></script>
+<script src="js/pilarica-site-content.js"></script>
+<script src="js/pilarica-info-pages.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script>
+<script>
+const ADMIN_AUTH_KEY = 'pilarica_admin_session';
+const CERTS_KEY = PilaricaConfig.certsKey;
+const DEMO_EMAIL = 'admin@ejemplo.local';
+const DEMO_PASS = 'demo-local';
+
+let products = [];
+let editingId = null;
+let productGallery = [];
+
+function formatCertDate(isoDate) {
+  if (!isoDate) return '—';
+  const d = new Date(isoDate + 'T12:00:00');
+  return d.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function setCertField(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = val;
+}
+
+function setCertPreviewText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val || '—';
+}
+
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast toast-show' + (type === 'warn' ? ' toast-warn' : '');
+  setTimeout(() => { t.className = 'toast'; }, 2800);
+}
+
+function formatPrice(n) {
+  return PilaricaStore.formatPrice(n);
+}
+
+async function loadProducts() {
+  if (PilaricaConfig.storage === 'supabase') {
+    await PilaricaStore.initAdmin();
+  } else {
+    await PilaricaStore.init();
+  }
+  products = PilaricaStore.getProducts(true);
+}
+
+function isLoggedIn() {
+  if (PilaricaConfig.storage === 'supabase') {
+    return !!PilaricaStore.getAccessToken();
+  }
+  return sessionStorage.getItem(ADMIN_AUTH_KEY) === '1';
+}
+
+async function showApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app-shell').classList.add('app-visible');
+  const label = PilaricaConfig.storage === 'supabase'
+    ? (PilaricaStore.getSessionEmail() || DEMO_EMAIL)
+    : DEMO_EMAIL;
+  document.getElementById('admin-user-label').textContent = label;
+  await loadProducts();
+  loadContentForms();
+  initRichTextEditors();
+  renderProducts();
+  renderStats();
+  fillCertCatalogPick();
+  renderCertHistory();
+  initQuoteForm();
+  document.getElementById('cert-date').value = new Date().toISOString().split('T')[0];
+  updateCertPreview();
+}
+
+function showLogin() {
+  sessionStorage.removeItem(ADMIN_AUTH_KEY);
+  PilaricaStore.signOut();
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app-shell').classList.remove('app-visible');
+}
+
+function switchPanel(name) {
+  document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('panel-active'));
+  document.querySelectorAll('.sidebar-link[data-panel]').forEach(l => {
+    if (l.id === 'nav-editor') return;
+    l.classList.toggle('active', l.dataset.panel === name);
+  });
+  const panel = document.getElementById('panel-' + name);
+  if (panel) panel.classList.add('panel-active');
+  const titles = { products: 'Productos', editor: editingId ? 'Editar pieza' : 'Nueva pieza', content: 'Contenido web', quotes: 'Cotizaciones', certificates: 'Certificados' };
+  document.getElementById('topbar-title').textContent = titles[name] || 'Panel';
+  closeSidebar();
+}
+
+function renderStats() {
+  const el = document.getElementById('stats-row');
+  const total = products.length;
+  const featured = products.filter(p => p.featured).length;
+  const inStock = products.filter(p => (p.stockQty ?? (p.inStock ? 1 : 0)) > 0).length;
+  const avg = total ? Math.round(products.reduce((s, p) => s + p.price, 0) / total) : 0;
+  el.innerHTML = [
+    ['' + total, 'Piezas en catálogo'],
+    ['' + featured, 'Destacadas'],
+    ['' + inStock, 'Disponibles'],
+    [formatPrice(avg), 'Precio promedio'],
+  ].map(([n, l]) => `<div class="stat-box"><div class="stat-box-num">${n}</div><div class="stat-box-label">${l}</div></div>`).join('');
+}
+
+function renderProducts(filter) {
+  const tbody = document.getElementById('products-tbody');
+  const q = (filter || '').toLowerCase().trim();
+  const list = q
+    ? products.filter(p => p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q))
+    : products;
+
+  if (!list.length) {
+    tbody.innerHTML = `<tr><td colspan="5"><p class="empty-state">No hay productos${q ? ' con esa búsqueda' : ''}.</p></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = list.map(p => `
+    <tr data-id="${p.id}">
+      <td>
+        <div style="display:flex;align-items:center;gap:12px;">
+          ${PilaricaStore.getProductImage(p) ? `<img class="prod-thumb" src="${PilaricaStore.getProductImage(p)}" alt="" />` : `<div class="prod-thumb" style="display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--stone);">IMG</div>`}
+          <div class="prod-name-cell">
+            <strong>${p.name}</strong>
+            <span>${p.id}</span>
+          </div>
+        </div>
+      </td>
+      <td class="hide-mobile">${PilaricaStore.CATEGORY_LABELS[p.category] || p.category}</td>
+      <td>${formatPrice(p.price)}</td>
+      <td class="hide-mobile">
+        ${(p.stockQty ?? (p.inStock ? 1 : 0)) > 0
+          ? `<span class="badge badge-green">${p.stockQty ?? 1} en stock</span>`
+          : '<span class="badge badge-muted">Agotado</span>'}
+        ${p.featured ? ' <span class="badge badge-gold">Destacado</span>' : ''}
+        ${p.active === false ? ' <span class="badge badge-muted">Oculto</span>' : ''}
+      </td>
+      <td>
+        <div class="row-actions">
+          <button type="button" class="btn btn-outline btn-sm" data-edit="${p.id}">Editar</button>
+        </div>
+      </td>
+    </tr>`).join('');
+
+  tbody.querySelectorAll('[data-edit]').forEach(btn => {
+    btn.addEventListener('click', () => openEditor(btn.dataset.edit));
+  });
+}
+
+function openEditor(id) {
+  editingId = id || null;
+  const form = document.getElementById('product-form');
+  form.reset();
+  document.getElementById('btn-hide-product').hidden = !editingId;
+  document.getElementById('btn-delete-product').hidden = !editingId;
+  document.getElementById('editor-heading').textContent = editingId ? 'Editar pieza' : 'Nueva pieza';
+  document.getElementById('nav-editor').hidden = false;
+
+  if (editingId) {
+    const p = products.find(x => x.id === editingId);
+    if (!p) return;
+    document.getElementById('pf-id').value = p.id;
+    document.getElementById('pf-id').readOnly = true;
+    document.getElementById('pf-name').value = p.name;
+    document.getElementById('pf-category').value = p.category;
+    document.getElementById('pf-desc').value = p.description || '';
+    document.getElementById('pf-material').value = p.material || '';
+    document.getElementById('pf-stone').value = p.stone || '';
+    document.getElementById('pf-size').value = p.size || '';
+    document.getElementById('pf-price').value = p.price;
+    document.getElementById('pf-stock').value = p.stockQty ?? (p.inStock ? 1 : 0);
+    document.getElementById('pf-image').value = p.image || '';
+    productGallery = Array.isArray(p.images) ? [...p.images] : [];
+    setToggle('toggle-featured', p.featured);
+    setToggle('toggle-active', p.active !== false);
+    updateImagePreview(p.image);
+    renderProductGallery();
+  } else {
+    document.getElementById('pf-id').readOnly = false;
+    productGallery = [];
+    document.getElementById('pf-stock').value = 1;
+    setToggle('toggle-featured', false);
+    setToggle('toggle-active', true);
+    updateImagePreview('');
+    renderProductGallery();
+  }
+  switchPanel('editor');
+  document.querySelector('.sidebar-link[data-panel="editor"]').classList.add('active');
+}
+
+function setToggle(id, on) {
+  const el = document.getElementById(id);
+  el.classList.toggle('on', on);
+  el.setAttribute('aria-pressed', on ? 'true' : 'false');
+}
+
+function getToggle(id) {
+  return document.getElementById(id).classList.contains('on');
+}
+
+function updateImagePreview(src) {
+  const box = document.getElementById('image-preview');
+  if (src) {
+    box.innerHTML = `<img src="${src}" alt="Vista previa" onerror="this.parentElement.innerHTML='<span>No se pudo cargar</span>'" />`;
+  } else {
+    box.innerHTML = '<span>Sin imagen</span>';
+  }
+}
+
+function renderProductGallery() {
+  const list = document.getElementById('pf-gallery-list');
+  if (!list) return;
+  if (!productGallery.length) {
+    list.innerHTML = '<span class="cert-note" style="margin:0;">Sin imágenes adicionales</span>';
+    return;
+  }
+  list.innerHTML = productGallery.map((src, i) => `
+    <div class="gallery-item">
+      <img src="${src.replace(/"/g, '&quot;')}" alt="Imagen ${i + 1}" onerror="this.alt='Error'" />
+      <button type="button" class="gallery-item-remove" data-gallery-remove="${i}" aria-label="Quitar imagen">&times;</button>
+    </div>`).join('');
+  list.querySelectorAll('[data-gallery-remove]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      productGallery.splice(Number(btn.dataset.galleryRemove), 1);
+      renderProductGallery();
+    });
+  });
+}
+
+async function addGalleryImagesFromFiles(fileList) {
+  const files = Array.from(fileList || []);
+  if (!files.length) return;
+  const category = document.getElementById('pf-category').value || 'catalog';
+  for (const file of files) {
+    try {
+      const url = await PilaricaStore.uploadProductImage(file, category);
+      productGallery.push(url);
+    } catch (err) {
+      console.error(err);
+      toast(err.message || 'No se pudo subir una imagen', 'warn');
+    }
+  }
+  renderProductGallery();
+  if (files.length) toast('Imágenes agregadas a la galería');
+}
+
+async function saveProduct(e) {
+  e.preventDefault();
+  const data = {
+    id: document.getElementById('pf-id').value.trim(),
+    name: document.getElementById('pf-name').value.trim(),
+    category: document.getElementById('pf-category').value,
+    description: document.getElementById('pf-desc').value.trim(),
+    material: document.getElementById('pf-material').value.trim(),
+    stone: document.getElementById('pf-stone').value.trim(),
+    size: document.getElementById('pf-size').value.trim(),
+    price: Number(document.getElementById('pf-price').value),
+    stockQty: Number(document.getElementById('pf-stock').value),
+    image: document.getElementById('pf-image').value.trim(),
+    images: productGallery.filter(Boolean),
+    currency: 'MXN',
+    inStock: Number(document.getElementById('pf-stock').value) > 0,
+    featured: getToggle('toggle-featured'),
+    active: getToggle('toggle-active'),
+    imageKey: editingId ? (products.find(x => x.id === editingId)?.imageKey || '') : '',
+  };
+  if (!data.id || !data.name || !data.price) {
+    toast('Completa SKU, nombre y precio', 'warn');
+    return;
+  }
+  if (Number.isNaN(data.stockQty) || data.stockQty < 0) {
+    toast('Indica un stock válido (0 o más unidades)', 'warn');
+    return;
+  }
+  if (!editingId && products.some(p => p.id === data.id)) {
+    toast('Ese SKU ya existe', 'warn');
+    return;
+  }
+  try {
+    await PilaricaStore.upsertProduct(data);
+    products = PilaricaStore.getProducts(true);
+    renderProducts();
+    renderStats();
+    fillCertCatalogPick();
+    updateCertPreview();
+    toast(editingId ? 'Pieza actualizada en el catálogo' : 'Pieza creada en el catálogo');
+    editingId = null;
+    document.getElementById('nav-editor').hidden = true;
+    switchPanel('products');
+  } catch (err) {
+    console.error(err);
+    if ((err.message || '').includes('Sesión expirada')) {
+      toast('Sesión expirada. Vuelve a iniciar sesión.', 'warn');
+      showLogin();
+      return;
+    }
+    if ((err.message || '').includes('permisos')) {
+      toast('Falta configurar permisos en Supabase. Ejecuta database/fix-rls.sql', 'warn');
+      return;
+    }
+    toast('No se pudo guardar en la base de datos', 'warn');
+  }
+}
+
+async function hideProduct() {
+  if (!editingId || !confirm('¿Ocultar esta pieza del catálogo?\n\nPermanece en la base de datos pero deja de mostrarse en la tienda.')) return;
+  try {
+    await PilaricaStore.deactivateProduct(editingId);
+    products = PilaricaStore.getProducts(true);
+    renderProducts();
+    renderStats();
+    fillCertCatalogPick();
+    toast('Pieza oculta del catálogo');
+    editingId = null;
+    document.getElementById('nav-editor').hidden = true;
+    switchPanel('products');
+  } catch (err) {
+    console.error(err);
+    toast('No se pudo ocultar la pieza', 'warn');
+  }
+}
+
+async function deleteProduct() {
+  if (!editingId || !confirm('¿Eliminar permanentemente esta pieza?\n\nEsta acción no se puede deshacer. Los certificados vinculados conservarán el nombre pero perderán la referencia al producto.')) return;
+  try {
+    await PilaricaStore.deleteProduct(editingId);
+    products = PilaricaStore.getProducts(true);
+    renderProducts();
+    renderStats();
+    fillCertCatalogPick();
+    toast('Pieza eliminada permanentemente');
+    editingId = null;
+    document.getElementById('nav-editor').hidden = true;
+    switchPanel('products');
+  } catch (err) {
+    console.error(err);
+    if ((err.message || '').includes('Sesión expirada')) {
+      toast('Sesión expirada. Vuelve a iniciar sesión.', 'warn');
+      showLogin();
+      return;
+    }
+    toast(err.message || 'No se pudo eliminar la pieza', 'warn');
+  }
+}
+
+function fillCertCatalogPick() {
+  const sel = document.getElementById('cert-catalog-pick');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">— Seleccionar pieza —</option>' +
+    products.map(p => `<option value="${p.id}">${p.name} (${p.id})</option>`).join('');
+}
+
+function setSelectValue(id, val) {
+  const el = document.getElementById(id);
+  if (!el || !val) { if (el) el.value = ''; return; }
+  const match = [...el.options].find(o => o.value === val || o.text === val);
+  if (match) {
+    el.value = match.value;
+    return;
+  }
+  if (el.tagName === 'SELECT') {
+    const opt = document.createElement('option');
+    opt.value = val;
+    opt.textContent = val;
+    el.appendChild(opt);
+    el.value = val;
+  } else {
+    el.value = val;
+  }
+}
+
+function prefillCertFromProduct(productId) {
+  const p = products.find(x => x.id === productId);
+  if (!p) return;
+  setCertField('cert-product', p.name);
+  setSelectValue('cert-material', p.material || '');
+  setSelectValue('cert-stone', p.stone && p.stone !== 'Sin piedra' ? p.stone : '');
+  setCertField('cert-size', p.size || '');
+  setCertField('cert-price', typeof p.price === 'number' ? formatPrice(p.price) : (p.price || ''));
+  updateCertPreview();
+}
+
+function getCerts() {
+  return PilaricaStore.getCertificates();
+}
+
+function updateCertPreview() {
+  setCertPreviewText('cert-prev-name', document.getElementById('cert-product').value || 'Nombre del producto');
+  setCertPreviewText('cert-prev-material', document.getElementById('cert-material').value || '—');
+  setCertPreviewText('cert-prev-stone', document.getElementById('cert-stone').value || '—');
+  setCertPreviewText('cert-prev-size', document.getElementById('cert-size').value || '—');
+  setCertPreviewText('cert-prev-client', document.getElementById('cert-client').value || 'Nombre del cliente');
+  setCertPreviewText('cert-prev-date', formatCertDate(document.getElementById('cert-date').value));
+}
+
+async function saveCert() {
+  const productName = document.getElementById('cert-product').value.trim();
+  const clientName = document.getElementById('cert-client').value.trim();
+  if (!productName) { toast('Ingresa el nombre del producto', 'warn'); return; }
+  if (!clientName) { toast('Ingresa el nombre del cliente', 'warn'); return; }
+
+  try {
+    const cert = await PilaricaStore.createCertificate({
+      productName,
+      material: document.getElementById('cert-material').value,
+      stone: document.getElementById('cert-stone').value || 'Sin piedra',
+      size: document.getElementById('cert-size').value,
+      price: document.getElementById('cert-price').value,
+      clientName,
+      purchaseDate: document.getElementById('cert-date').value,
+    });
+    document.getElementById('cert-prev-serial').textContent = cert.serial;
+    renderCertHistory();
+    toast('Certificado ' + cert.serial + ' guardado');
+  } catch (err) {
+    console.error(err);
+    if ((err.message || '').includes('permisos')) {
+      toast('Ejecuta database/certificates-rls.sql en Supabase', 'warn');
+      return;
+    }
+    toast('No se pudo guardar el certificado', 'warn');
+  }
+}
+
+function resetCertForm() {
+  ['cert-product', 'cert-material', 'cert-stone', 'cert-size', 'cert-price', 'cert-client'].forEach(id => setCertField(id, ''));
+  document.getElementById('cert-catalog-pick').value = '';
+  document.getElementById('cert-stone').value = '';
+  document.getElementById('cert-material').value = '';
+  document.getElementById('cert-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('cert-prev-serial').textContent = 'PIL-000000';
+  updateCertPreview();
+}
+
+let quoteSavedItems = [];
+let quoteSkuDebounce = null;
+
+function escapeQuoteHtml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function generateQuoteNum() {
+  const ymd = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const rnd = String(Math.floor(Math.random() * 900) + 100);
+  return `COT-${ymd}-${rnd}`;
+}
+
+function quoteImageFullUrl(url) {
+  if (!url) return '';
+  if (/^https?:\/\//i.test(url) || url.startsWith('data:')) return url;
+  const rel = PilaricaStore.resolvePublicUrl(url);
+  if (/^https?:\/\//i.test(rel)) return rel;
+  const origin = (PilaricaConfig.siteBaseUrl || '').replace(/\/$/, '') || window.location.origin;
+  const path = rel.startsWith('/') ? rel : `/${rel}`;
+  return `${origin}${path}`;
+}
+
+function findProductBySku(raw) {
+  const sku = (raw || '').trim();
+  if (!sku) return null;
+  return products.find(p => p.id.toLowerCase() === sku.toLowerCase()) || null;
+}
+
+function parseQuotePriceAmount(str) {
+  const cleaned = String(str || '').replace(/[^\d.,]/g, '').replace(/,/g, '');
+  const n = parseFloat(cleaned);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function parseQuoteDiscountAmount(subtotal, raw) {
+  const text = String(raw || '').trim();
+  if (!text) return 0;
+  if (/%/.test(text)) {
+    const pct = parseFloat(text.replace(/[^\d.,]/g, '').replace(/,/g, ''));
+    if (!Number.isFinite(pct) || pct <= 0) return 0;
+    return Math.min(subtotal, subtotal * (pct / 100));
+  }
+  return Math.min(subtotal, parseQuotePriceAmount(text));
+}
+
+function getProductStockQty(sku) {
+  const p = findProductBySku(sku);
+  if (!p) return null;
+  return typeof p.stockQty === 'number' ? p.stockQty : (p.inStock ? 1 : 0);
+}
+
+function getQuoteStockWarning(item) {
+  const stock = getProductStockQty(item.sku);
+  if (stock == null || !item.sku) return '';
+  const qty = item.qty || 1;
+  if (qty > stock) return `Solo hay ${stock} en stock (cotizas ${qty})`;
+  return '';
+}
+
+function clearQuotePieceForm() {
+  ['cot-sku', 'cot-product', 'cot-material', 'cot-stone', 'cot-size', 'cot-category', 'cot-price'].forEach(id => setCertField(id, ''));
+  const qtyEl = document.getElementById('cot-qty');
+  if (qtyEl) qtyEl.value = '1';
+}
+
+function readQuotePieceForm() {
+  const sku = document.getElementById('cot-sku')?.value.trim() || '';
+  const product = findProductBySku(sku);
+  const qty = Math.max(1, parseInt(document.getElementById('cot-qty')?.value, 10) || 1);
+  const unitPriceRaw = document.getElementById('cot-price')?.value.trim() || '';
+  const unitAmount = parseQuotePriceAmount(unitPriceRaw);
+  const lineAmount = unitAmount * qty;
+  return {
+    sku,
+    productName: document.getElementById('cot-product')?.value.trim() || '',
+    material: document.getElementById('cot-material')?.value.trim() || '',
+    stone: document.getElementById('cot-stone')?.value.trim() || '',
+    size: document.getElementById('cot-size')?.value.trim() || '',
+    category: document.getElementById('cot-category')?.value.trim() || '',
+    unitPrice: unitPriceRaw,
+    unitAmount,
+    qty,
+    price: lineAmount > 0 ? formatPrice(lineAmount) : unitPriceRaw,
+    lineAmount,
+    stockQty: product ? getProductStockQty(sku) : null,
+    imageUrl: product ? quoteImageFullUrl(PilaricaStore.getProductImage(product)) : '',
+  };
+}
+
+function validateQuotePieceItem(item, label) {
+  const who = label ? ` (${label})` : '';
+  if (!item.productName) { toast(`Ingresa el nombre de la pieza${who}`, 'warn'); return false; }
+  if (!item.unitPrice && !item.lineAmount) { toast(`Ingresa el precio de la pieza${who}`, 'warn'); return false; }
+  if (!item.qty || item.qty < 1) { toast(`Indica una cantidad válida${who}`, 'warn'); return false; }
+  return true;
+}
+
+function notifyQuoteStockWarning(item) {
+  const msg = getQuoteStockWarning(item);
+  if (msg) toast('Atención: ' + msg, 'warn');
+}
+
+function addQuotePieceToSaved(item) {
+  quoteSavedItems.push({ ...item });
+  notifyQuoteStockWarning(item);
+  renderQuoteSavedList();
+  updateQuotePreview();
+}
+
+function renderQuoteSavedList() {
+  const box = document.getElementById('quote-saved-items');
+  if (!box) return;
+  if (!quoteSavedItems.length) {
+    box.innerHTML = '<p class="quote-saved-empty">Aún no hay piezas. Usa Cargar o + Otra pieza.</p>';
+    return;
+  }
+  box.innerHTML = quoteSavedItems.map((item, i) => {
+    const warn = getQuoteStockWarning(item);
+    const qtyLabel = (item.qty || 1) > 1 ? ` · x${item.qty}` : '';
+    const unitLabel = item.unitPrice && (item.qty || 1) > 1 ? ` (${escapeQuoteHtml(item.unitPrice)} c/u)` : '';
+    return `
+    <div class="quote-saved-item" data-index="${i}">
+      <div class="quote-saved-info">
+        <strong>${escapeQuoteHtml(item.productName)}</strong>
+        <span>${escapeQuoteHtml(item.sku || 'Sin SKU')}${qtyLabel}${unitLabel} · ${escapeQuoteHtml(item.price)}</span>
+        ${warn ? `<span class="quote-saved-warn">${escapeQuoteHtml(warn)}</span>` : ''}
+      </div>
+      <button type="button" class="btn btn-outline btn-sm quote-saved-remove">Quitar</button>
+    </div>`;
+  }).join('');
+}
+
+function prefillQuotePieceFormFromSku(silent) {
+  const skuInput = document.getElementById('cot-sku');
+  const p = findProductBySku(skuInput?.value.trim());
+  if (!p) {
+    if (!silent) toast('No se encontró una pieza con ese SKU', 'warn');
+    return false;
+  }
+  setCertField('cot-sku', p.id);
+  setCertField('cot-product', p.name);
+  setCertField('cot-material', p.material || '');
+  setCertField('cot-stone', p.stone && p.stone !== 'Sin piedra' ? p.stone : '');
+  setCertField('cot-size', p.size || '');
+  setCertField('cot-category', PilaricaStore.CATEGORY_LABELS[p.category] || p.category || '');
+  setCertField('cot-price', typeof p.price === 'number' ? formatPrice(p.price) : (p.price || ''));
+  if (!silent) toast('Datos cargados: ' + p.name);
+  return true;
+}
+
+function loadAndCommitQuotePiece() {
+  const sku = document.getElementById('cot-sku')?.value.trim();
+  if (!sku) { toast('Ingresa un SKU', 'warn'); return; }
+  if (!prefillQuotePieceFormFromSku(true)) return;
+  const item = readQuotePieceForm();
+  if (!validateQuotePieceItem(item)) return;
+  addQuotePieceToSaved(item);
+  clearQuotePieceForm();
+  toast('Pieza agregada a la cotización');
+}
+
+function commitQuotePieceFromForm() {
+  const item = readQuotePieceForm();
+  const hasData = item.productName || item.sku || item.price;
+  if (!hasData) {
+    clearQuotePieceForm();
+    toast('Formulario listo para otra pieza');
+    return;
+  }
+  if (!validateQuotePieceItem(item)) return;
+  addQuotePieceToSaved(item);
+  clearQuotePieceForm();
+  toast('Pieza agregada a la cotización');
+}
+
+function computeQuoteTotals(items, discountRaw) {
+  const subtotal = items.reduce((sum, item) => sum + (item.lineAmount || parseQuotePriceAmount(item.price)), 0);
+  const discountAmount = parseQuoteDiscountAmount(subtotal, discountRaw);
+  const total = Math.max(0, subtotal - discountAmount);
+  const pieceCount = items.reduce((sum, item) => sum + (item.qty || 1), 0);
+  return { subtotal, discountAmount, total, pieceCount };
+}
+
+function getQuoteFormData() {
+  const items = quoteSavedItems.slice();
+  const discountRaw = document.getElementById('cot-discount')?.value.trim() || '';
+  const shippingRaw = document.getElementById('cot-shipping')?.value.trim() || '';
+  const totals = computeQuoteTotals(items, discountRaw);
+  return {
+    quoteNum: document.getElementById('cot-quote-num').value.trim() || generateQuoteNum(),
+    client: document.getElementById('cot-client').value.trim(),
+    phone: document.getElementById('cot-phone').value.trim(),
+    date: document.getElementById('cot-date').value,
+    validity: document.getElementById('cot-validity').value.trim() || '7 días naturales',
+    notes: document.getElementById('cot-notes').value.trim(),
+    discountRaw,
+    shippingRaw,
+    items,
+    subtotal: totals.subtotal > 0 ? formatPrice(totals.subtotal) : '$0 MXN',
+    discount: totals.discountAmount > 0 ? formatPrice(totals.discountAmount) : '',
+    total: totals.total > 0 ? formatPrice(totals.total) : '$0 MXN',
+    pieceCount: totals.pieceCount,
+    stockWarnings: items.map(getQuoteStockWarning).filter(Boolean),
+  };
+}
+
+function buildQuoteTotalsRows(data, inline) {
+  const pieceNote = data.pieceCount > 1 ? ` · ${data.pieceCount} piezas` : '';
+  const discountRow = data.discount
+    ? (inline
+      ? `<tr><td style="padding:8px 10px;border:1px solid #c9bfb0;text-align:right;color:#444;background:#faf8f5;width:72%;">Descuento</td><td style="padding:8px 10px;border:1px solid #c9bfb0;text-align:right;color:#9a4a2a;background:#faf8f5;">− ${escapeQuoteHtml(data.discount)}</td></tr>`
+      : `<tr><td>Descuento</td><td>− ${escapeQuoteHtml(data.discount)}</td></tr>`)
+    : '';
+  if (inline) {
+    return `
+      <tr><td style="padding:8px 10px;border:1px solid #c9bfb0;text-align:right;color:#444;background:#faf8f5;width:72%;">Subtotal (MXN)${pieceNote}</td><td style="padding:8px 10px;border:1px solid #c9bfb0;text-align:right;color:#111;background:#faf8f5;">${escapeQuoteHtml(data.subtotal || '$0 MXN')}</td></tr>
+      ${discountRow}
+      <tr><td style="padding:8px 10px;border:1px solid #c9bfb0;text-align:right;color:#444;background:#f3efe8;width:72%;font-weight:600;">Total cotizado (MXN)</td><td style="padding:8px 10px;border:1px solid #c9bfb0;text-align:right;font-weight:700;font-size:12px;color:#111;background:#f3efe8;">${escapeQuoteHtml(data.total || '$0 MXN')}</td></tr>`;
+  }
+  return `
+      <tr><td>Subtotal (MXN)${pieceNote}</td><td>${escapeQuoteHtml(data.subtotal || '$0 MXN')}</td></tr>
+      ${discountRow}
+      <tr><td>Total cotizado (MXN)</td><td>${escapeQuoteHtml(data.total || '$0 MXN')}</td></tr>`;
+}
+
+function buildQuoteLineRow(item) {
+  const imgBlock = item.imageUrl
+    ? `<img class="quote-doc-piece-img" src="${escapeQuoteHtml(item.imageUrl)}" alt="${escapeQuoteHtml(item.productName)}" crossorigin="anonymous" />`
+    : '<div class="quote-doc-piece-img placeholder">Sin imagen</div>';
+
+  const specRow = (label, val) => val
+    ? `<tr><td>${escapeQuoteHtml(label)}:</td><td>${escapeQuoteHtml(val)}</td></tr>`
+    : '';
+
+  const qty = item.qty || 1;
+  const unitLabel = item.unitPrice ? escapeQuoteHtml(item.unitPrice) : '';
+
+  return `
+    <tr>
+      <td>
+        <div class="quote-doc-line-item">
+          ${imgBlock}
+          <div>
+            <p class="quote-doc-piece-name">${escapeQuoteHtml(item.productName || 'Pieza')}</p>
+            <table class="quote-doc-specs">
+              <tbody>
+                ${specRow('SKU', item.sku)}
+                ${specRow('Cantidad', String(qty))}
+                ${qty > 1 && unitLabel ? specRow('Precio unitario', unitLabel) : ''}
+                ${specRow('Material', item.material)}
+                ${specRow('Piedra', item.stone)}
+                ${specRow('Talla', item.size)}
+                ${specRow('Categoría', item.category)}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </td>
+      <td>${escapeQuoteHtml(item.price || '$0 MXN')}</td>
+    </tr>`;
+}
+
+function buildQuoteDocumentHtml(data) {
+  const items = (data.items || []).filter(item => item.productName || item.sku || item.price);
+  const lineRows = items.length
+    ? items.map(buildQuoteLineRow).join('')
+    : buildQuoteLineRow({ productName: 'Pieza', price: '$0 MXN' });
+
+  const notesBlock = data.notes
+    ? `<div class="quote-doc-notes"><strong style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:#8a7f72;">Notas y condiciones</strong><br>${escapeQuoteHtml(data.notes)}</div>`
+    : '';
+
+  const wa = PilaricaStore.getWhatsAppNumber();
+  const waDisplay = formatWhatsAppDisplay(wa);
+
+  return `
+    <div class="quote-doc">
+      <div class="quote-doc-top">
+        <div>
+          <div class="quote-doc-brand">PILARICA</div>
+          <div class="quote-doc-brand-sub">Joyas de autor</div>
+        </div>
+        <div class="quote-doc-meta">
+          <strong>Folio ${escapeQuoteHtml(data.quoteNum)}</strong>
+          Fecha: ${escapeQuoteHtml(formatCertDate(data.date))}<br>
+          Vigencia: ${escapeQuoteHtml(data.validity)}
+        </div>
+      </div>
+
+      <h1 class="quote-doc-heading">Cotización</h1>
+
+      <dl class="quote-doc-info-grid">
+        <div><dt>Cliente</dt><dd>${escapeQuoteHtml(data.client || '—')}</dd></div>
+        <div><dt>Teléfono</dt><dd>${escapeQuoteHtml(data.phone || '—')}</dd></div>
+      </dl>
+
+      <div class="quote-doc-kicker">Detalle de la cotización</div>
+      <table class="quote-doc-lines">
+        <thead>
+          <tr>
+            <th>Concepto</th>
+            <th>Importe</th>
+          </tr>
+        </thead>
+        <tbody>${lineRows}</tbody>
+      </table>
+
+      <table class="quote-doc-total">
+        ${buildQuoteTotalsRows(data, false)}
+      </table>
+
+      ${data.shippingRaw ? `<p class="quote-doc-shipping-note">Envío (referencia interna): ${escapeQuoteHtml(data.shippingRaw)}</p>` : ''}
+
+      ${(data.stockWarnings || []).length ? `<div class="quote-doc-stock-warn"><strong>Atención stock</strong><ul>${data.stockWarnings.map(w => `<li>${escapeQuoteHtml(w)}</li>`).join('')}</ul></div>` : ''}
+
+      ${notesBlock}
+
+      <div class="quote-doc-footer">
+        <strong>Pilarica Joyas</strong> · WhatsApp ${escapeQuoteHtml(waDisplay)} · mrk@pilaricajoyas.com.mx · pilaricajoyas.com.mx
+      </div>
+    </div>`;
+}
+
+function buildQuotePdfHtml(data) {
+  const items = (data.items || []).filter(item => item.productName || item.sku || item.price);
+  const waDisplay = formatWhatsAppDisplay(PilaricaStore.getWhatsAppNumber());
+
+  const pdfSpec = (label, val) => val
+    ? `<tr><td style="color:#8a7f72;font-size:10px;padding:2px 8px 2px 0;vertical-align:top;">${escapeQuoteHtml(label)}:</td><td style="font-size:10px;color:#444;padding:2px 0;">${escapeQuoteHtml(val)}</td></tr>`
+    : '';
+
+  const pdfLine = (item) => {
+    const qty = item.qty || 1;
+    const unitLabel = item.unitPrice ? escapeQuoteHtml(item.unitPrice) : '';
+    const img = item.imageUrl
+      ? `<img src="${escapeQuoteHtml(item.imageUrl)}" crossorigin="anonymous" style="width:88px;height:88px;object-fit:cover;border:1px solid #ddd5c8;display:block;background:#f3efe8;" />`
+      : '<div style="width:88px;height:88px;border:1px solid #ddd5c8;background:#f3efe8;font-size:9px;color:#8a7f72;text-align:center;line-height:88px;">Sin imagen</div>';
+    return `<tr>
+      <td style="padding:10px 8px;border-bottom:1px solid #ece6dc;vertical-align:top;">
+        <table cellpadding="0" cellspacing="0" border="0"><tr>
+          <td style="vertical-align:top;padding-right:12px;">${img}</td>
+          <td style="vertical-align:top;">
+            <div style="font-size:11px;font-weight:700;color:#111;margin-bottom:6px;">${escapeQuoteHtml(item.productName || 'Pieza')}</div>
+            <table cellpadding="0" cellspacing="0" border="0">${pdfSpec('SKU', item.sku)}${pdfSpec('Cantidad', String(qty))}${qty > 1 && unitLabel ? pdfSpec('Precio unitario', unitLabel) : ''}${pdfSpec('Material', item.material)}${pdfSpec('Piedra', item.stone)}${pdfSpec('Talla', item.size)}${pdfSpec('Categoría', item.category)}</table>
+          </td>
+        </tr></table>
+      </td>
+      <td style="padding:10px 8px;border-bottom:1px solid #ece6dc;text-align:right;font-weight:600;font-size:11px;vertical-align:top;white-space:nowrap;">${escapeQuoteHtml(item.price || '$0 MXN')}</td>
+    </tr>`;
+  };
+
+  const lines = items.length ? items.map(pdfLine).join('') : pdfLine({ productName: 'Pieza', price: '$0 MXN' });
+  const notes = data.notes
+    ? `<div style="margin-top:12px;padding-top:10px;border-top:1px solid #ece6dc;font-size:11px;color:#444;line-height:1.5;white-space:pre-wrap;"><span style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:#8a7f72;font-weight:700;">Notas y condiciones</span><br>${escapeQuoteHtml(data.notes)}</div>`
+    : '';
+
+  return `<div id="quote-pdf-root" style="background:#fff;color:#222;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.45;padding:32px;width:794px;box-sizing:border-box;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:14px;border-bottom:1px solid #c9bfb0;">
+      <tr>
+        <td style="vertical-align:top;padding-bottom:12px;">
+          <div style="font-size:15px;font-weight:700;letter-spacing:0.06em;color:#111;">PILARICA</div>
+          <div style="font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:#8a7f72;margin-top:2px;">Joyas de autor</div>
+        </td>
+        <td style="vertical-align:top;text-align:right;font-size:11px;color:#444;line-height:1.5;padding-bottom:12px;">
+          <strong style="display:block;color:#111;font-size:11px;">Folio ${escapeQuoteHtml(data.quoteNum)}</strong>
+          Fecha: ${escapeQuoteHtml(formatCertDate(data.date))}<br>
+          Vigencia: ${escapeQuoteHtml(data.validity)}
+        </td>
+      </tr>
+    </table>
+    <div style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px;color:#111;">Cotización</div>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;font-size:11px;">
+      <tr>
+        <td width="50%" style="vertical-align:top;padding-right:12px;">
+          <div style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:#8a7f72;margin-bottom:2px;">Cliente</div>
+          <div style="color:#222;">${escapeQuoteHtml(data.client || '—')}</div>
+        </td>
+        <td width="50%" style="vertical-align:top;">
+          <div style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:#8a7f72;margin-bottom:2px;">Teléfono</div>
+          <div style="color:#222;">${escapeQuoteHtml(data.phone || '—')}</div>
+        </td>
+      </tr>
+    </table>
+    <div style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#8a7f72;margin-bottom:6px;">Detalle de la cotización</div>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;font-size:11px;margin-bottom:12px;">
+      <thead>
+        <tr>
+          <th style="text-align:left;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:#8a7f72;padding:6px 8px;border-bottom:1px solid #c9bfb0;background:#faf8f5;">Concepto</th>
+          <th style="text-align:right;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:#8a7f72;padding:6px 8px;border-bottom:1px solid #c9bfb0;background:#faf8f5;width:28%;">Importe</th>
+        </tr>
+      </thead>
+      <tbody>${lines}</tbody>
+    </table>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;font-size:11px;">
+      ${buildQuoteTotalsRows(data, true)}
+    </table>
+    ${notes}
+    <div style="margin-top:14px;padding-top:10px;border-top:1px solid #c9bfb0;font-size:10px;color:#666;line-height:1.5;">
+      <strong style="color:#222;">Pilarica Joyas</strong> · WhatsApp ${escapeQuoteHtml(waDisplay)} · mrk@pilaricajoyas.com.mx · pilaricajoyas.com.mx
+    </div>
+  </div>`;
+}
+
+function waitForQuoteImages(container) {
+  const imgs = container.querySelectorAll('img');
+  return Promise.all([...imgs].map(img => {
+    if (img.complete && img.naturalWidth) return Promise.resolve();
+    return new Promise(resolve => {
+      img.onload = resolve;
+      img.onerror = resolve;
+      setTimeout(resolve, 4000);
+    });
+  }));
+}
+
+function updateQuotePreview() {
+  const wrap = document.getElementById('quote-preview-wrap');
+  if (!wrap) return;
+  wrap.innerHTML = buildQuoteDocumentHtml(getQuoteFormData());
+}
+
+function validateQuoteForm() {
+  const client = document.getElementById('cot-client').value.trim();
+  if (!client) { toast('Ingresa el nombre del cliente', 'warn'); return false; }
+  if (!quoteSavedItems.length) { toast('Agrega al menos una pieza con Cargar o + Otra pieza', 'warn'); return false; }
+  return true;
+}
+
+function waitForNextPaint() {
+  return new Promise(resolve => {
+    requestAnimationFrame(() => requestAnimationFrame(resolve));
+  });
+}
+
+function sanitizeQuoteFilename(name) {
+  return String(name || 'cotizacion')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^\w.-]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 80) || 'cotizacion';
+}
+
+async function captureQuoteElementToPdf(sourceEl, filename) {
+  const { domToPng } = await import('https://cdn.jsdelivr.net/npm/modern-screenshot@4.7.0/+esm');
+  const { jsPDF } = window.jspdf;
+
+  const host = document.createElement('div');
+  host.setAttribute('data-pdf-export-root', 'true');
+  Object.assign(host.style, {
+    position: 'fixed',
+    left: '-12000px',
+    top: '0',
+    width: '794px',
+    background: '#ffffff',
+    overflow: 'visible',
+    pointerEvents: 'none',
+    zIndex: '2147483646',
+  });
+
+  Object.assign(sourceEl.style, {
+    width: '794px',
+    height: 'auto',
+    minHeight: '1123px',
+    maxHeight: 'none',
+    margin: '0',
+    transform: 'none',
+    boxShadow: 'none',
+    border: 'none',
+    background: '#ffffff',
+    color: '#111111',
+    position: 'relative',
+    overflow: 'visible',
+  });
+
+  host.appendChild(sourceEl);
+  document.body.appendChild(host);
+
+  try {
+    if (document.fonts?.ready) await document.fonts.ready;
+    await waitForQuoteImages(sourceEl);
+    await waitForNextPaint();
+
+    const fullHeight = Math.max(sourceEl.scrollHeight, sourceEl.offsetHeight, 1123);
+    const dataUrl = await domToPng(sourceEl, {
+      scale: 2,
+      backgroundColor: '#ffffff',
+      width: 794,
+      height: fullHeight,
+      style: {
+        transform: 'none',
+        overflow: 'visible',
+        height: `${fullHeight}px`,
+      },
+    });
+
+    if (!dataUrl.startsWith('data:image')) {
+      throw new Error('No se pudo generar la imagen del documento');
+    }
+
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+      compress: true,
+    });
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+    pdf.setFillColor(255, 255, 255);
+    pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+
+    const props = pdf.getImageProperties(dataUrl);
+    const imgWidth = pageWidth;
+    const imgHeight = (props.height * imgWidth) / props.width;
+    const renderHeight = Math.min(imgHeight, pageHeight);
+    const renderWidth = imgHeight > pageHeight
+      ? (props.width * pageHeight) / props.height
+      : imgWidth;
+
+    pdf.addImage(
+      dataUrl,
+      'PNG',
+      (pageWidth - renderWidth) / 2,
+      0,
+      renderWidth,
+      renderHeight,
+    );
+
+    const safeName = sanitizeQuoteFilename(filename);
+    pdf.save(safeName.endsWith('.pdf') ? safeName : `${safeName}.pdf`);
+  } finally {
+    host.remove();
+  }
+}
+
+async function downloadQuotePdf() {
+  if (!validateQuoteForm()) return;
+  if (!window.jspdf) {
+    toast('No se cargó el generador de PDF. Recarga la página.', 'warn');
+    return;
+  }
+
+  const data = getQuoteFormData();
+  if (data.stockWarnings.length) {
+    toast('Revisa el stock: ' + data.stockWarnings.join(' · '), 'warn');
+  }
+  updateQuotePreview();
+
+  const status = document.createElement('p');
+  status.textContent = 'Generando PDF…';
+  status.style.cssText = 'position:fixed;top:16px;left:50%;transform:translateX(-50%);font-family:Arial,sans-serif;font-size:14px;color:#444;z-index:100001;margin:0;background:#fff;padding:8px 16px;border:1px solid #ddd;border-radius:4px;';
+  document.body.appendChild(status);
+
+  const mount = document.createElement('div');
+  mount.innerHTML = buildQuotePdfHtml(data);
+  const el = mount.querySelector('#quote-pdf-root');
+  if (!el) {
+    toast('No hay contenido para el PDF', 'warn');
+    status.remove();
+    return;
+  }
+
+  try {
+    const clientSlug = data.client.replace(/[^\w\s-áéíóúñÁÉÍÓÚÑ]/g, '').trim().replace(/\s+/g, '-').slice(0, 24) || 'cliente';
+    const filename = `Cotizacion-Pilarica-${data.quoteNum}-${clientSlug}.pdf`;
+    await captureQuoteElementToPdf(el, filename);
+    toast('PDF descargado');
+  } catch (err) {
+    console.error(err);
+    toast('No se pudo generar el PDF', 'warn');
+  } finally {
+    status.remove();
+  }
+}
+
+function resetQuoteForm() {
+  quoteSavedItems = [];
+  clearQuotePieceForm();
+  renderQuoteSavedList();
+  ['cot-client', 'cot-phone', 'cot-date', 'cot-validity', 'cot-notes', 'cot-discount', 'cot-shipping'].forEach(id => setCertField(id, ''));
+  document.getElementById('cot-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('cot-validity').value = '7 días naturales';
+  document.getElementById('cot-quote-num').value = generateQuoteNum();
+  updateQuotePreview();
+}
+
+function initQuoteForm() {
+  const dateEl = document.getElementById('cot-date');
+  const numEl = document.getElementById('cot-quote-num');
+  if (dateEl && !dateEl.value) dateEl.value = new Date().toISOString().split('T')[0];
+  if (numEl && !numEl.value) numEl.value = generateQuoteNum();
+  renderQuoteSavedList();
+  updateQuotePreview();
+
+  if (initQuoteForm._ready) return;
+  initQuoteForm._ready = true;
+
+  document.getElementById('cot-sku-load')?.addEventListener('click', loadAndCommitQuotePiece);
+  document.getElementById('btn-add-quote-item')?.addEventListener('click', commitQuotePieceFromForm);
+  document.getElementById('btn-download-quote-pdf')?.addEventListener('click', downloadQuotePdf);
+  document.getElementById('btn-reset-quote')?.addEventListener('click', resetQuoteForm);
+
+  document.getElementById('cot-sku')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      loadAndCommitQuotePiece();
+    }
+  });
+
+  document.getElementById('cot-sku')?.addEventListener('input', () => {
+    clearTimeout(quoteSkuDebounce);
+    quoteSkuDebounce = setTimeout(() => {
+      const val = document.getElementById('cot-sku')?.value.trim();
+      if (val && findProductBySku(val)) prefillQuotePieceFormFromSku(true);
+    }, 600);
+  });
+
+  document.getElementById('quote-saved-items')?.addEventListener('click', e => {
+    const btn = e.target.closest('.quote-saved-remove');
+    if (!btn) return;
+    const row = btn.closest('.quote-saved-item');
+    const idx = Number(row?.dataset.index);
+    if (!Number.isFinite(idx)) return;
+    quoteSavedItems.splice(idx, 1);
+    renderQuoteSavedList();
+    updateQuotePreview();
+  });
+
+  ['cot-client', 'cot-phone', 'cot-date', 'cot-validity', 'cot-notes', 'cot-discount', 'cot-shipping'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', updateQuotePreview);
+  });
+  document.getElementById('cot-qty')?.addEventListener('input', updateQuotePreview);
+}
+
+function formatWhatsAppDisplay(num) {
+  const d = String(num || '').replace(/\D/g, '');
+  if (d.length === 12 && d.startsWith('52')) {
+    return `+52 ${d.slice(2, 5)} ${d.slice(5, 8)} ${d.slice(8)}`;
+  }
+  return String(num || '').startsWith('+') ? num : `+${d || num}`;
+}
+
+function populateCertPreview(cert) {
+  setCertPreviewText('cert-prev-name', cert.productName);
+  setCertPreviewText('cert-prev-material', cert.material || '—');
+  setCertPreviewText('cert-prev-stone', cert.stone || '—');
+  setCertPreviewText('cert-prev-size', cert.size || '—');
+  setCertPreviewText('cert-prev-client', cert.clientName);
+  setCertPreviewText('cert-prev-date', formatCertDate(cert.purchaseDate));
+  document.getElementById('cert-prev-serial').textContent = cert.serial;
+}
+
+function renderCertHistory() {
+  const list = getCerts().slice(0, 8);
+  const el = document.getElementById('cert-history-list');
+  if (!list.length) {
+    el.innerHTML = '<p class="empty-state">Los certificados emitidos aparecerán aquí.</p>';
+    return;
+  }
+  el.innerHTML = list.map(c => `
+    <div class="hist-item">
+      <div class="hist-info">
+        <p class="hist-name">${c.productName}</p>
+        <p class="hist-sub">${c.clientName} · <span class="hist-serial">${c.serial}</span></p>
+      </div>
+      <div class="hist-meta">
+        <span class="hist-date">${formatCertDate(c.purchaseDate)}</span>
+        <button type="button" class="hist-reprint" data-reprint="${c.serial}">Reimprimir</button>
+      </div>
+    </div>`).join('');
+  el.querySelectorAll('[data-reprint]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const cert = getCerts().find(c => c.serial === btn.dataset.reprint);
+      if (cert) {
+        populateCertPreview(cert);
+        window.print();
+      }
+    });
+  });
+}
+
+function closeSidebar() {
+  document.getElementById('admin-sidebar').classList.remove('sidebar-open');
+  document.getElementById('sidebar-backdrop').classList.remove('visible');
+}
+
+function loadContentForms() {
+  const c = PilaricaStore.getSiteContent();
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+  const setRich = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html || ''; };
+  const setImage = (inputId, previewId, url) => {
+    set(inputId, url);
+    updateContentImagePreview(previewId, url);
+  };
+
+  set('ct-hero-eyebrow', c.hero.eyebrow);
+  setRich('ct-hero-title', c.hero.titleHtml);
+  set('ct-hero-body', c.hero.body);
+  setImage('ct-hero-image', 'ct-hero-image-preview', c.hero.imageUrl);
+
+  const statsBox = document.getElementById('ct-hero-stats');
+  if (statsBox) {
+    const stats = c.hero.stats || [];
+    statsBox.innerHTML = stats.map((s, i) => `
+      <div class="form-row"><label class="form-label">Dato ${i + 1}</label><input class="form-input" id="ct-stat-num-${i}" value="${s.num || ''}" placeholder="18k" /></div>
+      <div class="form-row"><label class="form-label">Etiqueta ${i + 1}</label><input class="form-input" id="ct-stat-label-${i}" value="${s.label || ''}" placeholder="Oro certificado" /></div>
+    `).join('');
+  }
+
+  setImage('ct-cover-anillos', 'ct-cover-anillos-preview', c.category_covers.anillos);
+  setImage('ct-cover-collares', 'ct-cover-collares-preview', c.category_covers.collares);
+  setImage('ct-cover-aretes', 'ct-cover-aretes-preview', c.category_covers.aretes);
+  setImage('ct-cover-pulseras', 'ct-cover-pulseras-preview', c.category_covers.pulseras);
+
+  set('ct-catalog-eyebrow', c.catalog_hero.eyebrow);
+  setRich('ct-catalog-title', c.catalog_hero.titleHtml);
+  set('ct-catalog-body', c.catalog_hero.body);
+
+  set('ct-about-eyebrow', c.about_hero.eyebrow);
+  setRich('ct-about-title', c.about_hero.titleHtml);
+  set('ct-about-story', c.about_hero.story);
+  setImage('ct-about-image', 'ct-about-image-preview', c.about_hero.imageUrl);
+  setRich('ct-mission-title', c.about_mission.titleHtml);
+  set('ct-mission-body', c.about_mission.body);
+
+  setRich('ct-quote-text', c.quote.textHtml);
+  set('ct-quote-cite', c.quote.cite);
+  setRich('ct-featured-title', c.featured.titleHtml);
+  set('ct-featured-body', c.featured.body);
+  setRich('ct-brand-title', c.brand.titleHtml);
+  set('ct-brand-body', c.brand.body);
+
+  setRich('ct-values-title', c.values.titleHtml);
+  const valuesBox = document.getElementById('ct-values-fields');
+  const valueItems = c.values.items || [];
+  if (valuesBox) {
+    valuesBox.innerHTML = valueItems.map((v, i) => `
+      <div class="form-grid" style="margin-bottom:8px;">
+        <div class="form-row"><label class="form-label">Icono ${i + 1}</label>
+          <select class="form-select" id="ct-val-icon-${i}">
+            <option value="star" ${v.icon === 'star' ? 'selected' : ''}>Estrella</option>
+            <option value="shield" ${v.icon === 'shield' ? 'selected' : ''}>Escudo</option>
+            <option value="heart" ${v.icon === 'heart' ? 'selected' : ''}>Corazón</option>
+            <option value="tag" ${v.icon === 'tag' ? 'selected' : ''}>Etiqueta</option>
+          </select>
+        </div>
+        <div class="form-row"><label class="form-label">Título ${i + 1}</label><input class="form-input" id="ct-val-title-${i}" value="${v.title || ''}" /></div>
+      </div>
+      <div class="form-row"><label class="form-label">Texto ${i + 1}</label><textarea class="form-textarea" id="ct-val-desc-${i}">${v.desc || ''}</textarea></div>
+    `).join('');
+  }
+
+  const member = (c.team.members || [])[0] || {};
+  set('ct-team-eyebrow', c.team.eyebrow);
+  setRich('ct-team-title', c.team.titleHtml);
+  set('ct-team-name', member.name);
+  set('ct-team-initials', member.initials);
+  set('ct-team-role', member.role);
+  set('ct-team-bio', member.bio);
+
+  const loc = (c.locations.items || [])[0] || {};
+  set('ct-loc-eyebrow', c.locations.eyebrow);
+  setRich('ct-loc-title', c.locations.titleHtml);
+  set('ct-loc-name', loc.name);
+  set('ct-loc-address', loc.address);
+  set('ct-loc-phone', loc.phone);
+  set('ct-loc-whatsapp', loc.whatsapp);
+  set('ct-loc-email', loc.email);
+  set('ct-loc-hours-wd', (loc.hours || [])[0]?.time || '');
+  set('ct-loc-hours-sat', (loc.hours || [])[1]?.time || '');
+  set('ct-loc-hours-sun', (loc.hours || [])[2]?.time || '');
+  set('ct-loc-map', loc.mapUrl);
+
+  set('ct-social-eyebrow', c.social.eyebrow);
+  setRich('ct-social-title', c.social.titleHtml);
+  set('ct-social-body', c.social.body);
+  renderSocialFields(c.social.items || []);
+  loadInfoPageForms();
+}
+
+function loadInfoPageForms() {
+  if (typeof PilaricaInfoPages === 'undefined') return;
+  const pages = PilaricaInfoPages.getMergedPages();
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+  const setRich = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html || ''; };
+
+  const sobre = pages['sobre-pilarica'] || {};
+  set('ct-info-sobre-eyebrow', sobre.eyebrow);
+  setRich('ct-info-sobre-title', sobre.titleHtml);
+  set('ct-info-sobre-lead', sobre.lead);
+  setRich('ct-info-sobre-body', sobre.bodyHtml);
+
+  const cuidado = pages['cuidado-de-joyas'] || {};
+  set('ct-info-cuidado-eyebrow', cuidado.eyebrow);
+  setRich('ct-info-cuidado-title', cuidado.titleHtml);
+  set('ct-info-cuidado-lead', cuidado.lead);
+  setRich('ct-info-cuidado-body', cuidado.bodyHtml);
+
+  const faq = pages['preguntas-frecuentes'] || {};
+  set('ct-info-faq-eyebrow', faq.eyebrow);
+  setRich('ct-info-faq-title', faq.titleHtml);
+  set('ct-info-faq-lead', faq.lead);
+  renderFaqFields(faq.items || []);
+}
+
+function renderFaqFields(items) {
+  const box = document.getElementById('ct-faq-list');
+  if (!box) return;
+  const list = items.length ? items : [{ q: '', a: '' }];
+  box.innerHTML = list.map((item, i) => `
+    <div class="faq-admin-row" data-faq-index="${i}">
+      <div class="form-row"><label class="form-label">Pregunta ${i + 1}</label><input class="form-input ct-faq-q" value="${_escAttr(item.q)}" placeholder="¿Cómo puedo comprar?" /></div>
+      <div class="form-row"><label class="form-label">Respuesta ${i + 1}</label><textarea class="form-textarea ct-faq-a" rows="3" placeholder="Respuesta…">${_escTextarea(item.a)}</textarea></div>
+      ${list.length > 1 ? `<button type="button" class="social-row-remove" data-faq-remove="${i}">Quitar</button>` : ''}
+    </div>`).join('');
+  box.querySelectorAll('[data-faq-remove]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = Number(btn.dataset.faqRemove);
+      const next = _readFaqFromForm().filter((_, j) => j !== idx);
+      renderFaqFields(next.length ? next : [{ q: '', a: '' }]);
+    });
+  });
+}
+
+function _escAttr(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+}
+
+function _escTextarea(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;');
+}
+
+function _readFaqFromForm() {
+  return Array.from(document.querySelectorAll('#ct-faq-list .faq-admin-row')).map(row => ({
+    q: row.querySelector('.ct-faq-q')?.value.trim() || '',
+    a: row.querySelector('.ct-faq-a')?.value.trim() || '',
+  }));
+}
+
+async function _saveInfoPageSlug(slug, patch) {
+  const current = (PilaricaStore.getRawSiteSection && PilaricaStore.getRawSiteSection('info_pages'))
+    || PilaricaStore.getSiteSection('info_pages')
+    || {};
+  const merged = typeof PilaricaInfoPages !== 'undefined'
+    ? PilaricaInfoPages.merge(current)
+    : { ...current };
+  merged[slug] = { ...merged[slug], ...patch };
+  const next = { ...current, [slug]: merged[slug] };
+  await PilaricaStore.saveSiteSection('info_pages', next);
+}
+
+function renderSocialFields(items) {
+  const box = document.getElementById('ct-social-list');
+  if (!box) return;
+  const list = items.length ? items : [{ platform: '', handle: '', url: '' }];
+  box.innerHTML = list.map((s, i) => `
+    <div class="social-row-card" data-social-index="${i}">
+      <div class="form-grid">
+        <div class="form-row">
+          <label class="form-label">Plataforma</label>
+          <input class="form-input ct-social-platform" value="${(s.platform || '').replace(/"/g, '&quot;')}" placeholder="Instagram, Facebook, TikTok…" />
+        </div>
+        <div class="form-row">
+          <label class="form-label">Usuario</label>
+          <input class="form-input ct-social-handle" value="${(s.handle || '').replace(/"/g, '&quot;')}" placeholder="@pilarica.joyas" />
+        </div>
+      </div>
+      <div class="form-row"><label class="form-label">URL</label><input class="form-input ct-social-url" value="${(s.url || '').replace(/"/g, '&quot;')}" placeholder="https://…" /></div>
+      ${list.length > 1 ? `<button type="button" class="social-row-remove" data-social-remove="${i}">Quitar</button>` : ''}
+    </div>`).join('');
+  box.querySelectorAll('[data-social-remove]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = Number(btn.dataset.socialRemove);
+      const next = _readSocialFromForm().filter((_, j) => j !== idx);
+      renderSocialFields(next.length ? next : [{ platform: '', handle: '', url: '' }]);
+    });
+  });
+}
+
+function _readSocialFromForm() {
+  const cards = document.querySelectorAll('#ct-social-list .social-row-card');
+  return Array.from(cards).map(card => ({
+    platform: card.querySelector('.ct-social-platform')?.value.trim() || '',
+    handle: card.querySelector('.ct-social-handle')?.value.trim() || '',
+    url: card.querySelector('.ct-social-url')?.value.trim() || '',
+  })).filter(s => s.platform || s.handle || s.url);
+}
+
+function _readValuesFromForm() {
+  const icons = ['star', 'shield', 'heart', 'tag'];
+  return icons.map((fallback, i) => ({
+    icon: document.getElementById('ct-val-icon-' + i)?.value || fallback,
+    title: document.getElementById('ct-val-title-' + i)?.value.trim() || '',
+    desc: document.getElementById('ct-val-desc-' + i)?.value.trim() || '',
+  }));
+}
+
+function getRichText(id) {
+  const el = document.getElementById(id);
+  if (!el) return '';
+  if (el.tagName === 'TEXTAREA') return el.value.trim();
+  return normalizeRichHtml(el.innerHTML.trim());
+}
+
+function normalizeRichHtml(html) {
+  return html
+    .replace(/<i(\s|>)/gi, '<em$1')
+    .replace(/<\/i>/gi, '</em>')
+    .replace(/<b(\s|>)/gi, '<strong$1')
+    .replace(/<\/b>/gi, '</strong>')
+    .replace(/<div><br><\/div>/gi, '<br/>')
+    .replace(/<div>/gi, '<br/>')
+    .replace(/<\/div>/gi, '');
+}
+
+function initRichTextEditors() {
+  document.querySelectorAll('.rich-text-input').forEach(editor => {
+    if (editor.dataset.rtReady) return;
+    editor.dataset.rtReady = '1';
+
+    const wrap = document.createElement('div');
+    wrap.className = 'rich-text-wrap';
+    editor.parentNode.insertBefore(wrap, editor);
+    wrap.appendChild(editor);
+
+    const toolbar = document.createElement('div');
+    toolbar.className = 'rich-text-toolbar';
+    toolbar.innerHTML = `
+      <button type="button" class="rt-btn" data-cmd="highlight" title="Destacar en dorado (como en la tienda)"><em>Destacar</em></button>
+      <button type="button" class="rt-btn" data-cmd="italic" title="Cursiva"><em>I</em></button>
+      <button type="button" class="rt-btn" data-cmd="bold" title="Negrita"><strong>B</strong></button>
+    `;
+    wrap.insertBefore(toolbar, editor);
+
+    const hint = document.createElement('p');
+    hint.className = 'rich-text-hint';
+    hint.textContent = 'Selecciona palabras y usa «Destacar» para el tono dorado de la tienda. Enter = salto de línea.';
+    wrap.appendChild(hint);
+
+    toolbar.querySelectorAll('.rt-btn').forEach(btn => {
+      btn.addEventListener('mousedown', e => e.preventDefault());
+      btn.addEventListener('click', () => applyRichTextCommand(editor, btn.dataset.cmd));
+    });
+
+    editor.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        document.execCommand('insertLineBreak');
+      }
+    });
+  });
+}
+
+function applyRichTextCommand(editor, cmd) {
+  editor.focus();
+  const sel = window.getSelection();
+  if (!sel || !sel.rangeCount || sel.isCollapsed) {
+    toast('Selecciona primero el texto a formatear', 'warn');
+    return;
+  }
+  const range = sel.getRangeAt(0);
+  if (!editor.contains(range.commonAncestorContainer)) return;
+
+  if (cmd === 'highlight' || cmd === 'italic') {
+    const em = document.createElement('em');
+    try {
+      range.surroundContents(em);
+    } catch (_) {
+      document.execCommand('italic');
+      editor.innerHTML = normalizeRichHtml(editor.innerHTML);
+    }
+  } else if (cmd === 'bold') {
+    const strong = document.createElement('strong');
+    try {
+      range.surroundContents(strong);
+    } catch (_) {
+      document.execCommand('bold');
+      editor.innerHTML = normalizeRichHtml(editor.innerHTML);
+    }
+  }
+  sel.removeAllRanges();
+}
+
+function updateContentImagePreview(previewId, src) {
+  const box = document.getElementById(previewId);
+  if (!box) return;
+  if (src) {
+    box.innerHTML = `<img src="${src}" alt="Vista previa" onerror="this.parentElement.innerHTML='<span>No se pudo cargar</span>'" />`;
+  } else {
+    box.innerHTML = '<span>Sin imagen</span>';
+  }
+}
+
+async function handleContentImageUpload(fileInput) {
+  const file = fileInput.files[0];
+  if (!file) return;
+  const targetId = fileInput.dataset.target;
+  const previewId = fileInput.dataset.preview;
+  const folder = fileInput.dataset.folder || 'site';
+  const localPreview = URL.createObjectURL(file);
+  updateContentImagePreview(previewId, localPreview);
+  try {
+    const url = await PilaricaStore.uploadSiteImage(file, folder);
+    const target = document.getElementById(targetId);
+    if (target) target.value = url;
+    updateContentImagePreview(previewId, url);
+    toast('Imagen subida — pulsa guardar para publicarla');
+  } catch (err) {
+    console.error(err);
+    const target = document.getElementById(targetId);
+    updateContentImagePreview(previewId, target?.value || '');
+    if ((err.message || '').includes('permisos')) {
+      toast('Falta configurar permisos. Ejecuta database/fix-rls.sql y site-storage.sql', 'warn');
+      return;
+    }
+    if ((err.message || '').includes('site-storage')) {
+      toast(err.message, 'warn');
+      return;
+    }
+    toast(err.message || 'No se pudo subir la imagen', 'warn');
+  } finally {
+    URL.revokeObjectURL(localPreview);
+  }
+  fileInput.value = '';
+}
+
+function _readHeroStatsFromForm() {
+  const stats = [];
+  for (let i = 0; i < 4; i++) {
+    const num = document.getElementById('ct-stat-num-' + i);
+    const label = document.getElementById('ct-stat-label-' + i);
+    if (num && label) stats.push({ num: num.value.trim(), label: label.value.trim() });
+  }
+  return stats;
+}
+
+async function saveContentSection(key) {
+  try {
+    if (key === 'hero') {
+      await PilaricaStore.saveSiteSection('hero', {
+        eyebrow: document.getElementById('ct-hero-eyebrow').value.trim(),
+        titleHtml: getRichText('ct-hero-title'),
+        body: document.getElementById('ct-hero-body').value.trim(),
+        imageUrl: document.getElementById('ct-hero-image').value.trim(),
+        stats: _readHeroStatsFromForm(),
+      });
+    } else if (key === 'category_covers') {
+      await PilaricaStore.saveSiteSection('category_covers', {
+        anillos: document.getElementById('ct-cover-anillos').value.trim(),
+        collares: document.getElementById('ct-cover-collares').value.trim(),
+        aretes: document.getElementById('ct-cover-aretes').value.trim(),
+        pulseras: document.getElementById('ct-cover-pulseras').value.trim(),
+      });
+    } else if (key === 'catalog_hero') {
+      await PilaricaStore.saveSiteSection('catalog_hero', {
+        eyebrow: document.getElementById('ct-catalog-eyebrow').value.trim(),
+        titleHtml: getRichText('ct-catalog-title'),
+        body: document.getElementById('ct-catalog-body').value.trim(),
+      });
+    } else if (key === 'about_bundle') {
+      await PilaricaStore.saveSiteSection('about_hero', {
+        eyebrow: document.getElementById('ct-about-eyebrow').value.trim(),
+        titleHtml: getRichText('ct-about-title'),
+        story: document.getElementById('ct-about-story').value.trim(),
+        imageUrl: document.getElementById('ct-about-image').value.trim(),
+      });
+      await PilaricaStore.saveSiteSection('about_mission', {
+        titleHtml: getRichText('ct-mission-title'),
+        body: document.getElementById('ct-mission-body').value.trim(),
+      });
+    } else if (key === 'quote') {
+      await PilaricaStore.saveSiteSection('quote', {
+        textHtml: getRichText('ct-quote-text'),
+        cite: document.getElementById('ct-quote-cite').value.trim(),
+      });
+    } else if (key === 'featured') {
+      await PilaricaStore.saveSiteSection('featured', {
+        eyebrow: 'Piezas destacadas',
+        titleHtml: getRichText('ct-featured-title'),
+        body: document.getElementById('ct-featured-body').value.trim(),
+      });
+    } else if (key === 'brand') {
+      await PilaricaStore.saveSiteSection('brand', {
+        eyebrow: 'Nuestra promesa',
+        titleHtml: getRichText('ct-brand-title'),
+        body: document.getElementById('ct-brand-body').value.trim(),
+      });
+    } else if (key === 'values') {
+      await PilaricaStore.saveSiteSection('values', {
+        titleHtml: getRichText('ct-values-title'),
+        items: _readValuesFromForm(),
+      });
+    } else if (key === 'team') {
+      await PilaricaStore.saveSiteSection('team', {
+        eyebrow: document.getElementById('ct-team-eyebrow').value.trim(),
+        titleHtml: getRichText('ct-team-title'),
+        members: [{
+          name: document.getElementById('ct-team-name').value.trim(),
+          role: document.getElementById('ct-team-role').value.trim(),
+          bio: document.getElementById('ct-team-bio').value.trim(),
+          initials: document.getElementById('ct-team-initials').value.trim() || 'PR',
+        }],
+      });
+    } else if (key === 'locations') {
+      await PilaricaStore.saveSiteSection('locations', {
+        eyebrow: document.getElementById('ct-loc-eyebrow').value.trim(),
+        titleHtml: getRichText('ct-loc-title'),
+        items: [{
+          id: 'loc-01',
+          name: document.getElementById('ct-loc-name').value.trim(),
+          address: document.getElementById('ct-loc-address').value.trim(),
+          city: '',
+          cp: '',
+          phone: document.getElementById('ct-loc-phone').value.trim(),
+          whatsapp: document.getElementById('ct-loc-whatsapp').value.trim(),
+          email: document.getElementById('ct-loc-email').value.trim(),
+          hours: [
+            { days: 'Lunes - Viernes', time: document.getElementById('ct-loc-hours-wd').value.trim() },
+            { days: 'Sábado', time: document.getElementById('ct-loc-hours-sat').value.trim() },
+            { days: 'Domingo', time: document.getElementById('ct-loc-hours-sun').value.trim() },
+          ],
+          mapUrl: document.getElementById('ct-loc-map').value.trim(),
+        }],
+      });
+    } else if (key === 'social') {
+      await PilaricaStore.saveSiteSection('social', {
+        eyebrow: document.getElementById('ct-social-eyebrow').value.trim(),
+        titleHtml: getRichText('ct-social-title'),
+        body: document.getElementById('ct-social-body').value.trim(),
+        items: _readSocialFromForm(),
+      });
+    } else if (key === 'info_sobre') {
+      await _saveInfoPageSlug('sobre-pilarica', {
+        eyebrow: document.getElementById('ct-info-sobre-eyebrow').value.trim(),
+        titleHtml: getRichText('ct-info-sobre-title'),
+        lead: document.getElementById('ct-info-sobre-lead').value.trim(),
+        bodyHtml: getRichText('ct-info-sobre-body'),
+      });
+    } else if (key === 'info_cuidado') {
+      await _saveInfoPageSlug('cuidado-de-joyas', {
+        eyebrow: document.getElementById('ct-info-cuidado-eyebrow').value.trim(),
+        titleHtml: getRichText('ct-info-cuidado-title'),
+        lead: document.getElementById('ct-info-cuidado-lead').value.trim(),
+        bodyHtml: getRichText('ct-info-cuidado-body'),
+      });
+    } else if (key === 'info_faq') {
+      await _saveInfoPageSlug('preguntas-frecuentes', {
+        eyebrow: document.getElementById('ct-info-faq-eyebrow').value.trim(),
+        titleHtml: getRichText('ct-info-faq-title'),
+        lead: document.getElementById('ct-info-faq-lead').value.trim(),
+        items: _readFaqFromForm().filter(i => i.q && i.a),
+      });
+    }
+    if (key.startsWith('info_')) {
+      await PilaricaStore.reloadSiteContent();
+      loadInfoPageForms();
+    }
+    toast('Contenido guardado');
+  } catch (err) {
+    console.error(err);
+    if ((err.message || '').includes('Sesión expirada')) {
+      toast('Sesión expirada. Vuelve a iniciar sesión.', 'warn');
+      showLogin();
+      return;
+    }
+    if ((err.message || '').includes('permisos')) {
+      toast('Falta configurar permisos. Ejecuta database/fix-rls.sql en Supabase', 'warn');
+      return;
+    }
+    toast('No se pudo guardar el contenido', 'warn');
+  }
+}
+
+document.getElementById('login-password-toggle').addEventListener('click', () => {
+  const input = document.getElementById('login-password');
+  const btn = document.getElementById('login-password-toggle');
+  const show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  btn.setAttribute('aria-pressed', show ? 'true' : 'false');
+  btn.setAttribute('aria-label', show ? 'Ocultar contraseña' : 'Mostrar contraseña');
+});
+
+document.getElementById('login-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-password').value;
+  const err = document.getElementById('login-error');
+  err.classList.remove('visible');
+
+  try {
+    if (PilaricaConfig.storage === 'supabase') {
+      await PilaricaStore.signIn(email, pass);
+    } else if (email === DEMO_EMAIL && pass === DEMO_PASS) {
+      sessionStorage.setItem(ADMIN_AUTH_KEY, '1');
+    } else {
+      err.classList.add('visible');
+      return;
+    }
+    await showApp();
+  } catch (loginErr) {
+    console.error(loginErr);
+    err.classList.add('visible');
+  }
+});
+
+document.getElementById('logout-btn').addEventListener('click', showLogin);
+
+document.querySelectorAll('.sidebar-link[data-panel]').forEach(link => {
+  link.addEventListener('click', () => {
+    if (link.dataset.panel === 'editor' && !editingId) return;
+    switchPanel(link.dataset.panel);
+  });
+});
+
+document.getElementById('btn-new-product').addEventListener('click', () => openEditor(null));
+document.getElementById('btn-cancel-edit').addEventListener('click', () => {
+  editingId = null;
+  document.getElementById('nav-editor').hidden = true;
+  switchPanel('products');
+});
+document.getElementById('product-form').addEventListener('submit', saveProduct);
+document.getElementById('btn-hide-product').addEventListener('click', hideProduct);
+document.getElementById('btn-delete-product').addEventListener('click', deleteProduct);
+document.getElementById('product-search').addEventListener('input', e => renderProducts(e.target.value));
+
+document.getElementById('toggle-featured').addEventListener('click', function() {
+  setToggle('toggle-featured', !this.classList.contains('on'));
+});
+document.getElementById('toggle-active').addEventListener('click', function() {
+  setToggle('toggle-active', !this.classList.contains('on'));
+});
+
+document.querySelectorAll('[data-save-content]').forEach(btn => {
+  btn.addEventListener('click', () => saveContentSection(btn.dataset.saveContent));
+});
+
+document.querySelectorAll('.ct-image-file').forEach(input => {
+  input.addEventListener('change', () => handleContentImageUpload(input));
+});
+
+document.getElementById('ct-social-add').addEventListener('click', () => {
+  renderSocialFields([..._readSocialFromForm(), { platform: '', handle: '', url: '' }]);
+});
+
+document.getElementById('ct-faq-add').addEventListener('click', () => {
+  renderFaqFields([..._readFaqFromForm(), { q: '', a: '' }]);
+});
+
+document.getElementById('pf-image').addEventListener('input', e => updateImagePreview(e.target.value.trim()));
+document.getElementById('pf-image-file').addEventListener('change', async e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const category = document.getElementById('pf-category').value || 'catalog';
+  const localPreview = URL.createObjectURL(file);
+  updateImagePreview(localPreview);
+  try {
+    const url = await PilaricaStore.uploadProductImage(file, category);
+    document.getElementById('pf-image').value = url;
+    updateImagePreview(url);
+    toast('Imagen de producto subida');
+  } catch (err) {
+    console.error(err);
+    updateImagePreview(document.getElementById('pf-image').value.trim());
+    toast(err.message || 'No se pudo subir la imagen', 'warn');
+  } finally {
+    URL.revokeObjectURL(localPreview);
+  }
+  e.target.value = '';
+});
+
+document.getElementById('pf-gallery-file').addEventListener('change', async e => {
+  await addGalleryImagesFromFiles(e.target.files);
+  e.target.value = '';
+});
+
+document.getElementById('pf-gallery-add-url').addEventListener('click', () => {
+  const url = prompt('URL o ruta de la imagen (ej. assets/products/...)');
+  if (!url || !url.trim()) return;
+  productGallery.push(url.trim());
+  renderProductGallery();
+});
+
+document.getElementById('btn-restore-content-defaults').addEventListener('click', async () => {
+  if (!confirm('¿Restaurar todo el contenido del sitio al diseño original?\n\nSe reemplazarán textos e imágenes del inicio, catálogo, Conócenos y páginas informativas con los valores por defecto.')) return;
+  try {
+    await PilaricaStore.restoreSiteContentDefaults();
+    loadContentForms();
+    toast('Contenido restaurado al diseño original');
+  } catch (err) {
+    console.error(err);
+    toast(err.message || 'No se pudo restaurar el contenido', 'warn');
+  }
+});
+
+document.getElementById('login-forgot-btn').addEventListener('click', async () => {
+  const email = document.getElementById('login-email').value.trim();
+  const msg = document.getElementById('login-forgot-msg');
+  const err = document.getElementById('login-error');
+  err.style.display = 'none';
+  if (!email) {
+    msg.hidden = false;
+    msg.className = 'login-forgot-msg err';
+    msg.textContent = 'Escribe tu correo arriba y vuelve a pulsar el enlace.';
+    return;
+  }
+  msg.hidden = false;
+  msg.className = 'login-forgot-msg';
+  msg.textContent = 'Enviando enlace de recuperación…';
+  try {
+    await PilaricaStore.resetPassword(email);
+    msg.className = 'login-forgot-msg ok';
+    msg.textContent = 'Revisa tu correo: te enviamos un enlace para restablecer tu contraseña.';
+  } catch (resetErr) {
+    console.error(resetErr);
+    msg.className = 'login-forgot-msg err';
+    msg.textContent = resetErr.message || 'No se pudo enviar el correo. Verifica el email en Supabase Auth.';
+  }
+});
+
+['cert-product', 'cert-material', 'cert-stone', 'cert-size', 'cert-client', 'cert-date'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', updateCertPreview);
+  if (el && el.tagName === 'SELECT') el.addEventListener('change', updateCertPreview);
+});
+
+document.getElementById('cert-catalog-pick').addEventListener('change', e => {
+  if (e.target.value) prefillCertFromProduct(e.target.value);
+});
+
+document.getElementById('btn-save-cert').addEventListener('click', saveCert);
+document.getElementById('btn-print-cert').addEventListener('click', () => window.print());
+document.getElementById('btn-reset-cert').addEventListener('click', resetCertForm);
+
+document.getElementById('menu-toggle').addEventListener('click', () => {
+  document.getElementById('admin-sidebar').classList.toggle('sidebar-open');
+  document.getElementById('sidebar-backdrop').classList.toggle('visible');
+});
+document.getElementById('sidebar-backdrop').addEventListener('click', closeSidebar);
+
+if (isLoggedIn()) {
+  initRichTextEditors();
+  showApp().catch(() => showLogin());
+}
+</script>
+</body>
+</html>
